@@ -1,4 +1,4 @@
-package com.mayada1994.omplayer
+package com.omplayer.app
 
 import org.junit.Test
 
