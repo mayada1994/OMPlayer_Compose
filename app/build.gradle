@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -50,6 +52,9 @@ dependencies {
 
     // Google
     implementation 'com.google.android.material:material:1.7.0'
+
+    // Kotlin Reflection
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.10"
 
     // Tests
     testImplementation 'junit:junit:4.13.2'

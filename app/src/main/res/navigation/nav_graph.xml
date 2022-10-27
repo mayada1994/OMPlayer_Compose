@@ -7,6 +7,24 @@
     <fragment
         android:id="@+id/tracklistFragment"
         android:name="com.omplayer.app.fragments.TracklistFragment"
-        android:label="TracklistFragment" />
+        android:label="TracklistFragment">
+
+        <action
+            android:id="@+id/nav_from_tracklist_fragment_to_player_fragment"
+            app:destination="@id/playerFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.omplayer.app.fragments.PlayerFragment"
+        android:label="PlayerFragment">
+
+        <argument
+            android:name="track"
+            app:argType="com.omplayer.app.entities.Track"
+            app:nullable="true" />
+
+    </fragment>
 
 </navigation>

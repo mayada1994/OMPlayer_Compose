@@ -5,13 +5,13 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.entities.Track
+import com.omplayer.app.fragments.TracklistFragmentDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TracklistViewModel: ViewModel() {
+class TracklistViewModel: BaseViewModel() {
 
     private val _tracks = MutableLiveData<List<Track>>()
     val tracks: LiveData<List<Track>> = _tracks
@@ -91,6 +91,10 @@ class TracklistViewModel: ViewModel() {
                 _tracks.postValue(extractedTracks)
             }
         }
+    }
+
+    fun onTrackSelected(track: Track) {
+        _event.value = BaseViewEvent.Navigate(TracklistFragmentDirections.navFromTracklistFragmentToPlayerFragment(track))
     }
 
     companion object {

@@ -3,10 +3,7 @@ package com.omplayer.app.fragments
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -17,20 +14,9 @@ import com.omplayer.app.entities.Track
 import com.omplayer.app.viewmodels.TracklistViewModel
 
 
-class TracklistFragment : Fragment() {
+class TracklistFragment : BaseFragment<FragmentTracklistBinding>(FragmentTracklistBinding::inflate) {
 
-    private var _binding: FragmentTracklistBinding? = null
-    private val binding get() = _binding!!
-
-    private val viewModel: TracklistViewModel by viewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return FragmentTracklistBinding.inflate(inflater, container, false)
-            .also { _binding = it }.root
-    }
+    override val viewModel: TracklistViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,7 +29,7 @@ class TracklistFragment : Fragment() {
                     it,
                     object : TracklistAdapter.OnTrackSelectedListener {
                         override fun onTrackSelected(track: Track) {
-                            // TODO: Navigate to player
+                            viewModel.onTrackSelected(track)
                         }
                     }
                 )
@@ -94,11 +80,6 @@ class TracklistFragment : Fragment() {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {

@@ -1,5 +1,9 @@
 package com.omplayer.app.entities
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Track(
     val id: Int,
     val title: String,
@@ -10,4 +14,4 @@ data class Track(
     val duration: Int,
     val position: Int,
     val path: String
-)
+) : Parcelable
