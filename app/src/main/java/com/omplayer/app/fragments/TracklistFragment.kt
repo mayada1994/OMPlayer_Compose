@@ -1,27 +1,107 @@
 package com.omplayer.app.fragments
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.omplayer.app.R
+import com.omplayer.app.adapters.TracklistAdapter
+import com.omplayer.app.databinding.FragmentTracklistBinding
+import com.omplayer.app.entities.Track
+import com.omplayer.app.viewmodels.TracklistViewModel
 
 
 class TracklistFragment : Fragment() {
 
+    private var _binding: FragmentTracklistBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: TracklistViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tracklist, container, false)
+    ): View {
+        return FragmentTracklistBinding.inflate(inflater, container, false)
+            .also { _binding = it }.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        checkExternalStoragePermission()
+
+        viewModel.tracks.observe(viewLifecycleOwner) {
+            binding.rvTracklist.apply {
+                adapter = TracklistAdapter(
+                    it,
+                    object : TracklistAdapter.OnTrackSelectedListener {
+                        override fun onTrackSelected(track: Track) {
+                            // TODO: Navigate to player
+                        }
+                    }
+                )
+                addItemDecoration(
+                    DividerItemDecoration(
+                        this.context,
+                        DividerItemDecoration.VERTICAL
+                    ).apply {
+                        ContextCompat.getDrawable(context, R.drawable.line_divider)?.let { setDrawable(it) }
+                    }
+                )
+            }
+        }
+    }
+
+    private fun checkExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
+            ) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    EXTERNAL_STORAGE_PERMISSIONS_REQUEST
+                )
+
+            } else {
+                requestPermissions(
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    EXTERNAL_STORAGE_PERMISSIONS_REQUEST
+                )
+            }
+        } else {
+            viewModel.loadTracks(requireContext())
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == EXTERNAL_STORAGE_PERMISSIONS_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            viewModel.loadTracks(requireContext())
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
-
-        @JvmStatic
-        fun newInstance() =
-            TracklistFragment()
+        private const val EXTERNAL_STORAGE_PERMISSIONS_REQUEST = 123
     }
 }
