@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.omplayer.app.R
+import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.adapters.TracklistAdapter
 import com.omplayer.app.databinding.FragmentTracklistBinding
 import com.omplayer.app.entities.Track
@@ -30,6 +31,7 @@ class TracklistFragment : BaseFragment<FragmentTracklistBinding>(FragmentTrackli
                     object : TracklistAdapter.OnTrackSelectedListener {
                         override fun onTrackSelected(track: Track) {
                             viewModel.onTrackSelected(track)
+                            (activity as MainActivity).playTrack(track)
                         }
                     }
                 )
