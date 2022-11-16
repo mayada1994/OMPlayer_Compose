@@ -45,14 +45,6 @@ object NotificationUtils {
             // Enable launching the player by clicking the notification
             setContentIntent(controller.sessionActivity)
 
-            // Stop the service when the notification is swiped away
-            setDeleteIntent(
-                MediaButtonReceiver.buildMediaButtonPendingIntent(
-                    service,
-                    PlaybackStateCompat.ACTION_STOP
-                )
-            )
-
             // Make the transport controls visible on the lockscreen
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 
@@ -61,17 +53,7 @@ object NotificationUtils {
             // Take advantage of MediaStyle features
             setStyle(
                 androidx.media.app.NotificationCompat.MediaStyle()
-                    .setMediaSession(mediaSession.sessionToken)
-                    .setShowActionsInCompactView(0)
-
-                     // Add a cancel button
-                    .setShowCancelButton(true)
-                    .setCancelButtonIntent(
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(
-                            service,
-                            PlaybackStateCompat.ACTION_STOP
-                        )
-                    )
+//                    .setShowActionsInCompactView(3)
             )
 
             addAction(
@@ -119,6 +101,17 @@ object NotificationUtils {
                     MediaButtonReceiver.buildMediaButtonPendingIntent(
                         service,
                         PlaybackStateCompat.ACTION_SKIP_TO_NEXT
+                    )
+                )
+            )
+
+            addAction(
+                NotificationCompat.Action(
+                    R.drawable.close,
+                    service.getString(R.string.close),
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(
+                        service,
+                        PlaybackStateCompat.ACTION_STOP
                     )
                 )
             )
