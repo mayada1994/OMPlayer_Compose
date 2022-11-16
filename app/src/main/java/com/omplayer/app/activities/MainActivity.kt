@@ -1,18 +1,17 @@
 package com.omplayer.app.activities
 
 import android.content.ComponentName
-import android.content.Intent
 import android.media.AudioManager
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.omplayer.app.R
+import com.omplayer.app.callbacks.PlayerMediaSessionCallback
 import com.omplayer.app.databinding.ActivityMainBinding
 import com.omplayer.app.entities.Track
 import com.omplayer.app.events.ViewEvent
@@ -88,8 +87,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun playTrack(track: Track) {
-        ContextCompat.startForegroundService(this, Intent(this, MediaPlaybackService::class.java))
-        mediaController.transportControls.playFromUri(track.path.toUri(), Bundle().apply { putParcelable(MediaPlaybackService.TRACK_EXTRA, track) })
+        mediaController.transportControls.playFromUri(track.path.toUri(), Bundle().apply { putParcelable(PlayerMediaSessionCallback.TRACK_EXTRA, track) })
     }
 
     companion object {
