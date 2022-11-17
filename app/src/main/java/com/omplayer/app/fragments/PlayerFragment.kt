@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.omplayer.app.R
 import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.databinding.FragmentPlayerBinding
+import com.omplayer.app.entities.Track
 import com.omplayer.app.viewmodels.PlayerViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,6 +22,8 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayerBinding
     override val viewModel: PlayerViewModel by viewModels()
 
     private val args: PlayerFragmentArgs by navArgs()
+
+    private var currentTrack: Track? = null
 
     private var mediaController: MediaControllerCompat? = null
 
@@ -38,6 +41,16 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayerBinding
                 PlaybackStateCompat.STATE_STOPPED -> {
                     binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
                     binding.seekBar.progress = 0
+                }
+                PlaybackStateCompat.STATE_SKIPPING_TO_NEXT -> {
+                    currentTrack = (activity as MainActivity).playNextTrack(currentTrack!!)
+                    binding.txtTitle.text = currentTrack!!.title
+                    binding.txtArtist.text = currentTrack!!.artist
+                }
+                PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS -> {
+                    currentTrack = (activity as MainActivity).playPreviousTrack(currentTrack!!)
+                    binding.txtTitle.text = currentTrack!!.title
+                    binding.txtArtist.text = currentTrack!!.artist
                 }
             }
         }
@@ -58,6 +71,8 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayerBinding
             }
 
             args.track?.let {
+                currentTrack = args.track
+
                 with(binding) {
                     txtTitle.text = it.title
                     txtArtist.text = it.artist
@@ -79,6 +94,8 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayerBinding
 
                         })
                     }
+                    btnNext.setOnClickListener { mediaController.transportControls.skipToNext() }
+                    btnPrev.setOnClickListener { mediaController.transportControls.skipToPrevious() }
                 }
             }
 

@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
 
     private val navController: NavController by lazy { findNavController(R.id.navHostFragment) }
 
+    private var tracks: List<Track> = listOf()
+
     private lateinit var mediaBrowser: MediaBrowserCompat
 
     private val connectionCallbacks = object : MediaBrowserCompat.ConnectionCallback() {
@@ -86,8 +88,41 @@ class MainActivity : AppCompatActivity() {
         mediaBrowser.disconnect()
     }
 
-    fun playTrack(track: Track) {
+    fun playTrack(track: Track): Track {
         mediaController.transportControls.playFromUri(track.path.toUri(), Bundle().apply { putParcelable(PlayerMediaSessionCallback.TRACK_EXTRA, track) })
+        return track
+    }
+
+    fun playNextTrack(track: Track): Track {
+        return playTrack(getNextTrack(track))
+    }
+
+    fun playPreviousTrack(track: Track): Track {
+        return playTrack(getPreviousTrack(track))
+    }
+
+    private fun getNextTrack(track: Track): Track {
+        tracks.let {
+            return if (it.last() == track) {
+                it.first()
+            } else {
+                it[it.indexOf(track) + 1]
+            }
+        }
+    }
+
+    private fun getPreviousTrack(track: Track): Track {
+        tracks.let {
+            return if (it.first() == track) {
+                it.last()
+            } else {
+                it[it.indexOf(track) - 1]
+            }
+        }
+    }
+
+    fun setTracks(tracks: List<Track>) {
+        this.tracks = tracks
     }
 
     companion object {

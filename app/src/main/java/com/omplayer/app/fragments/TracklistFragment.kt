@@ -25,6 +25,7 @@ class TracklistFragment : BaseFragment<FragmentTracklistBinding>(FragmentTrackli
         checkExternalStoragePermission()
 
         viewModel.tracks.observe(viewLifecycleOwner) {
+            (activity as MainActivity).setTracks(it)
             binding.rvTracklist.apply {
                 adapter = TracklistAdapter(
                     it,

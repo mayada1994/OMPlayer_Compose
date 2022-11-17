@@ -40,6 +40,16 @@ class PlayerMediaSessionCallback(
         setMediaPlaybackState(state = PlaybackStateCompat.STATE_PAUSED, mediaPlayer.currentPosition.toLong())
     }
 
+    override fun onSkipToNext() {
+        super.onSkipToNext()
+        setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
+    }
+
+    override fun onSkipToPrevious() {
+        super.onSkipToPrevious()
+        setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS)
+    }
+
     override fun onSeekTo(pos: Long) {
         super.onSeekTo(pos)
         mediaPlayer.seekTo(pos.toInt())
