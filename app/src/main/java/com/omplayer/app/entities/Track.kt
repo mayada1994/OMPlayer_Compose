@@ -1,5 +1,6 @@
 package com.omplayer.app.entities
 
+import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -9,6 +10,8 @@ data class Track(
     val title: String,
     val artist: String,
     val album: String,
+    val albumId: Int,
+    val albumCover: Uri,
     val year: String,
     val genre: String,
     val duration: Int,

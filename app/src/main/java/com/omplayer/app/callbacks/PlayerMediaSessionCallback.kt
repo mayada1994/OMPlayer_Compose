@@ -10,8 +10,14 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.omplayer.app.R
 import com.omplayer.app.entities.Track
 import com.omplayer.app.services.MediaPlaybackService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PlayerMediaSessionCallback(
     private val context: Context,
@@ -89,17 +95,33 @@ class PlayerMediaSessionCallback(
     }
 
     private fun setNewTrack(track: Track, uri: Uri?) {
-        mediaSession.setMetadata(
-            MediaMetadataCompat.Builder()
-                .putString(
-                    MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
-                    uri.toString()
+        CoroutineScope(Dispatchers.Default).launch {
+            withContext(Dispatchers.IO) {
+                val bitmap = try {
+                    Glide.with(context)
+                        .asBitmap()
+                        .load(track.albumCover)
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
+                        .submit().get()
+                } catch (e: Exception) {
+                    null
+                }
+
+                mediaSession.setMetadata(
+                    MediaMetadataCompat.Builder()
+                        .putString(
+                            MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
+                            uri.toString()
+                        )
+                        .putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
+                        .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist)
+                        .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.album)
+                        .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, bitmap)
+                        .build()
                 )
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist)
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.album)
-                .build()
-        )
+            }
+        }
 
         mediaPlayer.apply {
             reset()

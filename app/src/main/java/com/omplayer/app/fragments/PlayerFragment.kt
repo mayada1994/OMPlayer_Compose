@@ -8,6 +8,7 @@ import android.widget.SeekBar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.omplayer.app.R
 import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.databinding.FragmentPlayerBinding
@@ -46,11 +47,23 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayerBinding
                     currentTrack = (activity as MainActivity).playNextTrack(currentTrack!!)
                     binding.txtTitle.text = currentTrack!!.title
                     binding.txtArtist.text = currentTrack!!.artist
+                    Glide.with(this@PlayerFragment)
+                        .load(currentTrack!!.albumCover)
+                        .placeholder(R.drawable.placeholder)
+                        .into(binding.imgCover)
+                    binding.seekBar.progress = 0
+                    binding.seekBar.max = currentTrack!!.duration
                 }
                 PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS -> {
                     currentTrack = (activity as MainActivity).playPreviousTrack(currentTrack!!)
                     binding.txtTitle.text = currentTrack!!.title
                     binding.txtArtist.text = currentTrack!!.artist
+                    Glide.with(this@PlayerFragment)
+                        .load(currentTrack!!.albumCover)
+                        .placeholder(R.drawable.placeholder)
+                        .into(binding.imgCover)
+                    binding.seekBar.progress = 0
+                    binding.seekBar.max = currentTrack!!.duration
                 }
             }
         }
@@ -76,6 +89,11 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayerBinding
                 with(binding) {
                     txtTitle.text = it.title
                     txtArtist.text = it.artist
+                    Glide.with(this@PlayerFragment)
+                        .load(it.albumCover)
+                        .placeholder(R.drawable.placeholder)
+                        .into(imgCover)
+
                     seekBar.apply {
                         progress = 0
                         max = it.duration

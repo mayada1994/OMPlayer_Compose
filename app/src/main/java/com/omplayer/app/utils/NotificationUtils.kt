@@ -41,6 +41,9 @@ object NotificationUtils {
             // Add the metadata for the currently playing track
             setContentTitle(mediaMetadata?.getString(MediaMetadataCompat.METADATA_KEY_TITLE))
             setContentText(mediaMetadata?.getString(MediaMetadataCompat.METADATA_KEY_ARTIST))
+            mediaMetadata?.getBitmap(MediaMetadataCompat.METADATA_KEY_ART)?.let {
+                setLargeIcon(it)
+            }
 
             // Enable launching the player by clicking the notification
             setContentIntent(controller.sessionActivity)

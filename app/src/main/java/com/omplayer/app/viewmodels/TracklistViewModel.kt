@@ -1,5 +1,6 @@
 package com.omplayer.app.viewmodels
 
+import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
@@ -26,7 +27,8 @@ class TracklistViewModel: BaseViewModel() {
                 MediaStore.Audio.Media.TRACK,
                 MediaStore.Audio.Media.ALBUM,
                 MediaStore.Audio.Media.YEAR,
-                MediaStore.Audio.Media._ID
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ALBUM_ID
             )
             context.contentResolver.query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -47,7 +49,9 @@ class TracklistViewModel: BaseViewModel() {
                         val album = cursor.getString(5)
                         val year = if (cursor.getString(6) != null) cursor.getString(6) else UNKNOWN
                         val id = cursor.getInt(7)
+                        val albumId = cursor.getInt(8)
                         var genre = UNKNOWN
+                        val albumCover = ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId.toLong())
 
                         context.contentResolver.query(
                             MediaStore.Audio.Genres.getContentUriForAudioId("external", id),
@@ -73,6 +77,8 @@ class TracklistViewModel: BaseViewModel() {
                                     title = title,
                                     artist = artist,
                                     album = album,
+                                    albumId = albumId,
+                                    albumCover = albumCover,
                                     year = year,
                                     genre = genre,
                                     duration = duration,
