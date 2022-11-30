@@ -15,7 +15,7 @@ import com.omplayer.app.entities.Track
 import com.omplayer.app.viewmodels.TracklistViewModel
 
 
-class TracklistFragment : BaseFragment<FragmentTracklistBinding>(FragmentTracklistBinding::inflate) {
+class TracklistFragment : BaseMvvmFragment<FragmentTracklistBinding>(FragmentTracklistBinding::inflate) {
 
     override val viewModel: TracklistViewModel by viewModels()
 
