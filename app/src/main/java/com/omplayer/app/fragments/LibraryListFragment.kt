@@ -14,8 +14,8 @@ class LibraryListFragment : BaseMvvmFragment<FragmentLibraryListBinding>(Fragmen
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.getInt(LIBRARY_LIST_TYPE_POSITION)?.let {
-            viewModel.initList(it)
-            viewModel.playerList.observe(viewLifecycleOwner) {
+            viewModel.init(it)
+            viewModel.libraryList.observe(viewLifecycleOwner) {
                 // TODO: setup recycler view
             }
         }
