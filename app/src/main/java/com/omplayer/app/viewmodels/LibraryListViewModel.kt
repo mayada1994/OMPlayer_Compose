@@ -35,4 +35,8 @@ class LibraryListViewModel: BaseViewModel() {
         }
     }
 
+    fun onItemClick(item: Any) {
+        // TODO: Add logic
+    }
+
 }
