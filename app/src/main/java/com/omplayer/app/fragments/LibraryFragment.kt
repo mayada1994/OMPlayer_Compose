@@ -13,7 +13,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>(FragmentLibraryBind
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            viewPagerLibrary.adapter = LibraryAdapter(parentFragmentManager, lifecycle)
+            viewPagerLibrary.adapter = LibraryAdapter(childFragmentManager, lifecycle)
 
             TabLayoutMediator(tabsLibrary, viewPagerLibrary) { tab, position ->
                 tab.text = getString(LibraryListType.getLibraryListTypeByPosition(position).titleRes)

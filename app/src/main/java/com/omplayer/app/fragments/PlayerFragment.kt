@@ -85,6 +85,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
 
             args.track?.let {
                 currentTrack = args.track
+                currentTrack?.let { (activity as MainActivity).playTrack(it) }
 
                 with(binding) {
                     txtTitle.text = it.title
@@ -124,7 +125,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
     private fun trackProgress(mediaController: MediaControllerCompat) {
         lifecycleScope.launch {
             while (mediaController.playbackState.state == PlaybackStateCompat.STATE_PLAYING) {
-                delay(100)
+                delay(500)
                 binding.seekBar.progress = mediaController.playbackState.position.toInt()
             }
         }

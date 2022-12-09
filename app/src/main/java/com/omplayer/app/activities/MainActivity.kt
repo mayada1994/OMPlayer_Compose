@@ -30,8 +30,6 @@ class MainActivity : AppCompatActivity() {
 
     private val navController: NavController by lazy { findNavController(R.id.navHostFragment) }
 
-    private var tracks: List<Track> = listOf()
-
     private lateinit var mediaBrowser: MediaBrowserCompat
 
     private val viewModel: MainViewModel by viewModels()
@@ -112,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getNextTrack(track: Track): Track {
-        tracks.let {
+        LibraryUtils.tracklist.value!!.let {
             return if (it.last() == track) {
                 it.first()
             } else {
@@ -122,7 +120,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getPreviousTrack(track: Track): Track {
-        tracks.let {
+        LibraryUtils.tracklist.value!!.let {
             return if (it.first() == track) {
                 it.last()
             } else {
@@ -132,7 +130,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setTracks(tracks: List<Track>) {
-        this.tracks = tracks
     }
 
     private fun checkExternalStoragePermission() {

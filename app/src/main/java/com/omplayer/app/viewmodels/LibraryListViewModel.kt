@@ -7,6 +7,7 @@ import com.omplayer.app.entities.Track
 import com.omplayer.app.extensions.toAlbum
 import com.omplayer.app.extensions.toArtist
 import com.omplayer.app.extensions.toGenre
+import com.omplayer.app.fragments.LibraryFragmentDirections
 import com.omplayer.app.utils.LibraryUtils
 
 class LibraryListViewModel: BaseViewModel() {
@@ -37,6 +38,9 @@ class LibraryListViewModel: BaseViewModel() {
 
     fun onItemClick(item: Any) {
         // TODO: Add logic
+        when (item) {
+            is Track -> _event.value = BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToPlayerFragment(item))
+        }
     }
 
 }

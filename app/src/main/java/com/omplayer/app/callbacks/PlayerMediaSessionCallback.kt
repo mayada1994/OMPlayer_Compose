@@ -25,7 +25,16 @@ class PlayerMediaSessionCallback(
     private val listener: OnMediaSessionStoppedListener
 ) : MediaSessionCompat.Callback() {
 
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
+    private val mediaPlayer: MediaPlayer by lazy {
+        MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+        }
+    }
 
     override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
         super.onPlayFromUri(uri, extras)
@@ -137,7 +146,7 @@ class PlayerMediaSessionCallback(
                 mediaSession.controller.transportControls.play()
             }
             setOnCompletionListener {
-                setMediaPlaybackState(state = PlaybackStateCompat.STATE_PAUSED)
+                setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
             }
         }
     }
