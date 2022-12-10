@@ -35,10 +35,19 @@ class PlayerMediaSessionCallback(
         }
     }
 
+    private var lastPlayedTrackUri: Uri? = null
+
     override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
         super.onPlayFromUri(uri, extras)
+
+        if (uri != null && lastPlayedTrackUri == uri) {
+            setMediaPlaybackState(position = mediaPlayer.currentPosition.toLong())
+            return
+        }
+
         val track: Track? = extras?.getParcelable(TRACK_EXTRA)
         track?.let { setNewTrack(it, uri) }
+        lastPlayedTrackUri = uri
         setMediaPlaybackState()
     }
 

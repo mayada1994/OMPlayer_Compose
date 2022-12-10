@@ -20,7 +20,6 @@ import com.omplayer.app.databinding.ActivityMainBinding
 import com.omplayer.app.entities.Track
 import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.services.MediaPlaybackService
-import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.viewmodels.BaseViewModel.BaseViewEvent
 import com.omplayer.app.viewmodels.MainViewModel
 
@@ -96,40 +95,11 @@ class MainActivity : AppCompatActivity() {
         mediaBrowser.disconnect()
     }
 
-    fun playTrack(track: Track): Track {
-        mediaController.transportControls.playFromUri(track.path.toUri(), Bundle().apply { putParcelable(PlayerMediaSessionCallback.TRACK_EXTRA, track) })
-        return track
-    }
-
-    fun playNextTrack(track: Track): Track {
-        return playTrack(getNextTrack(track))
-    }
-
-    fun playPreviousTrack(track: Track): Track {
-        return playTrack(getPreviousTrack(track))
-    }
-
-    private fun getNextTrack(track: Track): Track {
-        LibraryUtils.tracklist.value!!.let {
-            return if (it.last() == track) {
-                it.first()
-            } else {
-                it[it.indexOf(track) + 1]
-            }
-        }
-    }
-
-    private fun getPreviousTrack(track: Track): Track {
-        LibraryUtils.tracklist.value!!.let {
-            return if (it.first() == track) {
-                it.last()
-            } else {
-                it[it.indexOf(track) - 1]
-            }
-        }
-    }
-
-    fun setTracks(tracks: List<Track>) {
+    fun playTrack(track: Track) {
+        mediaController.transportControls.playFromUri(
+            track.path.toUri(),
+            Bundle().apply { putParcelable(PlayerMediaSessionCallback.TRACK_EXTRA, track) }
+        )
     }
 
     private fun checkExternalStoragePermission() {

@@ -6,6 +6,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import android.widget.SeekBar
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -25,8 +26,6 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
 
     private val args: PlayerFragmentArgs by navArgs()
 
-    private var currentTrack: Track? = null
-
     private var mediaController: MediaControllerCompat? = null
 
     private val callback = object: MediaControllerCompat.Callback() {
@@ -45,26 +44,10 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                     binding.seekBar.progress = 0
                 }
                 PlaybackStateCompat.STATE_SKIPPING_TO_NEXT -> {
-                    currentTrack = (activity as MainActivity).playNextTrack(currentTrack!!)
-                    binding.txtTitle.text = currentTrack!!.title
-                    binding.txtArtist.text = currentTrack!!.artist
-                    Glide.with(this@PlayerFragment)
-                        .load(LibraryUtils.getAlbumCover(requireContext(), currentTrack!!.id))
-                        .placeholder(R.drawable.placeholder)
-                        .into(binding.imgCover)
-                    binding.seekBar.progress = 0
-                    binding.seekBar.max = currentTrack!!.duration
+                    LibraryUtils.playNextTrack()
                 }
                 PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS -> {
-                    currentTrack = (activity as MainActivity).playPreviousTrack(currentTrack!!)
-                    binding.txtTitle.text = currentTrack!!.title
-                    binding.txtArtist.text = currentTrack!!.artist
-                    Glide.with(this@PlayerFragment)
-                        .load(LibraryUtils.getAlbumCover(requireContext(), currentTrack!!.id))
-                        .placeholder(R.drawable.placeholder)
-                        .into(binding.imgCover)
-                    binding.seekBar.progress = 0
-                    binding.seekBar.max = currentTrack!!.duration
+                    LibraryUtils.playPreviousTrack()
                 }
             }
         }
@@ -76,50 +59,59 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
         mediaController = MediaControllerCompat.getMediaController(requireActivity() as MainActivity)
 
         mediaController?.let { mediaController ->
-            binding.btnPlay.setOnClickListener {
-                if (mediaController.playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
-                    mediaController.transportControls.pause()
-                } else {
-                    mediaController.transportControls.play()
-                }
+            LibraryUtils.currentTrack.distinctUntilChanged().observe(viewLifecycleOwner) {
+                (activity as MainActivity).playTrack(it)
+                updateUI(it)
             }
 
-            args.track?.let {
-                currentTrack = args.track
-                currentTrack?.let { (activity as MainActivity).playTrack(it) }
+            args.track?.let { LibraryUtils.currentTrack.value = args.track }
 
-                with(binding) {
-                    txtTitle.text = it.title
-                    txtArtist.text = it.artist
-                    Glide.with(this@PlayerFragment)
-                        .load(LibraryUtils.getAlbumCover(requireContext(), it.id))
-                        .placeholder(R.drawable.placeholder)
-                        .into(imgCover)
-
-                    seekBar.apply {
-                        progress = 0
+            with(binding) {
+                seekBar.apply {
+                    LibraryUtils.currentTrack.value?.let {
+                        progress = mediaController.playbackState?.position?.toInt() ?: 0
                         max = it.duration
-                        setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                            override fun onProgressChanged(
-                                seekBar: SeekBar?,
-                                progress: Int,
-                                fromUser: Boolean
-                            ) = Unit
-
-                            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
-
-                            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                                seekBar?.let { mediaController.transportControls.seekTo(it.progress.toLong()) }
-                            }
-
-                        })
                     }
-                    btnNext.setOnClickListener { mediaController.transportControls.skipToNext() }
-                    btnPrev.setOnClickListener { mediaController.transportControls.skipToPrevious() }
+                    setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                        override fun onProgressChanged(
+                            seekBar: SeekBar?,
+                            progress: Int,
+                            fromUser: Boolean
+                        ) = Unit
+
+                        override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+
+                        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                            seekBar?.let { mediaController.transportControls.seekTo(it.progress.toLong()) }
+                        }
+
+                    })
                 }
+                btnPlay.setOnClickListener {
+                    if (mediaController.playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
+                        mediaController.transportControls.pause()
+                    } else {
+                        mediaController.transportControls.play()
+                    }
+                }
+                btnNext.setOnClickListener { mediaController.transportControls.skipToNext() }
+                btnPrev.setOnClickListener { mediaController.transportControls.skipToPrevious() }
             }
 
             mediaController.registerCallback(callback)
+        }
+    }
+
+    private fun updateUI(track: Track) {
+        with(binding) {
+            txtTitle.text = track.title
+            txtArtist.text = track.artist
+            Glide.with(this@PlayerFragment)
+                .load(LibraryUtils.getAlbumCover(requireContext(), track.id))
+                .placeholder(R.drawable.placeholder)
+                .into(imgCover)
+            seekBar.progress = mediaController?.playbackState?.position?.toInt() ?: 0
+            seekBar.max = track.duration
         }
     }
 

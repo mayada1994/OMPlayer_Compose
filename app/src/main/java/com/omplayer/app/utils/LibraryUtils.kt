@@ -11,6 +11,7 @@ import com.omplayer.app.entities.Track
 
 object LibraryUtils {
     var tracklist = MutableLiveData<List<Track>>()
+    var currentTrack = MutableLiveData<Track>()
 
     fun getAlbumCover(context: Context, trackId: Int): Bitmap? {
         return try {
@@ -37,5 +38,35 @@ object LibraryUtils {
         } catch (e: Exception) {
             null
         }
+    }
+
+    fun playNextTrack() {
+        currentTrack.value?.let { currentTrack.value = getNextTrack(it) }
+    }
+
+    fun playPreviousTrack() {
+        currentTrack.value?.let { currentTrack.value = getPreviousTrack(it) }
+    }
+
+    private fun getNextTrack(track: Track): Track? {
+        tracklist.value?.let {
+            return if (it.last() == track) {
+                it.first()
+            } else {
+                it[it.indexOf(track) + 1]
+            }
+        }
+        return null
+    }
+
+    private fun getPreviousTrack(track: Track): Track? {
+        tracklist.value?.let {
+            return if (it.first() == track) {
+                it.last()
+            } else {
+                it[it.indexOf(track) - 1]
+            }
+        }
+        return null
     }
 }
