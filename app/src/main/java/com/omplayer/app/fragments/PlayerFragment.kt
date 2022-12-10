@@ -13,6 +13,7 @@ import com.omplayer.app.R
 import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.databinding.FragmentPlayerBinding
 import com.omplayer.app.entities.Track
+import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.viewmodels.PlayerViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -48,7 +49,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                     binding.txtTitle.text = currentTrack!!.title
                     binding.txtArtist.text = currentTrack!!.artist
                     Glide.with(this@PlayerFragment)
-                        .load(currentTrack!!.albumCover)
+                        .load(LibraryUtils.getAlbumCover(requireContext(), currentTrack!!.id))
                         .placeholder(R.drawable.placeholder)
                         .into(binding.imgCover)
                     binding.seekBar.progress = 0
@@ -59,7 +60,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                     binding.txtTitle.text = currentTrack!!.title
                     binding.txtArtist.text = currentTrack!!.artist
                     Glide.with(this@PlayerFragment)
-                        .load(currentTrack!!.albumCover)
+                        .load(LibraryUtils.getAlbumCover(requireContext(), currentTrack!!.id))
                         .placeholder(R.drawable.placeholder)
                         .into(binding.imgCover)
                     binding.seekBar.progress = 0
@@ -76,7 +77,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
 
         mediaController?.let { mediaController ->
             binding.btnPlay.setOnClickListener {
-                if (mediaController.playbackState.state == PlaybackStateCompat.STATE_PLAYING) {
+                if (mediaController.playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
                     mediaController.transportControls.pause()
                 } else {
                     mediaController.transportControls.play()
@@ -91,7 +92,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                     txtTitle.text = it.title
                     txtArtist.text = it.artist
                     Glide.with(this@PlayerFragment)
-                        .load(it.albumCover)
+                        .load(LibraryUtils.getAlbumCover(requireContext(), it.id))
                         .placeholder(R.drawable.placeholder)
                         .into(imgCover)
 

@@ -10,10 +10,9 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
-import com.omplayer.app.R
 import com.omplayer.app.entities.Track
 import com.omplayer.app.services.MediaPlaybackService
+import com.omplayer.app.utils.LibraryUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -106,17 +105,6 @@ class PlayerMediaSessionCallback(
     private fun setNewTrack(track: Track, uri: Uri?) {
         CoroutineScope(Dispatchers.Default).launch {
             withContext(Dispatchers.IO) {
-                val bitmap = try {
-                    Glide.with(context)
-                        .asBitmap()
-                        .load(track.albumCover)
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.placeholder)
-                        .submit().get()
-                } catch (e: Exception) {
-                    null
-                }
-
                 mediaSession.setMetadata(
                     MediaMetadataCompat.Builder()
                         .putString(
@@ -126,7 +114,7 @@ class PlayerMediaSessionCallback(
                         .putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
                         .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist)
                         .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.album)
-                        .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, bitmap)
+                        .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, LibraryUtils.getAlbumCover(context, track.id))
                         .build()
                 )
             }

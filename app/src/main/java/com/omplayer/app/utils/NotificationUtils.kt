@@ -18,13 +18,12 @@ object NotificationUtils {
     private const val channelName = "OMPlayer Channel"
 
     private fun createNotificationChannel(context: Context) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (notificationManager.getNotificationChannel(channelId) == null) {
-            val channel = NotificationChannel(
-                channelId, channelName,
-                NotificationManager.IMPORTANCE_LOW)
-            notificationManager.createNotificationChannel(channel)
+        (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).let { notificationManager ->
+            if (notificationManager.getNotificationChannel(channelId) == null) {
+                notificationManager.createNotificationChannel(
+                    NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW)
+                )
+            }
         }
     }
 
@@ -90,7 +89,7 @@ object NotificationUtils {
             )
 
             addAction(
-                if (controller.playbackState.state == PlaybackStateCompat.STATE_PLAYING) {
+                if (controller.playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
                     actionPause
                 } else {
                     actionPlay

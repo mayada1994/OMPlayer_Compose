@@ -14,6 +14,7 @@ import com.omplayer.app.entities.Album
 import com.omplayer.app.entities.Artist
 import com.omplayer.app.entities.Genre
 import com.omplayer.app.entities.Track
+import com.omplayer.app.utils.LibraryUtils
 
 class LibraryListAdapter(
     private val items: List<Any>,
@@ -79,7 +80,7 @@ class LibraryListAdapter(
                 txtTitle.text = album.title
                 txtYear.text = album.year
                 Glide.with(root.context)
-                    .load(album.cover)
+                    .load(LibraryUtils.getAlbumCover(root.context, album.cover))
                     .placeholder(R.drawable.placeholder)
                     .into(imgCover)
                 root.setOnClickListener { listener.onItemClick(album) }
