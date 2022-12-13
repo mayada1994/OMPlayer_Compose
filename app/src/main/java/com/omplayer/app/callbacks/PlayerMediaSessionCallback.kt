@@ -41,7 +41,10 @@ class PlayerMediaSessionCallback(
         super.onPlayFromUri(uri, extras)
 
         if (uri != null && lastPlayedTrackUri == uri) {
-            setMediaPlaybackState(position = mediaPlayer.currentPosition.toLong())
+            setMediaPlaybackState(
+                state = if (mediaPlayer.isPlaying) PlaybackStateCompat.STATE_PLAYING else PlaybackStateCompat.STATE_PAUSED,
+                position = mediaPlayer.currentPosition.toLong()
+            )
             return
         }
 

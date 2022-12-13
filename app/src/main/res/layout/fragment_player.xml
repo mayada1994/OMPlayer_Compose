@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.PlayerFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -80,6 +80,27 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="36dp"
-        app:layout_constraintBottom_toTopOf="@id/controlsContainer" />
+        app:layout_constraintBottom_toTopOf="@id/controlsContainer"
+        tools:progress="55" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txtCurrentPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@id/seekBar"
+        app:layout_constraintTop_toBottomOf="@id/seekBar"
+        tools:text="02:34" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txtDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="@id/seekBar"
+        app:layout_constraintTop_toBottomOf="@id/seekBar"
+        tools:text="04:30" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

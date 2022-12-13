@@ -14,6 +14,7 @@ import com.omplayer.app.R
 import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.databinding.FragmentPlayerBinding
 import com.omplayer.app.entities.Track
+import com.omplayer.app.extensions.toFormattedTime
 import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.viewmodels.PlayerViewModel
 import kotlinx.coroutines.delay
@@ -71,6 +72,8 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                     LibraryUtils.currentTrack.value?.let {
                         progress = mediaController.playbackState?.position?.toInt() ?: 0
                         max = it.duration
+                        txtDuration.text = it.duration.toLong().toFormattedTime()
+                        txtCurrentPosition.text = mediaController.playbackState?.position?.toFormattedTime() ?: "00:00"
                     }
                     setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                         override fun onProgressChanged(
@@ -112,6 +115,8 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 .into(imgCover)
             seekBar.progress = mediaController?.playbackState?.position?.toInt() ?: 0
             seekBar.max = track.duration
+            txtCurrentPosition.text = mediaController?.playbackState?.position?.toFormattedTime() ?: "00:00"
+            txtDuration.text = track.duration.toLong().toFormattedTime()
         }
     }
 
@@ -120,6 +125,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
             while (mediaController.playbackState.state == PlaybackStateCompat.STATE_PLAYING) {
                 delay(500)
                 binding.seekBar.progress = mediaController.playbackState.position.toInt()
+                binding.txtCurrentPosition.text = mediaController.playbackState.position.toFormattedTime()
             }
         }
     }
