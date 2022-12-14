@@ -29,10 +29,10 @@ class LibraryListViewModel: BaseViewModel() {
         if (libraryListTypePosition == null) return listOf()
 
         return when (LibraryListType.getLibraryListTypeByPosition(libraryListTypePosition!!)) {
-            LibraryListType.SONGS -> tracklist
-            LibraryListType.ARTISTS -> tracklist.distinctBy { it.artist }.map { it.toArtist() }
-            LibraryListType.ALBUMS -> tracklist.distinctBy { it.albumId }.map { it.toAlbum() }
-            LibraryListType.GENRES -> tracklist.distinctBy { it.genre }.map { it.toGenre() }
+            LibraryListType.SONGS -> tracklist.sortedWith(compareBy(Track::artist, Track::title))
+            LibraryListType.ARTISTS -> tracklist.distinctBy { it.artist }.map { it.toArtist() }.sortedBy { it.name }
+            LibraryListType.ALBUMS -> tracklist.distinctBy { it.albumId }.map { it.toAlbum() }.sortedBy { it.title }
+            LibraryListType.GENRES -> tracklist.distinctBy { it.genre }.map { it.toGenre() }.sortedBy { it.title }
         }
     }
 
