@@ -1,5 +1,6 @@
 package com.omplayer.app.adapters
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -80,7 +81,13 @@ class LibraryListAdapter(
                 txtTitle.text = album.title
                 txtYear.text = album.year
                 Glide.with(root.context)
-                    .load(LibraryUtils.getAlbumCover(root.context, album.cover))
+                    .load(
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            LibraryUtils.getAlbumCover(root.context, album.cover)
+                        } else {
+                            LibraryUtils.getAlbumCover(album.id)
+                        }
+                    )
                     .placeholder(R.drawable.placeholder)
                     .into(imgCover)
                 root.setOnClickListener { listener.onItemClick(album) }

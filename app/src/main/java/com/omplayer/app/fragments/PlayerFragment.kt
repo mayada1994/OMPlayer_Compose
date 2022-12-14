@@ -1,5 +1,6 @@
 package com.omplayer.app.fragments
 
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -110,7 +111,13 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
             txtTitle.text = track.title
             txtArtist.text = track.artist
             Glide.with(this@PlayerFragment)
-                .load(LibraryUtils.getAlbumCover(requireContext(), track.id))
+                .load(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        LibraryUtils.getAlbumCover(requireContext(), track.id)
+                    } else {
+                        LibraryUtils.getAlbumCover(track.id)
+                    }
+                )
                 .placeholder(R.drawable.placeholder)
                 .into(imgCover)
             seekBar.progress = mediaController?.playbackState?.position?.toInt() ?: 0

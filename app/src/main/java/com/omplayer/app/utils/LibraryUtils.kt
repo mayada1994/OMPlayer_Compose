@@ -4,8 +4,10 @@ import android.content.ContentUris
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.util.Size
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.omplayer.app.entities.Track
 
@@ -13,6 +15,7 @@ object LibraryUtils {
     var tracklist = MutableLiveData<List<Track>>()
     var currentTrack = MutableLiveData<Track>()
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     fun getAlbumCover(context: Context, trackId: Int): Bitmap? {
         return try {
             context.contentResolver.loadThumbnail(
@@ -28,12 +31,25 @@ object LibraryUtils {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     fun getAlbumCover(context: Context, uri: Uri): Bitmap? {
         return try {
             context.contentResolver.loadThumbnail(
                 uri,
                 Size(512, 512),
                 null
+            )
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    // TODO: Check on older Android apis
+    fun getAlbumCover(trackId: Int): Uri? {
+        return try {
+            ContentUris.withAppendedId(
+                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                trackId.toLong()
             )
         } catch (e: Exception) {
             null

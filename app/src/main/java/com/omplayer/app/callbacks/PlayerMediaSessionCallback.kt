@@ -5,11 +5,14 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.omplayer.app.R
 import com.omplayer.app.entities.Track
 import com.omplayer.app.services.MediaPlaybackService
 import com.omplayer.app.utils.LibraryUtils
@@ -126,7 +129,23 @@ class PlayerMediaSessionCallback(
                         .putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
                         .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist)
                         .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.album)
-                        .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, LibraryUtils.getAlbumCover(context, track.id))
+                        .putBitmap(
+                            MediaMetadataCompat.METADATA_KEY_ART,
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                LibraryUtils.getAlbumCover(context, track.id)
+                            } else {
+                                try {
+                                    Glide.with(context)
+                                        .asBitmap()
+                                        .load(LibraryUtils.getAlbumCover(track.id))
+                                        .placeholder(R.drawable.placeholder)
+                                        .error(R.drawable.placeholder)
+                                        .submit().get()
+                                } catch (e: Exception) {
+                                    null
+                                }
+                            }
+                        )
                         .build()
                 )
             }
