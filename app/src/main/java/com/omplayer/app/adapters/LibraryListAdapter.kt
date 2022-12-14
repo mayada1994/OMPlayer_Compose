@@ -85,7 +85,7 @@ class LibraryListAdapter(
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             LibraryUtils.getAlbumCover(root.context, album.cover)
                         } else {
-                            LibraryUtils.getAlbumCover(album.id)
+                            album.cover
                         }
                     )
                     .placeholder(R.drawable.placeholder)

@@ -9,6 +9,6 @@ data class Album(
     val id: Int,
     val title: String,
     val artist: String,
-    val cover: Uri,
+    val cover: Uri?,
     val year: String,
 ) : Parcelable

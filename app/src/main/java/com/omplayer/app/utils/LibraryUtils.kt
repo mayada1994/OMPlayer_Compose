@@ -32,7 +32,9 @@ object LibraryUtils {
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun getAlbumCover(context: Context, uri: Uri): Bitmap? {
+    fun getAlbumCover(context: Context, uri: Uri?): Bitmap? {
+        uri ?: return null
+
         return try {
             context.contentResolver.loadThumbnail(
                 uri,
