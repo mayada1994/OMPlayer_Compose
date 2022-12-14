@@ -146,7 +146,11 @@ class PlayerMediaSessionCallback(
                 mediaSession.controller.transportControls.play()
             }
             setOnCompletionListener {
-                setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
+                if (!LibraryUtils.isSingleTrackPlaylist()) {
+                    setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
+                } else {
+                    setNewTrack(track, uri)
+                }
             }
         }
     }

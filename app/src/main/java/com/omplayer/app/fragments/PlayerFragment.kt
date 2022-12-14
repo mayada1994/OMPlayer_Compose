@@ -97,8 +97,8 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                         mediaController.transportControls.play()
                     }
                 }
-                btnNext.setOnClickListener { mediaController.transportControls.skipToNext() }
-                btnPrev.setOnClickListener { mediaController.transportControls.skipToPrevious() }
+                btnNext.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToNext() } }
+                btnPrev.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToPrevious() } }
             }
 
             mediaController.registerCallback(callback)

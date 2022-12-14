@@ -69,4 +69,6 @@ object LibraryUtils {
         }
         return null
     }
+
+    fun isSingleTrackPlaylist() = (tracklist.value?.size ?: 0) < 2
 }
