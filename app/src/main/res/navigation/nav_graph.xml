@@ -12,6 +12,10 @@
         <action
             android:id="@+id/nav_from_library_fragment_to_player_fragment"
             app:destination="@id/playerFragment" />
+
+        <action
+            android:id="@+id/nav_from_library_fragment_to_genre_fragment"
+            app:destination="@id/genreFragment" />
     </fragment>
 
     <fragment
@@ -23,7 +27,21 @@
             android:name="track"
             app:argType="com.omplayer.app.entities.Track"
             app:nullable="true" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/genreFragment"
+        android:name="com.omplayer.app.fragments.GenreFragment"
+        android:label="GenreFragment">
+
+        <argument
+            android:name="genre"
+            app:argType="com.omplayer.app.entities.Genre"
+            app:nullable="true" />
+
+        <action
+            android:id="@+id/nav_from_genre_fragment_to_player_fragment"
+            app:destination="@id/playerFragment" />
     </fragment>
 
 </navigation>

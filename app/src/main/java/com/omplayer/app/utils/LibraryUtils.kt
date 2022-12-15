@@ -12,7 +12,8 @@ import androidx.lifecycle.MutableLiveData
 import com.omplayer.app.entities.Track
 
 object LibraryUtils {
-    var tracklist = MutableLiveData<List<Track>>()
+    var generalTracklist = MutableLiveData<List<Track>>()
+    var currentTracklist = MutableLiveData<List<Track>>()
     var currentTrack = MutableLiveData<Track>()
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -67,7 +68,7 @@ object LibraryUtils {
     }
 
     private fun getNextTrack(track: Track): Track? {
-        tracklist.value?.let {
+        currentTracklist.value?.let {
             return if (it.last() == track) {
                 it.first()
             } else {
@@ -78,7 +79,7 @@ object LibraryUtils {
     }
 
     private fun getPreviousTrack(track: Track): Track? {
-        tracklist.value?.let {
+        currentTracklist.value?.let {
             return if (it.first() == track) {
                 it.last()
             } else {
@@ -88,5 +89,5 @@ object LibraryUtils {
         return null
     }
 
-    fun isSingleTrackPlaylist() = (tracklist.value?.size ?: 0) < 2
+    fun isSingleTrackPlaylist() = (currentTracklist.value?.size ?: 0) < 2
 }

@@ -86,7 +86,8 @@ class MainViewModel: BaseViewModel() {
                 } finally {
                     cursor.close()
                 }
-                LibraryUtils.tracklist.postValue(extractedTracks)
+                LibraryUtils.generalTracklist.postValue(extractedTracks)
+                LibraryUtils.currentTracklist.postValue(extractedTracks)
             }
         }
     }

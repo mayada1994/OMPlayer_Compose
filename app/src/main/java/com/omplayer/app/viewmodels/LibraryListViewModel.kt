@@ -3,6 +3,7 @@ package com.omplayer.app.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.omplayer.app.adapters.LibraryAdapter.LibraryListType
+import com.omplayer.app.entities.Genre
 import com.omplayer.app.entities.Track
 import com.omplayer.app.extensions.toAlbum
 import com.omplayer.app.extensions.toArtist
@@ -15,7 +16,7 @@ class LibraryListViewModel: BaseViewModel() {
     private var libraryListTypePosition: Int? = null
 
     private val _libraryList = MediatorLiveData<List<Any>>().apply {
-        addSource(LibraryUtils.tracklist) {
+        addSource(LibraryUtils.generalTracklist) {
             value = getCurrentList(it)
         }
     }
@@ -39,7 +40,13 @@ class LibraryListViewModel: BaseViewModel() {
     fun onItemClick(item: Any) {
         // TODO: Add logic
         when (item) {
-            is Track -> _event.value = BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToPlayerFragment(item))
+            is Track -> {
+                if (LibraryUtils.generalTracklist.value != LibraryUtils.currentTracklist.value) {
+                    LibraryUtils.currentTracklist.value = LibraryUtils.generalTracklist.value
+                }
+                _event.value = BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToPlayerFragment(item))
+            }
+            is Genre -> _event.value = BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToGenreFragment(item))
         }
     }
 
