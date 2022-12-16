@@ -11,6 +11,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.omplayer.app.R
 import com.omplayer.app.entities.Track
@@ -53,7 +54,6 @@ class PlayerMediaSessionCallback(
 
         val track: Track? = extras?.getParcelable(TRACK_EXTRA)
         track?.let { setNewTrack(it, uri) }
-        lastPlayedTrackUri = uri
         setMediaPlaybackState()
     }
 
@@ -72,11 +72,19 @@ class PlayerMediaSessionCallback(
     override fun onSkipToNext() {
         super.onSkipToNext()
         setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
+        LibraryUtils.playNextTrack()
+        LibraryUtils.currentTrack.value?.let {
+            setNewTrack(it, it.path.toUri())
+        }
     }
 
     override fun onSkipToPrevious() {
         super.onSkipToPrevious()
         setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS)
+        LibraryUtils.playPreviousTrack()
+        LibraryUtils.currentTrack.value?.let {
+            setNewTrack(it, it.path.toUri())
+        }
     }
 
     override fun onSeekTo(pos: Long) {
@@ -163,10 +171,12 @@ class PlayerMediaSessionCallback(
             prepareAsync()
             setOnPreparedListener {
                 mediaSession.controller.transportControls.play()
+                lastPlayedTrackUri = uri
             }
             setOnCompletionListener {
                 if (!LibraryUtils.isSingleTrackPlaylist()) {
                     setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
+                    mediaSession.controller.transportControls.skipToNext()
                 } else {
                     setNewTrack(track, uri)
                 }

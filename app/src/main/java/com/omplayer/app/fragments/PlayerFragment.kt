@@ -45,12 +45,6 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                     binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
                     binding.seekBar.progress = 0
                 }
-                PlaybackStateCompat.STATE_SKIPPING_TO_NEXT -> {
-                    LibraryUtils.playNextTrack()
-                }
-                PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS -> {
-                    LibraryUtils.playPreviousTrack()
-                }
             }
         }
     }
