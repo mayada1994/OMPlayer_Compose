@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
     fun handleBaseEvent(event: ViewEvent) {
         when (event) {
             is BaseViewEvent.Navigate -> navController.navigate(event.navDirections)
+            is BaseViewEvent.ShowError -> Toast.makeText(this, event.resId, event.duration).show()
         }
     }
 

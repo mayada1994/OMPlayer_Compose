@@ -2,8 +2,10 @@ package com.omplayer.app.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.omplayer.app.R
 import com.omplayer.app.adapters.LibraryAdapter.LibraryListType
 import com.omplayer.app.entities.Album
+import com.omplayer.app.entities.Artist
 import com.omplayer.app.entities.Genre
 import com.omplayer.app.entities.Track
 import com.omplayer.app.extensions.toAlbum
@@ -39,16 +41,17 @@ class LibraryListViewModel: BaseViewModel() {
     }
 
     fun onItemClick(item: Any) {
-        // TODO: Add logic
-        when (item) {
+        _event.value = when (item) {
             is Track -> {
                 if (LibraryUtils.generalTracklist.value != LibraryUtils.currentTracklist.value) {
                     LibraryUtils.currentTracklist.value = LibraryUtils.generalTracklist.value
                 }
-                _event.value = BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToPlayerFragment(item))
+                BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToPlayerFragment(item))
             }
-            is Album -> _event.value = BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToAlbumFragment(item))
-            is Genre -> _event.value = BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToGenreFragment(item))
+            is Artist -> BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToArtistFragment(item))
+            is Album -> BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToAlbumFragment(item))
+            is Genre -> BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToGenreFragment(item))
+            else -> BaseViewEvent.ShowError(R.string.general_error_message)
         }
     }
 

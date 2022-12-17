@@ -20,6 +20,10 @@
         <action
             android:id="@+id/nav_from_library_fragment_to_album_fragment"
             app:destination="@id/albumFragment" />
+
+        <action
+            android:id="@+id/nav_from_library_fragment_to_artist_fragment"
+            app:destination="@id/artistFragment" />
     </fragment>
 
     <fragment
@@ -61,6 +65,21 @@
         <action
             android:id="@+id/nav_from_album_fragment_to_player_fragment"
             app:destination="@id/playerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/artistFragment"
+        android:name="com.omplayer.app.fragments.ArtistFragment"
+        android:label="ArtistFragment">
+
+        <argument
+            android:name="artist"
+            app:argType="com.omplayer.app.entities.Artist"
+            app:nullable="true" />
+
+        <action
+            android:id="@+id/nav_from_artist_fragment_to_album_fragment"
+            app:destination="@id/albumFragment" />
     </fragment>
 
 </navigation>
