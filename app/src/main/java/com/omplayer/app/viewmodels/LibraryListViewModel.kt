@@ -3,6 +3,7 @@ package com.omplayer.app.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.omplayer.app.adapters.LibraryAdapter.LibraryListType
+import com.omplayer.app.entities.Album
 import com.omplayer.app.entities.Genre
 import com.omplayer.app.entities.Track
 import com.omplayer.app.extensions.toAlbum
@@ -46,6 +47,7 @@ class LibraryListViewModel: BaseViewModel() {
                 }
                 _event.value = BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToPlayerFragment(item))
             }
+            is Album -> _event.value = BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToAlbumFragment(item))
             is Genre -> _event.value = BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToGenreFragment(item))
         }
     }

@@ -2,19 +2,19 @@ package com.omplayer.app.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.omplayer.app.entities.Genre
+import com.omplayer.app.entities.Album
 import com.omplayer.app.entities.Track
-import com.omplayer.app.fragments.GenreFragmentDirections
+import com.omplayer.app.fragments.AlbumFragmentDirections
 import com.omplayer.app.utils.LibraryUtils
 
-class GenreViewModel: BaseViewModel() {
+class AlbumViewModel: BaseViewModel() {
 
     private val _tracklist = MutableLiveData<List<Track>>()
     val tracklist: LiveData<List<Track>> = _tracklist
 
-    fun init(genre: Genre?) {
-        LibraryUtils.generalTracklist.value?.filter { it.genre == genre?.title }?.let {
-            _tracklist.value = it.sortedWith(compareBy(Track::artist, Track::title))
+    fun init(album: Album?) {
+        LibraryUtils.generalTracklist.value?.filter { it.albumId == album?.id }?.let {
+            _tracklist.value = it.sortedBy { track -> track.position }
         }
     }
 
@@ -22,7 +22,7 @@ class GenreViewModel: BaseViewModel() {
         if (LibraryUtils.generalTracklist.value == LibraryUtils.currentTracklist.value) {
             LibraryUtils.currentTracklist.value = tracklist.value
         }
-        _event.value = BaseViewEvent.Navigate(GenreFragmentDirections.navFromGenreFragmentToPlayerFragment(track))
+        _event.value = BaseViewEvent.Navigate(AlbumFragmentDirections.navFromAlbumFragmentToPlayerFragment(track))
     }
 
 }
