@@ -86,8 +86,10 @@ class MainViewModel: BaseViewModel() {
                 } finally {
                     cursor.close()
                 }
-                LibraryUtils.generalTracklist.postValue(extractedTracks)
-                LibraryUtils.currentTracklist.postValue(extractedTracks)
+                extractedTracks.sortedWith(compareBy(Track::artist, Track::title)).let {
+                    LibraryUtils.generalTracklist.postValue(it)
+                    LibraryUtils.currentTracklist.postValue(it)
+                }
             }
         }
     }
