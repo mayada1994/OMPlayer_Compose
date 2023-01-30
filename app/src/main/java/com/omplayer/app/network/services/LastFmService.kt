@@ -11,7 +11,7 @@ import retrofit2.http.Query
 interface LastFmService {
 
     @POST("?method=auth.getMobileSession")
-    fun getSession(
+    suspend fun getSession(
         @Query("api_key") apiKey: String,
         @Query("password") password: String,
         @Query("username") username: String,
@@ -20,7 +20,7 @@ interface LastFmService {
     ): LastFmSessionResponse
 
     @POST("?method=track.updateNowPlaying")
-    fun updatePlayingTrack(
+    suspend fun updatePlayingTrack(
         @Query("album") album: String,
         @Query("artist") artist: String,
         @Query("track") track: String,
@@ -31,7 +31,7 @@ interface LastFmService {
     ): ResponseBody
 
     @POST("?method=track.scrobble")
-    fun scrobbleTrack(
+    suspend fun scrobbleTrack(
         @Query("album") album: String,
         @Query("artist") artist: String,
         @Query("track") track: String,
@@ -43,7 +43,7 @@ interface LastFmService {
     ): ResponseBody
 
     @POST("?method=track.love")
-    fun loveTrack(
+    suspend fun loveTrack(
         @Query("artist") artist: String,
         @Query("track") track: String,
         @Query("api_key") apiKey: String,
@@ -53,7 +53,7 @@ interface LastFmService {
     ): ResponseBody
 
     @GET("?method=track.getSimilar")
-    fun getSimilarTracks(
+    suspend fun getSimilarTracks(
         @Query("track") track: String,
         @Query("artist") artist: String,
         @Query("api_key") apiKey: String,

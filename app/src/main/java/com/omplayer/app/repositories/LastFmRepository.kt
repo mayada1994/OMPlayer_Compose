@@ -14,7 +14,7 @@ class LastFmRepository @Inject constructor(private val lastFmService: LastFmServ
         private const val FORMAT = "json"
     }
 
-    fun getLastFmSession(
+    suspend fun getLastFmSession(
         apiKey: String,
         password: String,
         username: String,
@@ -23,7 +23,7 @@ class LastFmRepository @Inject constructor(private val lastFmService: LastFmServ
         return lastFmService.getSession(apiKey, password, username, api_sig, FORMAT)
     }
 
-    fun updatePlayingTrack(
+    suspend fun updatePlayingTrack(
         album: String,
         artist: String,
         track: String,
@@ -34,7 +34,7 @@ class LastFmRepository @Inject constructor(private val lastFmService: LastFmServ
         return lastFmService.updatePlayingTrack(album, artist, track, apiKey, api_sig, sk, FORMAT)
     }
 
-    fun scrobbleTrack(
+    suspend fun scrobbleTrack(
         album: String,
         artist: String,
         track: String,
@@ -55,7 +55,7 @@ class LastFmRepository @Inject constructor(private val lastFmService: LastFmServ
         )
     }
 
-    fun loveTrack(
+    suspend fun loveTrack(
         artist: String,
         track: String,
         apiKey: String,
@@ -65,7 +65,7 @@ class LastFmRepository @Inject constructor(private val lastFmService: LastFmServ
         return lastFmService.loveTrack(artist, track, apiKey, api_sig, sk, FORMAT)
     }
 
-    fun getSimilarTracks(
+    suspend fun getSimilarTracks(
         track: String,
         artist: String,
         apiKey: String
