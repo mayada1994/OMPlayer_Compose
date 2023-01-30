@@ -11,6 +11,7 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.omplayer.app.R
 import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.databinding.FragmentPlayerBinding
@@ -112,6 +113,8 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                         LibraryUtils.getAlbumCover(track.id)
                     }
                 )
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .placeholder(R.drawable.placeholder)
                 .into(imgCover)
             seekBar.progress = mediaController?.playbackState?.position?.toInt() ?: 0

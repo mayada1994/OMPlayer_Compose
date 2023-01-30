@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.omplayer.app.R
 import com.omplayer.app.adapters.TracklistAdapter
 import com.omplayer.app.databinding.FragmentAlbumBinding
@@ -39,6 +40,8 @@ class AlbumFragment : BaseMvvmFragment<FragmentAlbumBinding>(FragmentAlbumBindin
                             it.cover
                         }
                     )
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .placeholder(R.drawable.placeholder)
                     .into(imgCover)
             }
