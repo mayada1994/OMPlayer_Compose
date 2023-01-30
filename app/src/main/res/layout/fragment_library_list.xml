@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.TracklistFragment">
+    tools:context=".fragments.LibraryListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTracklist"
+        android:id="@+id/rvLibraryList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginVertical="24dp"

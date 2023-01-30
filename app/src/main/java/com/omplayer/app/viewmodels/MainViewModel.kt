@@ -1,21 +1,15 @@
 package com.omplayer.app.viewmodels
 
-import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.entities.Track
-import com.omplayer.app.fragments.TracklistFragmentDirections
+import com.omplayer.app.utils.LibraryUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TracklistViewModel: BaseViewModel() {
-
-    private val _tracks = MutableLiveData<List<Track>>()
-    val tracks: LiveData<List<Track>> = _tracks
+class MainViewModel: BaseViewModel() {
 
     fun loadTracks(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -51,7 +45,6 @@ class TracklistViewModel: BaseViewModel() {
                         val id = cursor.getInt(7)
                         val albumId = cursor.getInt(8)
                         var genre = UNKNOWN
-                        val albumCover = ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId.toLong())
 
                         context.contentResolver.query(
                             MediaStore.Audio.Genres.getContentUriForAudioId("external", id),
@@ -78,7 +71,6 @@ class TracklistViewModel: BaseViewModel() {
                                     artist = artist,
                                     album = album,
                                     albumId = albumId,
-                                    albumCover = albumCover,
                                     year = year,
                                     genre = genre,
                                     duration = duration,
@@ -94,17 +86,16 @@ class TracklistViewModel: BaseViewModel() {
                 } finally {
                     cursor.close()
                 }
-                _tracks.postValue(extractedTracks)
+                extractedTracks.sortedWith(compareBy({ it.artist.lowercase() }, { it.title.lowercase() })).let {
+                    LibraryUtils.generalTracklist.postValue(it)
+                    LibraryUtils.currentTracklist.postValue(it)
+                }
             }
         }
     }
 
-    fun onTrackSelected(track: Track) {
-        _event.value = BaseViewEvent.Navigate(TracklistFragmentDirections.navFromTracklistFragmentToPlayerFragment(track))
-    }
-
     companion object {
-        private val TAG = TracklistViewModel::class.java.simpleName
+        private val TAG = MainViewModel::class.java.simpleName
         private val formats = arrayOf(".aac", ".mp3", ".wav", ".ogg", ".midi", ".3gp", ".m4a", ".amr", ".flac")
         private const val UNKNOWN = "unknown"
     }

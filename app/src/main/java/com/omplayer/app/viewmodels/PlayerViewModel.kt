@@ -1,3 +1,11 @@
 package com.omplayer.app.viewmodels
 
-class PlayerViewModel: BaseViewModel()
+import com.omplayer.app.utils.LibraryUtils
+
+class PlayerViewModel : BaseViewModel() {
+    fun skipTrack(action: () -> Unit) {
+        if (!LibraryUtils.isSingleTrackPlaylist()) {
+            action()
+        }
+    }
+}

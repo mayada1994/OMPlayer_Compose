@@ -5,15 +5,18 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.omplayer.app.R
 import com.omplayer.app.entities.Track
 import com.omplayer.app.services.MediaPlaybackService
+import com.omplayer.app.utils.LibraryUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,10 +28,30 @@ class PlayerMediaSessionCallback(
     private val listener: OnMediaSessionStoppedListener
 ) : MediaSessionCompat.Callback() {
 
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
+    private val mediaPlayer: MediaPlayer by lazy {
+        MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+        }
+    }
+
+    private var lastPlayedTrackUri: Uri? = null
 
     override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
         super.onPlayFromUri(uri, extras)
+
+        if (uri != null && lastPlayedTrackUri == uri) {
+            setMediaPlaybackState(
+                state = if (mediaPlayer.isPlaying) PlaybackStateCompat.STATE_PLAYING else PlaybackStateCompat.STATE_PAUSED,
+                position = mediaPlayer.currentPosition.toLong()
+            )
+            return
+        }
+
         val track: Track? = extras?.getParcelable(TRACK_EXTRA)
         track?.let { setNewTrack(it, uri) }
         setMediaPlaybackState()
@@ -49,11 +72,19 @@ class PlayerMediaSessionCallback(
     override fun onSkipToNext() {
         super.onSkipToNext()
         setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
+        LibraryUtils.playNextTrack()
+        LibraryUtils.currentTrack.value?.let {
+            setNewTrack(it, it.path.toUri())
+        }
     }
 
     override fun onSkipToPrevious() {
         super.onSkipToPrevious()
         setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS)
+        LibraryUtils.playPreviousTrack()
+        LibraryUtils.currentTrack.value?.let {
+            setNewTrack(it, it.path.toUri())
+        }
     }
 
     override fun onSeekTo(pos: Long) {
@@ -97,17 +128,6 @@ class PlayerMediaSessionCallback(
     private fun setNewTrack(track: Track, uri: Uri?) {
         CoroutineScope(Dispatchers.Default).launch {
             withContext(Dispatchers.IO) {
-                val bitmap = try {
-                    Glide.with(context)
-                        .asBitmap()
-                        .load(track.albumCover)
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.placeholder)
-                        .submit().get()
-                } catch (e: Exception) {
-                    null
-                }
-
                 mediaSession.setMetadata(
                     MediaMetadataCompat.Builder()
                         .putString(
@@ -117,7 +137,23 @@ class PlayerMediaSessionCallback(
                         .putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
                         .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist)
                         .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.album)
-                        .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, bitmap)
+                        .putBitmap(
+                            MediaMetadataCompat.METADATA_KEY_ART,
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                LibraryUtils.getAlbumCover(context, track.id)
+                            } else {
+                                try {
+                                    Glide.with(context)
+                                        .asBitmap()
+                                        .load(LibraryUtils.getAlbumCover(track.id))
+                                        .placeholder(R.drawable.placeholder)
+                                        .error(R.drawable.placeholder)
+                                        .submit().get()
+                                } catch (e: Exception) {
+                                    null
+                                }
+                            }
+                        )
                         .build()
                 )
             }
@@ -135,9 +171,15 @@ class PlayerMediaSessionCallback(
             prepareAsync()
             setOnPreparedListener {
                 mediaSession.controller.transportControls.play()
+                lastPlayedTrackUri = uri
             }
             setOnCompletionListener {
-                setMediaPlaybackState(state = PlaybackStateCompat.STATE_PAUSED)
+                if (!LibraryUtils.isSingleTrackPlaylist()) {
+                    setMediaPlaybackState(state = PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
+                    mediaSession.controller.transportControls.skipToNext()
+                } else {
+                    setNewTrack(track, uri)
+                }
             }
         }
     }

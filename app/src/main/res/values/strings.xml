@@ -5,4 +5,9 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="close">Close</string>
+    <string name="songs">Songs</string>
+    <string name="artists">Artists</string>
+    <string name="albums">Albums</string>
+    <string name="genres">Genres</string>
+    <string name="general_error_message">Something went wrong. Try again later</string>
 </resources>
