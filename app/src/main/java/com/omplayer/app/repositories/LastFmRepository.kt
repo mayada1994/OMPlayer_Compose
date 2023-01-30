@@ -4,8 +4,11 @@ import com.omplayer.app.network.responses.LastFmSessionResponse
 import com.omplayer.app.network.responses.LastFmSimilarTracksResponse
 import com.omplayer.app.network.services.LastFmService
 import okhttp3.ResponseBody
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class LastFmRepository(private val lastFmService: LastFmService) {
+@Singleton
+class LastFmRepository @Inject constructor(private val lastFmService: LastFmService) {
 
     companion object {
         private const val FORMAT = "json"
