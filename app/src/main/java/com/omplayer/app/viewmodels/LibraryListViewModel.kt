@@ -30,13 +30,13 @@ class LibraryListViewModel: BaseViewModel() {
     }
 
     private fun getCurrentList(tracklist: List<Track>): List<Any> {
-        if (libraryListTypePosition == null) return listOf()
+        libraryListTypePosition ?: return listOf()
 
         return when (LibraryListType.getLibraryListTypeByPosition(libraryListTypePosition!!)) {
-            LibraryListType.SONGS -> tracklist.sortedWith(compareBy(Track::artist, Track::title))
-            LibraryListType.ARTISTS -> tracklist.distinctBy { it.artist }.map { it.toArtist() }.sortedBy { it.name }
-            LibraryListType.ALBUMS -> tracklist.distinctBy { it.albumId }.map { it.toAlbum() }.sortedBy { it.title }
-            LibraryListType.GENRES -> tracklist.distinctBy { it.genre }.map { it.toGenre() }.sortedBy { it.title }
+            LibraryListType.SONGS -> tracklist.sortedWith(compareBy({ it.artist.lowercase() }, { it.title.lowercase() }))
+            LibraryListType.ARTISTS -> tracklist.distinctBy { it.artist }.map { it.toArtist() }.sortedBy { it.name.lowercase() }
+            LibraryListType.ALBUMS -> tracklist.distinctBy { it.albumId }.map { it.toAlbum() }.sortedBy { it.title.lowercase() }
+            LibraryListType.GENRES -> tracklist.distinctBy { it.genre }.map { it.toGenre() }.sortedBy { it.title.lowercase() }
         }
     }
 

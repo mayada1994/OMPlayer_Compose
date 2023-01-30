@@ -86,7 +86,7 @@ class MainViewModel: BaseViewModel() {
                 } finally {
                     cursor.close()
                 }
-                extractedTracks.sortedWith(compareBy(Track::artist, Track::title)).let {
+                extractedTracks.sortedWith(compareBy({ it.artist.lowercase() }, { it.title.lowercase() })).let {
                     LibraryUtils.generalTracklist.postValue(it)
                     LibraryUtils.currentTracklist.postValue(it)
                 }

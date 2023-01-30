@@ -13,8 +13,8 @@ class GenreViewModel: BaseViewModel() {
     val tracklist: LiveData<List<Track>> = _tracklist
 
     fun init(genre: Genre?) {
-        LibraryUtils.generalTracklist.value?.filter { it.genre == genre?.title }?.let {
-            _tracklist.value = it.sortedWith(compareBy(Track::artist, Track::title))
+        LibraryUtils.generalTracklist.value?.filter { it.genre == genre?.title }?.let { tracks ->
+            _tracklist.value = tracks.sortedWith(compareBy({ it.artist.lowercase() }, { it.title.lowercase() }))
         }
     }
 
