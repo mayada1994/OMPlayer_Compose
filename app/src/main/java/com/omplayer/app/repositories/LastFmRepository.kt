@@ -3,12 +3,16 @@ package com.omplayer.app.repositories
 import com.omplayer.app.network.responses.LastFmSessionResponse
 import com.omplayer.app.network.responses.LastFmSimilarTracksResponse
 import com.omplayer.app.network.services.LastFmService
+import com.omplayer.app.utils.CacheManager
 import okhttp3.ResponseBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LastFmRepository @Inject constructor(private val lastFmService: LastFmService) {
+class LastFmRepository @Inject constructor(
+    private val lastFmService: LastFmService,
+    private val cacheManager: CacheManager
+) {
 
     companion object {
         private const val FORMAT = "json"
@@ -20,7 +24,9 @@ class LastFmRepository @Inject constructor(private val lastFmService: LastFmServ
         username: String,
         api_sig: String
     ): LastFmSessionResponse {
-        return lastFmService.getSession(apiKey, password, username, api_sig, FORMAT)
+        return lastFmService.getSession(apiKey, password, username, api_sig, FORMAT).also {
+            cacheManager.currentLastFmSession = it.session
+        }
     }
 
     suspend fun updatePlayingTrack(
