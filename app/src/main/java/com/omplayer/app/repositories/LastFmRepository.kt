@@ -5,6 +5,7 @@ import com.omplayer.app.network.responses.LastFmSimilarTracksResponse
 import com.omplayer.app.network.services.LastFmService
 import com.omplayer.app.utils.CacheManager
 import okhttp3.ResponseBody
+import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,16 +17,41 @@ class LastFmRepository @Inject constructor(
 
     companion object {
         private const val FORMAT = "json"
+
+        fun md5(s: String): String? {
+            return try {
+                val bytes = MessageDigest.getInstance("MD5").digest(s.toByteArray(charset("UTF-8")))
+                val b = StringBuilder(32)
+                for (aByte in bytes) {
+                    val hex = Integer.toHexString(aByte.toInt() and 0xFF)
+                    if (hex.length == 1)
+                        b.append('0')
+                    b.append(hex)
+                }
+                b.toString()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
     }
 
     suspend fun getLastFmSession(
         apiKey: String,
         password: String,
         username: String,
-        api_sig: String
-    ): LastFmSessionResponse {
-        return lastFmService.getSession(apiKey, password, username, api_sig, FORMAT).also {
-            cacheManager.currentLastFmSession = it.session
+        secret: String
+    ): LastFmSessionResponse? {
+        val apiSignature = md5("api_key" + apiKey + "methodauth.getMobileSessionpassword" + password + "username" + username + secret)
+        apiSignature ?: return null
+
+        return try {
+            lastFmService.getSession(apiKey, password, username, apiSignature, FORMAT).also {
+                cacheManager.currentLastFmSession = it.session
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 

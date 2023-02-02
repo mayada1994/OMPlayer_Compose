@@ -18,15 +18,11 @@ abstract class BaseMvvmFragment<T : ViewBinding>(bindingInflater: (layoutInflate
         viewModel.event.observe(viewLifecycleOwner) { handleEvent(it) }
     }
 
-    /**
-     * Returns true if the event is base and false if it is custom
-     */
-    private fun handleEvent(event: ViewEvent): Boolean {
-        return if (BaseViewModel.BaseViewEvent::class.nestedClasses.contains(event::class)) {
-            (activity as MainActivity).handleBaseEvent(event)
-            true
-        } else {
-            false
+    private fun handleEvent(event: ViewEvent) {
+        if (!(activity as MainActivity).handleBaseEvent(event)) {
+            handleCustomEvent(event)
         }
     }
+
+    open fun handleCustomEvent(event: ViewEvent): Boolean = false
 }

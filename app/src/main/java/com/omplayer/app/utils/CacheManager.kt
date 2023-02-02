@@ -7,12 +7,13 @@ import androidx.preference.PreferenceManager
 import com.omplayer.app.network.responses.LastFmSessionResponse.LastFmSession
 import com.omplayer.app.network.responses.LastFmSessionResponse_LastFmSessionJsonAdapter
 import com.squareup.moshi.Moshi
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CacheManager @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
     private val moshi: Moshi
 ) {
 

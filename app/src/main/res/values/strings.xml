@@ -10,4 +10,9 @@
     <string name="albums">Albums</string>
     <string name="genres">Genres</string>
     <string name="general_error_message">Something went wrong. Try again later</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="register">Don\'t have an account? <u>Register</u>.</string>
 </resources>
