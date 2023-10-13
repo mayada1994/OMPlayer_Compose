@@ -15,7 +15,7 @@ interface LastFmService {
         @Query("api_key") apiKey: String,
         @Query("password") password: String,
         @Query("username") username: String,
-        @Query("api_sig") api_sig: String,
+        @Query("api_sig") apiSig: String,
         @Query("format") format: String
     ): LastFmSessionResponse
 
@@ -25,7 +25,7 @@ interface LastFmService {
         @Query("artist") artist: String,
         @Query("track") track: String,
         @Query("api_key") apiKey: String,
-        @Query("api_sig") api_sig: String,
+        @Query("api_sig") apiSig: String,
         @Query("sk") sessionKey: String,
         @Query("format") format: String
     ): ResponseBody
@@ -37,7 +37,7 @@ interface LastFmService {
         @Query("track") track: String,
         @Query("timestamp") timestamp: String,
         @Query("api_key") apiKey: String,
-        @Query("api_sig") api_sig: String,
+        @Query("api_sig") apiSig: String,
         @Query("sk") sessionKey: String,
         @Query("format") format: String
     ): ResponseBody
@@ -47,7 +47,7 @@ interface LastFmService {
         @Query("artist") artist: String,
         @Query("track") track: String,
         @Query("api_key") apiKey: String,
-        @Query("api_sig") api_sig: String,
+        @Query("api_sig") apiSig: String,
         @Query("sk") sessionKey: String,
         @Query("format") format: String
     ): ResponseBody
