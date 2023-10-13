@@ -15,6 +15,7 @@ object LibraryUtils {
     var generalTracklist = MutableLiveData<List<Track>>()
     var currentTracklist = MutableLiveData<List<Track>>()
     var currentTrack = MutableLiveData<Track>()
+    var currentTrackProgress = MutableLiveData<Long>()
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun getAlbumCover(context: Context, trackId: Int): Bitmap? {

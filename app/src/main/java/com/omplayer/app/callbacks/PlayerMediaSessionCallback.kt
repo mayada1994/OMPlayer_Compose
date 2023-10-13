@@ -7,6 +7,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -39,6 +40,8 @@ class PlayerMediaSessionCallback(
         }
     }
 
+    private var progressTracker: CountDownTimer? = null
+
     private var lastPlayedTrackUri: Uri? = null
 
     override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
@@ -61,12 +64,14 @@ class PlayerMediaSessionCallback(
         super.onPlay()
         mediaPlayer.start()
         setMediaPlaybackState(position = mediaPlayer.currentPosition.toLong())
+        trackProgress()
     }
 
     override fun onPause() {
         super.onPause()
         mediaPlayer.pause()
         setMediaPlaybackState(state = PlaybackStateCompat.STATE_PAUSED, mediaPlayer.currentPosition.toLong())
+        progressTracker?.cancel()
     }
 
     override fun onSkipToNext() {
@@ -100,7 +105,10 @@ class PlayerMediaSessionCallback(
         super.onStop()
         mediaPlayer.stop()
         setMediaPlaybackState(state = PlaybackStateCompat.STATE_STOPPED)
+        LibraryUtils.currentTrackProgress.value = 0
         listener.onStop()
+        progressTracker?.cancel()
+        progressTracker = null
     }
 
     private fun setMediaPlaybackState(
@@ -172,6 +180,7 @@ class PlayerMediaSessionCallback(
             setOnPreparedListener {
                 mediaSession.controller.transportControls.play()
                 lastPlayedTrackUri = uri
+                trackProgress()
             }
             setOnCompletionListener {
                 if (!LibraryUtils.isSingleTrackPlaylist()) {
@@ -182,6 +191,23 @@ class PlayerMediaSessionCallback(
                 }
             }
         }
+    }
+
+    private fun trackProgress() {
+        progressTracker = object : CountDownTimer(
+            (mediaPlayer.duration - mediaPlayer.currentPosition).toLong(),
+            500L
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                // Do not remove to prevent track skipping bug when previous track duration is bigger than the current
+                if (mediaPlayer.isPlaying) {
+                    LibraryUtils.currentTrackProgress.postValue(mediaPlayer.currentPosition.toLong())
+                }
+            }
+
+            override fun onFinish() = Unit
+        }
+        progressTracker?.start()
     }
 
     interface OnMediaSessionStoppedListener {

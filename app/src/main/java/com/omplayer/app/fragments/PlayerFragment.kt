@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.SeekBar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -19,8 +18,6 @@ import com.omplayer.app.entities.Track
 import com.omplayer.app.extensions.toFormattedTime
 import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.viewmodels.PlayerViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBinding::inflate) {
@@ -37,7 +34,6 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
             when(state?.state) {
                 PlaybackStateCompat.STATE_PLAYING -> {
                     binding.btnPlay.setImageResource(R.drawable.ic_pause_circle)
-                    mediaController?.let { trackProgress(it) }
                 }
                 PlaybackStateCompat.STATE_PAUSED -> {
                     binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
@@ -64,6 +60,11 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
             args.track?.let { LibraryUtils.currentTrack.value = args.track }
 
             with(binding) {
+                LibraryUtils.currentTrackProgress.distinctUntilChanged().observe(viewLifecycleOwner) {
+                    seekBar.progress = it.toInt()
+                    txtCurrentPosition.text = it.toFormattedTime()
+                }
+
                 seekBar.apply {
                     LibraryUtils.currentTrack.value?.let {
                         progress = mediaController.playbackState?.position?.toInt() ?: 0
@@ -81,9 +82,11 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                         override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
 
                         override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                            seekBar?.let { mediaController.transportControls.seekTo(it.progress.toLong()) }
+                            seekBar?.let {
+                                mediaController.transportControls.seekTo(it.progress.toLong())
+                                LibraryUtils.currentTrackProgress.value = it.progress.toLong()
+                            }
                         }
-
                     })
                 }
                 btnPlay.setOnClickListener {
@@ -121,16 +124,6 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
             seekBar.max = track.duration
             txtCurrentPosition.text = mediaController?.playbackState?.position?.toFormattedTime() ?: "00:00"
             txtDuration.text = track.duration.toLong().toFormattedTime()
-        }
-    }
-
-    private fun trackProgress(mediaController: MediaControllerCompat) {
-        lifecycleScope.launch {
-            while (mediaController.playbackState.state == PlaybackStateCompat.STATE_PLAYING) {
-                delay(500)
-                binding.seekBar.progress = mediaController.playbackState.position.toInt()
-                binding.txtCurrentPosition.text = mediaController.playbackState.position.toFormattedTime()
-            }
         }
     }
 
