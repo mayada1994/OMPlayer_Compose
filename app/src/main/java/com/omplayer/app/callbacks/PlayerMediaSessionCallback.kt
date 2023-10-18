@@ -13,11 +13,18 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.omplayer.app.R
 import com.omplayer.app.entities.Track
+import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.services.MediaPlaybackService
 import com.omplayer.app.utils.LibraryUtils
+import com.omplayer.app.workers.LastFmTrackScrobbleWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -180,6 +187,7 @@ class PlayerMediaSessionCallback(
             setOnPreparedListener {
                 mediaSession.controller.transportControls.play()
                 lastPlayedTrackUri = uri
+                LibraryUtils.wasCurrentTrackScrobbled = false
                 trackProgress()
             }
             setOnCompletionListener {
@@ -202,6 +210,17 @@ class PlayerMediaSessionCallback(
                 // Do not remove to prevent track skipping bug when previous track duration is bigger than the current
                 if (mediaPlayer.isPlaying) {
                     LibraryUtils.currentTrackProgress.postValue(mediaPlayer.currentPosition.toLong())
+                    if (shouldScrobbleTrack(mediaPlayer.currentPosition, mediaPlayer.duration)) {
+                        WorkManager.getInstance(context).beginUniqueWork(
+                            LastFmTrackScrobbleWorker::class.java.simpleName,
+                            ExistingWorkPolicy.APPEND_OR_REPLACE,
+                            OneTimeWorkRequestBuilder<LastFmTrackScrobbleWorker>().setConstraints(
+                                Constraints.Builder()
+                                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                                    .build()
+                            ).build()
+                        ).enqueue()
+                    }
                 }
             }
 
@@ -209,6 +228,12 @@ class PlayerMediaSessionCallback(
         }
         progressTracker?.start()
     }
+
+    private fun shouldScrobbleTrack(currentPosition: Int, duration: Int) =
+        !LibraryUtils.wasCurrentTrackScrobbled
+                && duration >= LastFmRepository.LAST_FM_MIN_TRACK_DURATION
+                && (currentPosition >= LastFmRepository.LAST_FM_MAX_PLAYBACK_DURATION_BEFORE_SCROBBLE
+                || currentPosition.toFloat() / duration.toFloat() >= LastFmRepository.LAST_FM_SCROBBLING_PERCENTAGE)
 
     interface OnMediaSessionStoppedListener {
         fun onStop()

@@ -24,8 +24,6 @@ class LastFmRepository @Inject constructor(
         const val LAST_FM_SCROBBLING_PERCENTAGE = 0.5 // 50% of the track duration
     }
 
-    private val lastFmSessionKey = cacheManager.currentLastFmSession?.key
-
     suspend fun getLastFmSession(
         apiKey: String,
         password: String,
@@ -53,6 +51,8 @@ class LastFmRepository @Inject constructor(
         apiKey: String,
         secret: String
     ): ResponseBody? {
+        val lastFmSessionKey = cacheManager.currentLastFmSession?.key
+
         md5("album" + album + "api_key" + apiKey + "artist" + artist + "methodtrack.updateNowPlaying" + "sk" + lastFmSessionKey + "track" + track + secret).let { apiSignature ->
             if (apiSignature.isNullOrBlank() || lastFmSessionKey.isNullOrBlank()) return null
 
@@ -76,6 +76,8 @@ class LastFmRepository @Inject constructor(
         apiKey: String,
         secret: String
     ): ResponseBody? {
+        val lastFmSessionKey = cacheManager.currentLastFmSession?.key
+
         md5("album" + album + "api_key" + apiKey + "artist" + artist + "methodtrack.scrobble" + "sk" + lastFmSessionKey + "timestamp" + timestamp + "track" + track + secret).let { apiSignature ->
             if (apiSignature.isNullOrBlank() || lastFmSessionKey.isNullOrBlank()) return null
 
@@ -98,6 +100,8 @@ class LastFmRepository @Inject constructor(
         apiKey: String,
         secret: String
     ): ResponseBody? {
+        val lastFmSessionKey = cacheManager.currentLastFmSession?.key
+
         md5("api_key" + apiKey + "artist" + artist + "methodtrack.love" + "sk" + lastFmSessionKey + "track" + track + secret).let { apiSignature ->
             if (apiSignature.isNullOrBlank() || lastFmSessionKey.isNullOrBlank()) return null
 
