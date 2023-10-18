@@ -25,6 +25,7 @@ import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.services.MediaPlaybackService
 import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.workers.LastFmTrackScrobbleWorker
+import com.omplayer.app.workers.LastFmTrackUpdateWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -210,10 +211,23 @@ class PlayerMediaSessionCallback(
                 // Do not remove to prevent track skipping bug when previous track duration is bigger than the current
                 if (mediaPlayer.isPlaying) {
                     LibraryUtils.currentTrackProgress.postValue(mediaPlayer.currentPosition.toLong())
+
+                    if (shouldUpdateTrack(mediaPlayer.currentPosition)) {
+                        WorkManager.getInstance(context).beginUniqueWork(
+                            LastFmTrackUpdateWorker::class.java.simpleName,
+                            ExistingWorkPolicy.REPLACE,
+                            OneTimeWorkRequestBuilder<LastFmTrackUpdateWorker>().setConstraints(
+                                Constraints.Builder()
+                                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                                    .build()
+                            ).build()
+                        ).enqueue()
+                    }
+
                     if (shouldScrobbleTrack(mediaPlayer.currentPosition, mediaPlayer.duration)) {
                         WorkManager.getInstance(context).beginUniqueWork(
                             LastFmTrackScrobbleWorker::class.java.simpleName,
-                            ExistingWorkPolicy.APPEND_OR_REPLACE,
+                            ExistingWorkPolicy.REPLACE,
                             OneTimeWorkRequestBuilder<LastFmTrackScrobbleWorker>().setConstraints(
                                 Constraints.Builder()
                                     .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -228,6 +242,10 @@ class PlayerMediaSessionCallback(
         }
         progressTracker?.start()
     }
+
+    private fun shouldUpdateTrack(currentPosition: Int) =
+        System.currentTimeMillis() - LibraryUtils.lastTrackUpdateOnLastFmTime >= LastFmRepository.LAST_FM_TRACK_UPDATE_INTERVAL
+                || currentPosition <= 500
 
     private fun shouldScrobbleTrack(currentPosition: Int, duration: Int) =
         !LibraryUtils.wasCurrentTrackScrobbled

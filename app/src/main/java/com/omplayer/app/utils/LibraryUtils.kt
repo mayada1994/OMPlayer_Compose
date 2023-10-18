@@ -17,6 +17,7 @@ object LibraryUtils {
     var currentTrack = MutableLiveData<Track>()
     var currentTrackProgress = MutableLiveData<Long>()
     var wasCurrentTrackScrobbled = false
+    var lastTrackUpdateOnLastFmTime = 0L
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun getAlbumCover(context: Context, trackId: Int): Bitmap? {

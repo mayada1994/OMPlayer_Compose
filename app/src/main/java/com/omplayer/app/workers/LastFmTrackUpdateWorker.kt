@@ -8,21 +8,21 @@ import androidx.work.WorkerParameters
 import com.omplayer.app.R
 import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.utils.LibraryUtils.currentTrack
-import com.omplayer.app.utils.LibraryUtils.wasCurrentTrackScrobbled
+import com.omplayer.app.utils.LibraryUtils.lastTrackUpdateOnLastFmTime
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @HiltWorker
-class LastFmTrackScrobbleWorker @AssistedInject constructor(
+class LastFmTrackUpdateWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val lastFmRepository: LastFmRepository
 ) : CoroutineWorker(context, workerParams) {
 
     companion object {
-        private val TAG = LastFmTrackScrobbleWorker::class.java.simpleName
+        private val TAG = LastFmTrackUpdateWorker::class.java.simpleName
     }
 
     override suspend fun doWork(): Result {
@@ -32,20 +32,19 @@ class LastFmTrackScrobbleWorker @AssistedInject constructor(
 
         return try {
             withContext(Dispatchers.IO) {
-                lastFmRepository.scrobbleTrack(
+                lastFmRepository.updatePlayingTrack(
                     track.album,
                     track.artist,
                     track.title,
-                    LastFmRepository.timestamp,
                     context.getString(R.string.last_fm_api_key),
                     context.getString(R.string.last_fm_secret)
                 ).let {
-                    wasCurrentTrackScrobbled = true
-
                     it ?: return@withContext Result.failure()
+
+                    lastTrackUpdateOnLastFmTime = System.currentTimeMillis()
                 }
 
-                Log.d(TAG, "scrobbled $track")
+                Log.d(TAG, "updated $track")
 
                 Result.success()
             }

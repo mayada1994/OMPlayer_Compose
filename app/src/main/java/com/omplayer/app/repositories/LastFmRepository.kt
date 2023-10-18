@@ -21,6 +21,7 @@ class LastFmRepository @Inject constructor(
         val timestamp = (System.currentTimeMillis() / 1000).toString()
         val LAST_FM_MIN_TRACK_DURATION = TimeUnit.SECONDS.toMillis(30) // Don't scrobble track with less than 30 seconds duration
         val LAST_FM_MAX_PLAYBACK_DURATION_BEFORE_SCROBBLE = TimeUnit.MINUTES.toMillis(4) // For very long tracks
+        val LAST_FM_TRACK_UPDATE_INTERVAL = TimeUnit.MINUTES.toMillis(3) // For very long tracks
         const val LAST_FM_SCROBBLING_PERCENTAGE = 0.5 // 50% of the track duration
     }
 
