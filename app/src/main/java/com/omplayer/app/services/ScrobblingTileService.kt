@@ -46,10 +46,10 @@ class ScrobblingTileService: TileService() {
     }
 
     private fun updateTileState() {
-        qsTile.state = if (cacheManager.isScrobblingEnabled) {
-            Tile.STATE_ACTIVE
-        } else {
-            Tile.STATE_INACTIVE
+        qsTile.state = when {
+            cacheManager.currentLastFmSession == null -> Tile.STATE_UNAVAILABLE
+            cacheManager.isScrobblingEnabled -> Tile.STATE_ACTIVE
+            else -> Tile.STATE_INACTIVE
         }
         qsTile.updateTile()
     }
