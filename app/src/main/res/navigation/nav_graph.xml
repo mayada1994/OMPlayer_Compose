@@ -24,6 +24,10 @@
         <action
             android:id="@+id/nav_from_library_fragment_to_artist_fragment"
             app:destination="@id/artistFragment" />
+
+        <action
+            android:id="@+id/nav_from_library_fragment_to_last_fm_login_fragment"
+            app:destination="@id/lastFmLoginFragment" />
     </fragment>
 
     <fragment
@@ -81,5 +85,10 @@
             android:id="@+id/nav_from_artist_fragment_to_album_fragment"
             app:destination="@id/albumFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/lastFmLoginFragment"
+        android:name="com.omplayer.app.fragments.LastFmLoginFragment"
+        android:label="LastFmLoginFragment" />
 
 </navigation>

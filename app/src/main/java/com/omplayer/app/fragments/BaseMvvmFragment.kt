@@ -16,6 +16,9 @@ abstract class BaseMvvmFragment<T : ViewBinding>(bindingInflater: (layoutInflate
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.event.observe(viewLifecycleOwner) { handleEvent(it) }
+        viewModel.showProgress.observe(viewLifecycleOwner) {
+            (activity as MainActivity).showProgress(it)
+        }
     }
 
     private fun handleEvent(event: ViewEvent) {

@@ -3,6 +3,7 @@ package com.omplayer.app.utils
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.omplayer.app.network.responses.LastFmSessionResponse.LastFmSession
 import com.omplayer.app.network.responses.LastFmSessionResponse_LastFmSessionJsonAdapter
@@ -28,7 +29,11 @@ class CacheManager @Inject constructor(
 
     var isScrobblingEnabled: Boolean
         get() = sharedPreferences.getBoolean(IS_SCROBBLING_ENABLED, false)
-        set(value) = sharedPreferences.edit { putBoolean(IS_SCROBBLING_ENABLED, value) }
+        set(value) = sharedPreferences.edit { putBoolean(IS_SCROBBLING_ENABLED, value) }.also {
+            isScrobblingEnabledLiveData.postValue(value)
+        }
+
+    val isScrobblingEnabledLiveData = MutableLiveData(isScrobblingEnabled)
 
     var currentLastFmSession: LastFmSession?
         get() {

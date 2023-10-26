@@ -16,4 +16,6 @@
     <string name="logout">Logout</string>
     <string name="register">Don\'t have an account? <u>Register</u>.</string>
     <string name="scrobbling">Scrobbling</string>
+    <string name="enter_username">Please enter your username to proceed</string>
+    <string name="enter_password">Please enter your password to proceed</string>
 </resources>

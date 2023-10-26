@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.omplayer.app.R
@@ -82,6 +83,10 @@ class MainActivity : AppCompatActivity() {
      */
     fun handleBaseEvent(event: ViewEvent): Boolean {
         return when (event) {
+            is BaseViewEvent.NavigateUp -> {
+                navController.navigateUp()
+                true
+            }
             is BaseViewEvent.Navigate -> {
                 navController.navigate(event.navDirections)
                 true
@@ -92,6 +97,10 @@ class MainActivity : AppCompatActivity() {
             }
             else -> false
         }
+    }
+
+    fun showProgress(isVisible: Boolean) {
+        binding.progressBar.isVisible = isVisible
     }
 
     override fun onStart() {
