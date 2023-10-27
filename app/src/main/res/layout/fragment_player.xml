@@ -7,6 +7,17 @@
     tools:context=".fragments.PlayerFragment">
 
     <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black" />
+
+    <ImageView
         android:id="@+id/btnMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

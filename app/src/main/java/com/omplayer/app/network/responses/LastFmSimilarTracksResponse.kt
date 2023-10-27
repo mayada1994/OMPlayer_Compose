@@ -1,12 +1,17 @@
 package com.omplayer.app.network.responses
 
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class LastFmSimilarTracksResponse(val similarTracks: LastFmSimilarTracks) {
+data class LastFmSimilarTracksResponse(
+    @Json(name = "similartracks") val similarTracks: LastFmSimilarTracks
+) {
 
     @JsonClass(generateAdapter = true)
-    data class LastFmSimilarTracks(val similarTracksList: List<LastFmSimilarTrack>)
+    data class LastFmSimilarTracks(
+        @Json(name = "track") val similarTracksList: List<LastFmSimilarTrack>
+    )
 
     @JsonClass(generateAdapter = true)
     data class LastFmSimilarTrack(

@@ -103,6 +103,8 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 btnPrev.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToPrevious() } }
 
                 btnMenu.setOnClickListener { showMenu(btnMenu) }
+
+                btnBack.setOnClickListener { viewModel.onBackPressed() }
             }
 
             mediaController.registerCallback(callback)
@@ -137,7 +139,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
             popup.menuInflater.inflate(R.menu.player_menu, popup.menu)
             popup.setForceShowIcon(true)
             popup.setOnMenuItemClickListener { menuItem ->
-                viewModel.onMenuItemClicked(menuItem.itemId, requireContext())
+                viewModel.onMenuItemClicked(menuItem.itemId, requireContext(), args.track)
                 true
             }
             popup.show()

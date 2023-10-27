@@ -43,6 +43,21 @@
             android:name="track"
             app:argType="com.omplayer.app.entities.Track"
             app:nullable="true" />
+
+        <action
+            android:id="@+id/nav_from_player_fragment_to_similar_tracks_fragment"
+            app:destination="@id/similarTracksFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/similarTracksFragment"
+        android:name="com.omplayer.app.fragments.SimilarTracksFragment"
+        android:label="SimilarTracksFragment">
+
+        <argument
+            android:name="track"
+            app:argType="com.omplayer.app.entities.Track"
+            app:nullable="true" />
     </fragment>
 
     <fragment

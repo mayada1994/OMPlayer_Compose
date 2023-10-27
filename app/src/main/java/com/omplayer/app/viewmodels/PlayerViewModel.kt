@@ -3,6 +3,8 @@ package com.omplayer.app.viewmodels
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.R
+import com.omplayer.app.entities.Track
+import com.omplayer.app.fragments.PlayerFragmentDirections
 import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.utils.LibraryUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,10 +19,14 @@ class PlayerViewModel @Inject constructor(private val lastFmRepository: LastFmRe
         }
     }
 
-    fun onMenuItemClicked(menuItemId: Int, context: Context) {
+    fun onMenuItemClicked(menuItemId: Int, context: Context, track: Track?) {
         when (menuItemId) {
             R.id.loveMenuItem -> addCurrentTrackToLoved(context)
-            R.id.similarTracksMenuItem -> {}
+
+            R.id.similarTracksMenuItem -> _event.value = BaseViewEvent.Navigate(
+                PlayerFragmentDirections.navFromPlayerFragmentToSimilarTracksFragment(track)
+            )
+
             R.id.videoMenuItem -> {}
         }
     }
@@ -45,5 +51,9 @@ class PlayerViewModel @Inject constructor(private val lastFmRepository: LastFmRe
                 }
             }
         }
+    }
+
+    fun onBackPressed() {
+        _event.value = BaseViewEvent.NavigateUp
     }
 }

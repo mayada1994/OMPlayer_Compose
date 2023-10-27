@@ -24,4 +24,6 @@
     <string name="last_fm_similar_tracks">Similar Tracks</string>
     <string name="last_fm_video">Video</string>
     <string name="track_added_to_loved">Track was added to loved successfully</string>
+    <string name="tracks_similar_to">Tracks similar to:\n%1$s - %2$s</string>
+    <string name="no_similar_tracks">No similar tracks were found</string>
 </resources>
