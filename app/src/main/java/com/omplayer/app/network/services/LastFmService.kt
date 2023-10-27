@@ -3,6 +3,7 @@ package com.omplayer.app.network.services
 import com.omplayer.app.entities.*
 import com.omplayer.app.network.responses.LastFmSessionResponse
 import com.omplayer.app.network.responses.LastFmSimilarTracksResponse
+import com.omplayer.app.network.responses.LastFmUserResponse
 import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -18,6 +19,13 @@ interface LastFmService {
         @Query("api_sig") apiSig: String,
         @Query("format") format: String
     ): LastFmSessionResponse
+
+    @GET("?method=user.getInfo")
+    suspend fun getUserInfo(
+        @Query("user") user: String,
+        @Query("api_key") apiKey: String,
+        @Query("format") format: String
+    ): LastFmUserResponse
 
     @POST("?method=track.updateNowPlaying")
     suspend fun updatePlayingTrack(

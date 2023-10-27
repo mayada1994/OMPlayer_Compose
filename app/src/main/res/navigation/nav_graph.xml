@@ -28,6 +28,10 @@
         <action
             android:id="@+id/nav_from_library_fragment_to_last_fm_login_fragment"
             app:destination="@id/lastFmLoginFragment" />
+
+        <action
+            android:id="@+id/nav_from_library_fragment_to_last_fm_profile_fragment"
+            app:destination="@id/lastFmProfileFragment" />
     </fragment>
 
     <fragment
@@ -90,5 +94,10 @@
         android:id="@+id/lastFmLoginFragment"
         android:name="com.omplayer.app.fragments.LastFmLoginFragment"
         android:label="LastFmLoginFragment" />
+
+    <fragment
+        android:id="@+id/lastFmProfileFragment"
+        android:name="com.omplayer.app.fragments.LastFmProfileFragment"
+        android:label="LastFmProfileFragment" />
 
 </navigation>

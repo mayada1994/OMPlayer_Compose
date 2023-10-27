@@ -49,8 +49,12 @@ class CacheManager @Inject constructor(
             }
         }
         set(value) = sharedPreferences.edit {
-            LastFmSessionResponse_LastFmSessionJsonAdapter(moshi).toJson(value)?.let {
-                putString(CURRENT_LAST_FM_SESSION, it)
+            if (value != null) {
+                LastFmSessionResponse_LastFmSessionJsonAdapter(moshi).toJson(value)?.let {
+                    putString(CURRENT_LAST_FM_SESSION, it)
+                }
+            } else {
+                putString(CURRENT_LAST_FM_SESSION, null)
             }
         }
 }

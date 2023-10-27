@@ -1,10 +1,8 @@
 package com.omplayer.app.fragments
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
-import androidx.core.widget.ImageViewCompat
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.omplayer.app.R
@@ -29,21 +27,19 @@ class LibraryFragment : BaseMvvmFragment<FragmentLibraryBinding>(FragmentLibrary
                 tab.text = getString(LibraryListType.getLibraryListTypeByPosition(position).titleRes)
             }.attach()
 
-            viewModel.isScrobblingEnabled.observe(viewLifecycleOwner) { scrobblingEnabled ->
-                ImageViewCompat.setImageTintList(
-                    toolbar.btnScrobble, ColorStateList.valueOf(
-                        ContextCompat.getColor(
-                            requireContext(), if (scrobblingEnabled) {
-                                R.color.colorAccent
-                            } else {
-                                R.color.colorBorderSeekBar
-                            }
-                        )
-                    )
-                )
-            }
+            btnMenu.setOnClickListener { showMenu(btnMenu) }
+        }
+    }
 
-            toolbar.btnScrobble.setOnClickListener { viewModel.onScrobbleClick() }
+    private fun showMenu(view: View) {
+        PopupMenu(requireContext(), view).let { popup ->
+            popup.menuInflater.inflate(R.menu.library_menu, popup.menu)
+            popup.setForceShowIcon(true)
+            popup.setOnMenuItemClickListener { menuItem ->
+                viewModel.onMenuItemClicked(menuItem.itemId)
+                true
+            }
+            popup.show()
         }
     }
 }

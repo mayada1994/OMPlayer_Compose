@@ -9,6 +9,7 @@
     <string name="artists">Artists</string>
     <string name="albums">Albums</string>
     <string name="genres">Genres</string>
+    <string name="library">Library</string>
     <string name="general_error_message">Something went wrong. Try again later</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -16,6 +17,7 @@
     <string name="logout">Logout</string>
     <string name="register">Don\'t have an account? <u>Register</u>.</string>
     <string name="scrobbling">Scrobbling</string>
+    <string name="last_fm">Last.fm</string>
     <string name="enter_username">Please enter your username to proceed</string>
     <string name="enter_password">Please enter your password to proceed</string>
 </resources>

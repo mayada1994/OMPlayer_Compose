@@ -2,6 +2,7 @@ package com.omplayer.app.repositories
 
 import com.omplayer.app.network.responses.LastFmSessionResponse
 import com.omplayer.app.network.responses.LastFmSimilarTracksResponse
+import com.omplayer.app.network.responses.LastFmUserResponse
 import com.omplayer.app.network.services.LastFmService
 import com.omplayer.app.utils.CacheManager
 import okhttp3.ResponseBody
@@ -42,6 +43,15 @@ class LastFmRepository @Inject constructor(
                 e.printStackTrace()
                 null
             }
+        }
+    }
+
+    suspend fun getUserInfo(user: String, apiKey: String): LastFmUserResponse? {
+        return try {
+            lastFmService.getUserInfo(user, apiKey, FORMAT)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 
