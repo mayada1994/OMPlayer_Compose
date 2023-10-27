@@ -1,11 +1,49 @@
 package com.omplayer.app.viewmodels
 
+import android.content.Context
+import androidx.lifecycle.viewModelScope
+import com.omplayer.app.R
+import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.utils.LibraryUtils
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PlayerViewModel : BaseViewModel() {
+@HiltViewModel
+class PlayerViewModel @Inject constructor(private val lastFmRepository: LastFmRepository) : BaseViewModel() {
     fun skipTrack(action: () -> Unit) {
         if (!LibraryUtils.isSingleTrackPlaylist()) {
             action()
+        }
+    }
+
+    fun onMenuItemClicked(menuItemId: Int, context: Context) {
+        when (menuItemId) {
+            R.id.loveMenuItem -> addCurrentTrackToLoved(context)
+            R.id.similarTracksMenuItem -> {}
+            R.id.videoMenuItem -> {}
+        }
+    }
+
+    private fun addCurrentTrackToLoved(context: Context) {
+        LibraryUtils.currentTrack.value?.let { track ->
+            viewModelScope.launch {
+                try {
+                    _showProgress.postValue(true)
+                    lastFmRepository.loveTrack(
+                        artist = track.artist,
+                        track = track.title,
+                        apiKey = context.getString(R.string.last_fm_api_key),
+                        secret = context.getString(R.string.last_fm_secret)
+                    )
+                    _showProgress.postValue(false)
+                    _event.postValue(BaseViewEvent.ShowError(R.string.track_added_to_loved))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    _showProgress.postValue(false)
+                    _event.postValue(BaseViewEvent.ShowError(R.string.general_error_message))
+                }
+            }
         }
     }
 }

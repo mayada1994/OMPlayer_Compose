@@ -6,6 +6,7 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import android.widget.SeekBar
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.distinctUntilChanged
 import androidx.navigation.fragment.navArgs
@@ -18,8 +19,10 @@ import com.omplayer.app.entities.Track
 import com.omplayer.app.extensions.toFormattedTime
 import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.viewmodels.PlayerViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBinding::inflate) {
 
     override val viewModel: PlayerViewModel by viewModels()
@@ -31,7 +34,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
     private val callback = object: MediaControllerCompat.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             super.onPlaybackStateChanged(state)
-            when(state?.state) {
+            when (state?.state) {
                 PlaybackStateCompat.STATE_PLAYING -> {
                     binding.btnPlay.setImageResource(R.drawable.ic_pause_circle)
                 }
@@ -98,6 +101,8 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 }
                 btnNext.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToNext() } }
                 btnPrev.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToPrevious() } }
+
+                btnMenu.setOnClickListener { showMenu(btnMenu) }
             }
 
             mediaController.registerCallback(callback)
@@ -124,6 +129,18 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
             seekBar.max = track.duration
             txtCurrentPosition.text = mediaController?.playbackState?.position?.toFormattedTime() ?: "00:00"
             txtDuration.text = track.duration.toLong().toFormattedTime()
+        }
+    }
+
+    private fun showMenu(view: View) {
+        PopupMenu(requireContext(), view).let { popup ->
+            popup.menuInflater.inflate(R.menu.player_menu, popup.menu)
+            popup.setForceShowIcon(true)
+            popup.setOnMenuItemClickListener { menuItem ->
+                viewModel.onMenuItemClicked(menuItem.itemId, requireContext())
+                true
+            }
+            popup.show()
         }
     }
 

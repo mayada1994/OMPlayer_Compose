@@ -11,6 +11,8 @@
     <string name="genres">Genres</string>
     <string name="library">Library</string>
     <string name="general_error_message">Something went wrong. Try again later</string>
+    <string name="enter_username">Please enter your username to proceed</string>
+    <string name="enter_password">Please enter your password to proceed</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
@@ -18,6 +20,8 @@
     <string name="register">Don\'t have an account? <u>Register</u>.</string>
     <string name="scrobbling">Scrobbling</string>
     <string name="last_fm">Last.fm</string>
-    <string name="enter_username">Please enter your username to proceed</string>
-    <string name="enter_password">Please enter your password to proceed</string>
+    <string name="last_fm_love">Love</string>
+    <string name="last_fm_similar_tracks">Similar Tracks</string>
+    <string name="last_fm_video">Video</string>
+    <string name="track_added_to_loved">Track was added to loved successfully</string>
 </resources>
