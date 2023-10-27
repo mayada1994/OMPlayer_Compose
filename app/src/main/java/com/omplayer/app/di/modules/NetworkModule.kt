@@ -1,6 +1,7 @@
 package com.omplayer.app.di.modules
 
 import com.omplayer.app.network.services.LastFmService
+import com.omplayer.app.network.services.VideoService
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -33,4 +34,12 @@ class NetworkModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(LastFmService::class.java)
+
+    @Provides
+    @Singleton
+    internal fun provideVideoService(): VideoService =
+        Retrofit.Builder()
+            .baseUrl("https://www.last.fm/music/")
+            .build()
+            .create(VideoService::class.java)
 }
