@@ -29,7 +29,7 @@ interface LastFmService {
 
     @POST("?method=track.updateNowPlaying")
     suspend fun updatePlayingTrack(
-        @Query("album") album: String,
+        @Query("album") album: String?,
         @Query("artist") artist: String,
         @Query("track") track: String,
         @Query("api_key") apiKey: String,
@@ -40,7 +40,7 @@ interface LastFmService {
 
     @POST("?method=track.scrobble")
     suspend fun scrobbleTrack(
-        @Query("album") album: String,
+        @Query("album") album: String?,
         @Query("artist") artist: String,
         @Query("track") track: String,
         @Query("timestamp") timestamp: String,

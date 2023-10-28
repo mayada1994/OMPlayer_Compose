@@ -21,6 +21,7 @@ import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.omplayer.app.R
 import com.omplayer.app.entities.Track
+import com.omplayer.app.enums.ScrobbleMediaType
 import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.services.MediaPlaybackService
 import com.omplayer.app.utils.LibraryUtils
@@ -246,6 +247,7 @@ class PlayerMediaSessionCallback(
     private fun shouldUpdateTrack(currentPosition: Int) =
         System.currentTimeMillis() - LibraryUtils.lastTrackUpdateOnLastFmTime >= LastFmRepository.LAST_FM_TRACK_UPDATE_INTERVAL
                 || currentPosition <= 500
+                || LibraryUtils.lastUpdatedMediaType != ScrobbleMediaType.TRACK
 
     private fun shouldScrobbleTrack(currentPosition: Int, duration: Int) =
         !LibraryUtils.wasCurrentTrackScrobbled

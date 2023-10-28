@@ -56,7 +56,7 @@ class LastFmRepository @Inject constructor(
     }
 
     suspend fun updatePlayingTrack(
-        album: String,
+        album: String?,
         artist: String,
         track: String,
         apiKey: String,
@@ -69,6 +69,29 @@ class LastFmRepository @Inject constructor(
 
             return lastFmService.updatePlayingTrack(
                 album,
+                artist,
+                track,
+                apiKey,
+                apiSignature,
+                lastFmSessionKey,
+                FORMAT
+            )
+        }
+    }
+
+    suspend fun updatePlayingTrack(
+        artist: String,
+        track: String,
+        apiKey: String,
+        secret: String
+    ): ResponseBody? {
+        val lastFmSessionKey = cacheManager.currentLastFmSession?.key
+
+        md5("api_key" + apiKey + "artist" + artist + "methodtrack.updateNowPlaying" + "sk" + lastFmSessionKey + "track" + track + secret).let { apiSignature ->
+            if (apiSignature.isNullOrBlank() || lastFmSessionKey.isNullOrBlank()) return null
+
+            return lastFmService.updatePlayingTrack(
+                null,
                 artist,
                 track,
                 apiKey,
@@ -94,6 +117,31 @@ class LastFmRepository @Inject constructor(
 
             return lastFmService.scrobbleTrack(
                 album,
+                artist,
+                track,
+                timestamp,
+                apiKey,
+                apiSignature,
+                lastFmSessionKey,
+                FORMAT
+            )
+        }
+    }
+
+    suspend fun scrobbleTrack(
+        artist: String,
+        track: String,
+        timestamp: String,
+        apiKey: String,
+        secret: String
+    ): ResponseBody? {
+        val lastFmSessionKey = cacheManager.currentLastFmSession?.key
+
+        md5("api_key" + apiKey + "artist" + artist + "methodtrack.scrobble" + "sk" + lastFmSessionKey + "timestamp" + timestamp + "track" + track + secret).let { apiSignature ->
+            if (apiSignature.isNullOrBlank() || lastFmSessionKey.isNullOrBlank()) return null
+
+            return lastFmService.scrobbleTrack(
+                null,
                 artist,
                 track,
                 timestamp,

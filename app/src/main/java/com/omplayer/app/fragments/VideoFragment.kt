@@ -29,6 +29,8 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
 
     private var isFullscreen = false
 
+    private var currentVideoDuration: Float = 0f
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -118,6 +120,8 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
                     }
 
                     youTubePlayer.loadVideo(videoId, 0f)
+
+                    viewModel.onPlaybackStarted(requireContext())
                 }
 
                 override fun onStateChange(
@@ -129,9 +133,17 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
                         viewModel.pauseCurrentTrack()
                     }
                 }
+
+                override fun onVideoDuration(youTubePlayer: YouTubePlayer, duration: Float) {
+                    currentVideoDuration = duration
+                }
+
+                override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
+                    viewModel.handlePlaybackProgress(second, currentVideoDuration, requireContext())
+                }
             }, iFramePlayerOptions)
 
-            btnStar.setOnClickListener { viewModel.onStarClicked(args.artist, args.title, videoId) }
+            btnStar.setOnClickListener { viewModel.onStarClicked() }
         }
     }
 }

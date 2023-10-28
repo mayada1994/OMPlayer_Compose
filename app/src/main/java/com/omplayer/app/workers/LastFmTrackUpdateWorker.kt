@@ -6,9 +6,11 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.omplayer.app.R
+import com.omplayer.app.enums.ScrobbleMediaType
 import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.utils.LibraryUtils.currentTrack
 import com.omplayer.app.utils.LibraryUtils.lastTrackUpdateOnLastFmTime
+import com.omplayer.app.utils.LibraryUtils.lastUpdatedMediaType
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +44,7 @@ class LastFmTrackUpdateWorker @AssistedInject constructor(
                     it ?: return@withContext Result.failure()
 
                     lastTrackUpdateOnLastFmTime = System.currentTimeMillis()
+                    lastUpdatedMediaType = ScrobbleMediaType.TRACK
                 }
 
                 Log.d(TAG, "updated $track")
