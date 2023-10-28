@@ -34,17 +34,21 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
     private val callback = object: MediaControllerCompat.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             super.onPlaybackStateChanged(state)
-            when (state?.state) {
-                PlaybackStateCompat.STATE_PLAYING -> {
-                    binding.btnPlay.setImageResource(R.drawable.ic_pause_circle)
+            try {
+                when (state?.state) {
+                    PlaybackStateCompat.STATE_PLAYING -> {
+                        binding.btnPlay.setImageResource(R.drawable.ic_pause_circle)
+                    }
+                    PlaybackStateCompat.STATE_PAUSED -> {
+                        binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
+                    }
+                    PlaybackStateCompat.STATE_STOPPED -> {
+                        binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
+                        binding.seekBar.progress = 0
+                    }
                 }
-                PlaybackStateCompat.STATE_PAUSED -> {
-                    binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
-                }
-                PlaybackStateCompat.STATE_STOPPED -> {
-                    binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
-                    binding.seekBar.progress = 0
-                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
@@ -139,7 +143,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
             popup.menuInflater.inflate(R.menu.player_menu, popup.menu)
             popup.setForceShowIcon(true)
             popup.setOnMenuItemClickListener { menuItem ->
-                viewModel.onMenuItemClicked(menuItem.itemId, requireContext(), args.track)
+                viewModel.onMenuItemClicked(menuItem.itemId, requireContext())
                 true
             }
             popup.show()

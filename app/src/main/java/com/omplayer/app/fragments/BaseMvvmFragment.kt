@@ -22,8 +22,21 @@ abstract class BaseMvvmFragment<T : ViewBinding>(bindingInflater: (layoutInflate
     }
 
     private fun handleEvent(event: ViewEvent) {
-        if (!(activity as MainActivity).handleBaseEvent(event)) {
+        if (!(activity as MainActivity).handleBaseEvent(event) && !handleComplexEvent(event)) {
             handleCustomEvent(event)
+        }
+    }
+
+    private fun handleComplexEvent(event: ViewEvent): Boolean {
+        return when (event) {
+            is BaseViewModel.Complex -> {
+                event.events.forEach {
+                    handleEvent(it)
+                }
+                true
+            }
+
+            else -> false
         }
     }
 

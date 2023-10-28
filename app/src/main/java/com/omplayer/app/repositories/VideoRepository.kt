@@ -11,13 +11,11 @@ class VideoRepository @Inject constructor(private val videoService: VideoService
         private const val YOUTUBE_VIDEO_LINK = "https://www.youtube.com/watch?v="
     }
 
-    suspend fun getVideo(artist: String, track: String): String? {
+    suspend fun getVideoId(artist: String, track: String): String? {
         return try {
             videoService.getTrackPage(artist, track).string().let {
                 return if (it.contains(YOUTUBE_VIDEO_LINK)) {
-                    it.substringAfter(YOUTUBE_VIDEO_LINK).substringBefore("\"").let { videoId ->
-                        YOUTUBE_VIDEO_LINK + videoId
-                    }
+                    it.substringAfter(YOUTUBE_VIDEO_LINK).substringBefore("\"")
                 } else {
                     null
                 }

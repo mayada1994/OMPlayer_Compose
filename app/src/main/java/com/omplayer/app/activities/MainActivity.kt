@@ -95,6 +95,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, event.resId, event.duration).show()
                 true
             }
+            is BaseViewEvent.PausePlayback -> {
+                mediaController.transportControls.pause()
+                true
+            }
             else -> false
         }
     }

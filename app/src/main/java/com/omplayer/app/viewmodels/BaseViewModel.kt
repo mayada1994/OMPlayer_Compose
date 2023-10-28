@@ -20,6 +20,9 @@ abstract class BaseViewModel: ViewModel() {
         object NavigateUp : ViewEvent
         data class Navigate(val navDirections: NavDirections) : ViewEvent
         data class ShowError(@StringRes val resId: Int, val duration: Int = Toast.LENGTH_SHORT) : ViewEvent
+        object PausePlayback : ViewEvent
     }
+
+    class Complex(vararg val events: ViewEvent) : ViewEvent
 
 }

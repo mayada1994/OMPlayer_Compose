@@ -22,10 +22,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center_horizontal"
-        tools:text="@string/tracks_similar_to"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/tracks_similar_to" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSimilarTracks"
@@ -42,6 +42,7 @@
         android:id="@+id/txtPlaceholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginHorizontal="16dp"
         android:gravity="center"
         android:text="@string/no_similar_tracks"
         android:textColor="@color/black"
