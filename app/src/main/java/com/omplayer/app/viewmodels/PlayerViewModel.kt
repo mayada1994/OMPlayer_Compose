@@ -34,7 +34,11 @@ class PlayerViewModel @Inject constructor(private val lastFmRepository: LastFmRe
                 )
 
                 R.id.videoMenuItem -> _event.value = BaseViewEvent.Navigate(
-                    PlayerFragmentDirections.navFromPlayerFragmentToVideoFragment(track)
+                    PlayerFragmentDirections.navFromPlayerFragmentToVideoFragment(
+                        artist = track.artist,
+                        title = track.title,
+                        isSimilarTrack = false
+                    )
                 )
             }
         }

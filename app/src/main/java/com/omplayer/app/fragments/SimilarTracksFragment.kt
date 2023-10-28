@@ -28,7 +28,7 @@ class SimilarTracksFragment : BaseMvvmFragment<FragmentSimilarTracksBinding>(Fra
         viewModel.getSimilarTracks(args.track, requireContext())
 
         with(binding) {
-            args.track?.let {
+            args.track.let {
                 txtTitle.text = requireContext().getString(R.string.tracks_similar_to, it.artist, it.title)
             }
 
@@ -39,7 +39,9 @@ class SimilarTracksFragment : BaseMvvmFragment<FragmentSimilarTracksBinding>(Fra
                     rvSimilarTracks.apply {
                         adapter =
                             SimilarTracksAdapter(list, object : OnSimilarTrackSelectedListener {
-                                override fun onTrackSelected(track: LastFmSimilarTrack) = Unit
+                                override fun onTrackSelected(track: LastFmSimilarTrack) {
+                                    viewModel.onTrackSelected(track)
+                                }
 
                                 override fun onTrackStarred(track: LastFmSimilarTrack) = Unit
                             })

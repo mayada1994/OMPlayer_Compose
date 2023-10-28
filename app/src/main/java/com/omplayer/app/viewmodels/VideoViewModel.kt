@@ -1,7 +1,7 @@
 package com.omplayer.app.viewmodels
 
 import androidx.lifecycle.viewModelScope
-import com.omplayer.app.entities.Track
+import com.omplayer.app.R
 import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.repositories.VideoRepository
@@ -19,10 +19,18 @@ class VideoViewModel @Inject constructor(
         data class PlayVideo(val videoId: String) : ViewEvent
         object ShowPlaceholder: ViewEvent
     }
-    fun getVideo(track: Track) {
+    fun getVideo(artist: String?, title: String?) {
+        if (artist.isNullOrBlank() || title.isNullOrBlank()) {
+            _event.value = Complex(
+                BaseViewEvent.ShowError(R.string.general_error_message),
+                CustomEvent.ShowPlaceholder
+            )
+            return
+        }
+
         viewModelScope.launch {
             _showProgress.postValue(true)
-            videoRepository.getVideoId(track.artist, track.title).let { videoId ->
+            videoRepository.getVideoId(artist, title).let { videoId ->
                 if (!videoId.isNullOrBlank()) {
                     _event.postValue(CustomEvent.PlayVideo(videoId))
                 } else {
@@ -37,7 +45,7 @@ class VideoViewModel @Inject constructor(
         _event.value = BaseViewEvent.PausePlayback
     }
 
-    fun onStarClicked(track: Track) {
+    fun onStarClicked(artist: String?, title: String?, videoId: String) {
         //TODO: Save track
     }
 

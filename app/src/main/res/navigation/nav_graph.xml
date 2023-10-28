@@ -61,6 +61,10 @@
             android:name="track"
             app:argType="com.omplayer.app.entities.Track"
             app:nullable="false" />
+
+        <action
+            android:id="@+id/nav_from_similar_tracks_fragment_to_video_fragment"
+            app:destination="@id/videoFragment" />
     </fragment>
 
     <fragment
@@ -70,8 +74,18 @@
         tools:layout="@layout/fragment_video">
 
         <argument
-            android:name="track"
-            app:argType="com.omplayer.app.entities.Track"
+            android:name="artist"
+            app:argType="string"
+            app:nullable="true" />
+
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+
+        <argument
+            android:name="isSimilarTrack"
+            app:argType="boolean"
             app:nullable="false" />
     </fragment>
 

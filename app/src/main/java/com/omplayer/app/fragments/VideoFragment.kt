@@ -35,14 +35,11 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
         with(binding) {
             lifecycle.addObserver(youtubeVideoView)
 
-            args.track.let {
-                txtArtist.text = it.artist
-                txtTitle.text = it.title
-            }
+            txtArtist.text = args.artist
+            txtTitle.text = args.title
+            btnStar.visibility = if (args.isSimilarTrack) View.VISIBLE else View.INVISIBLE
 
             btnBack.setOnClickListener { viewModel.onBackPressed() }
-
-            btnStar.setOnClickListener { viewModel.onStarClicked(args.track) }
 
             // we need to initialize manually in order to pass IFramePlayerOptions to the player
             youtubeVideoView.enableAutomaticInitialization = false
@@ -70,7 +67,10 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
 
             })
 
-            viewModel.getVideo(args.track)
+            viewModel.getVideo(
+                artist = args.artist,
+                title = args.title
+            )
         }
     }
 
@@ -106,28 +106,32 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
             .ccLoadPolicy(0)
             .build()
 
-        binding.youtubeVideoView.initialize(object : AbstractYouTubePlayerListener() {
-            override fun onReady(youTubePlayer: YouTubePlayer) {
-                requireActivity().onBackPressedDispatcher.addCallback(this@VideoFragment) {
-                    if (isFullscreen) {
-                        youTubePlayer.toggleFullscreen()
-                    } else {
-                        viewModel.onBackPressed()
+        with(binding) {
+            youtubeVideoView.initialize(object : AbstractYouTubePlayerListener() {
+                override fun onReady(youTubePlayer: YouTubePlayer) {
+                    requireActivity().onBackPressedDispatcher.addCallback(this@VideoFragment) {
+                        if (isFullscreen) {
+                            youTubePlayer.toggleFullscreen()
+                        } else {
+                            viewModel.onBackPressed()
+                        }
+                    }
+
+                    youTubePlayer.loadVideo(videoId, 0f)
+                }
+
+                override fun onStateChange(
+                    youTubePlayer: YouTubePlayer,
+                    state: PlayerConstants.PlayerState
+                ) {
+                    if (state == PlayerConstants.PlayerState.BUFFERING
+                        && (activity as MainActivity?)?.mediaController?.playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
+                        viewModel.pauseCurrentTrack()
                     }
                 }
+            }, iFramePlayerOptions)
 
-                youTubePlayer.loadVideo(videoId, 0f)
-            }
-
-            override fun onStateChange(
-                youTubePlayer: YouTubePlayer,
-                state: PlayerConstants.PlayerState
-            ) {
-                if (state == PlayerConstants.PlayerState.BUFFERING
-                    && (activity as MainActivity?)?.mediaController?.playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
-                    viewModel.pauseCurrentTrack()
-                }
-            }
-        }, iFramePlayerOptions)
+            btnStar.setOnClickListener { viewModel.onStarClicked(args.artist, args.title, videoId) }
+        }
     }
 }

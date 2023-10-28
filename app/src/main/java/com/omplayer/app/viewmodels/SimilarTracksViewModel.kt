@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.R
 import com.omplayer.app.entities.Track
+import com.omplayer.app.fragments.SimilarTracksFragmentDirections
 import com.omplayer.app.network.responses.LastFmSimilarTracksResponse.LastFmSimilarTrack
 import com.omplayer.app.repositories.LastFmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,6 +44,16 @@ class SimilarTracksViewModel @Inject constructor(private val lastFmRepository: L
                 _event.postValue(BaseViewEvent.ShowError(R.string.general_error_message))
             }
         }
+    }
+
+    fun onTrackSelected(similarTrack: LastFmSimilarTrack) {
+        _event.value = BaseViewEvent.Navigate(
+            SimilarTracksFragmentDirections.navFromSimilarTracksFragmentToVideoFragment(
+                artist = similarTrack.artist.name,
+                title = similarTrack.name,
+                isSimilarTrack = true
+            )
+        )
     }
 
     fun onBackPressed() {
