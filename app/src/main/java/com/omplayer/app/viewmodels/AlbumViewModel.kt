@@ -19,10 +19,9 @@ class AlbumViewModel: BaseViewModel() {
     }
 
     fun onTrackSelected(track: Track) {
-        if (LibraryUtils.generalTracklist.value == LibraryUtils.currentTracklist.value) {
-            LibraryUtils.currentTracklist.value = tracklist.value
-        }
-        _event.value = BaseViewEvent.Navigate(AlbumFragmentDirections.navFromAlbumFragmentToPlayerFragment(track))
+        LibraryUtils.currentTracklist.value = tracklist.value
+        LibraryUtils.currentTrack.value = track
+        _event.value = BaseViewEvent.Navigate(AlbumFragmentDirections.navFromAlbumFragmentToPlayerFragment())
     }
 
 }

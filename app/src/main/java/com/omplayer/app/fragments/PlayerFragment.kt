@@ -9,7 +9,6 @@ import android.widget.SeekBar
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.distinctUntilChanged
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.omplayer.app.R
@@ -26,8 +25,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBinding::inflate) {
 
     override val viewModel: PlayerViewModel by viewModels()
-
-    private val args: PlayerFragmentArgs by navArgs()
 
     private var mediaController: MediaControllerCompat? = null
 
@@ -63,8 +60,6 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 (activity as MainActivity).playTrack(it)
                 updateUI(it)
             }
-
-            args.track?.let { LibraryUtils.currentTrack.value = args.track }
 
             with(binding) {
                 LibraryUtils.currentTrackProgress.distinctUntilChanged().observe(viewLifecycleOwner) {

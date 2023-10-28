@@ -42,11 +42,6 @@
         android:label="PlayerFragment"
         tools:layout="@layout/fragment_player">
 
-        <argument
-            android:name="track"
-            app:argType="com.omplayer.app.entities.Track"
-            app:nullable="true" />
-
         <action
             android:id="@+id/nav_from_player_fragment_to_similar_tracks_fragment"
             app:destination="@id/similarTracksFragment" />
