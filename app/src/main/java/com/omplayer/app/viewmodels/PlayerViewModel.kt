@@ -1,9 +1,12 @@
 package com.omplayer.app.viewmodels
 
 import android.content.Context
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.R
 import com.omplayer.app.entities.Track
+import com.omplayer.app.enums.PlaybackMode
+import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.fragments.PlayerFragmentDirections
 import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.utils.LibraryUtils
@@ -13,9 +16,31 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(private val lastFmRepository: LastFmRepository) : BaseViewModel() {
+
+    sealed class CustomEvent {
+        data class UpdatePlaybackModeIcon(@DrawableRes val iconRes: Int) : ViewEvent
+    }
+
     fun skipTrack(action: () -> Unit) {
         if (!LibraryUtils.isSingleTrackPlaylist()) {
             action()
+        }
+    }
+
+    fun changePlaybackMode() {
+        when (LibraryUtils.currentPlaybackMode) {
+            PlaybackMode.LOOP_ALL -> {
+                LibraryUtils.currentPlaybackMode = PlaybackMode.LOOP_SINGLE
+                _event.value = CustomEvent.UpdatePlaybackModeIcon(R.drawable.ic_loop_single)
+            }
+            PlaybackMode.LOOP_SINGLE -> {
+                LibraryUtils.currentPlaybackMode = PlaybackMode.SHUFFLE
+                _event.value = CustomEvent.UpdatePlaybackModeIcon(R.drawable.ic_shuffle)
+            }
+            PlaybackMode.SHUFFLE -> {
+                LibraryUtils.currentPlaybackMode = PlaybackMode.LOOP_ALL
+                _event.value = CustomEvent.UpdatePlaybackModeIcon(R.drawable.ic_loop_all)
+            }
         }
     }
 

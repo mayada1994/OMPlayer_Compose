@@ -15,6 +15,7 @@ import com.omplayer.app.R
 import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.databinding.FragmentPlayerBinding
 import com.omplayer.app.entities.Track
+import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.extensions.toFormattedTime
 import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.viewmodels.PlayerViewModel
@@ -100,6 +101,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 }
                 btnNext.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToNext() } }
                 btnPrev.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToPrevious() } }
+                btnPlaybackMode.setOnClickListener { viewModel.changePlaybackMode() }
 
                 btnMenu.setOnClickListener { showMenu(btnMenu) }
 
@@ -142,6 +144,17 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 true
             }
             popup.show()
+        }
+    }
+
+    override fun handleCustomEvent(event: ViewEvent): Boolean {
+        return when (event) {
+            is PlayerViewModel.CustomEvent.UpdatePlaybackModeIcon -> {
+                binding.btnPlaybackMode.setImageResource(event.iconRes)
+                true
+            }
+
+            else -> super.handleCustomEvent(event)
         }
     }
 

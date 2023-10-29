@@ -10,6 +10,7 @@ import android.util.Size
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.omplayer.app.entities.Track
+import com.omplayer.app.enums.PlaybackMode
 import com.omplayer.app.enums.ScrobbleMediaType
 
 object LibraryUtils {
@@ -17,6 +18,7 @@ object LibraryUtils {
     var currentTracklist = MutableLiveData<List<Track>>()
     var currentTrack = MutableLiveData<Track>()
     var currentTrackProgress = MutableLiveData<Long>()
+    var currentPlaybackMode = PlaybackMode.LOOP_ALL
     var wasCurrentTrackScrobbled = false
     var lastTrackUpdateOnLastFmTime = 0L
     var lastUpdatedMediaType: ScrobbleMediaType? = null
@@ -74,10 +76,16 @@ object LibraryUtils {
 
     private fun getNextTrack(track: Track): Track? {
         currentTracklist.value?.let {
-            return if (it.last() == track) {
-                it.first()
-            } else {
-                it[it.indexOf(track) + 1]
+            return when (currentPlaybackMode) {
+                PlaybackMode.LOOP_ALL -> {
+                    if (it.last() == track) {
+                        it.first()
+                    } else {
+                        it[it.indexOf(track) + 1]
+                    }
+                }
+                PlaybackMode.LOOP_SINGLE -> currentTrack.value
+                PlaybackMode.SHUFFLE -> it.random()
             }
         }
         return null
@@ -85,10 +93,16 @@ object LibraryUtils {
 
     private fun getPreviousTrack(track: Track): Track? {
         currentTracklist.value?.let {
-            return if (it.first() == track) {
-                it.last()
-            } else {
-                it[it.indexOf(track) - 1]
+            return when (currentPlaybackMode) {
+                PlaybackMode.LOOP_ALL -> {
+                    if (it.first() == track) {
+                        it.last()
+                    } else {
+                        it[it.indexOf(track) - 1]
+                    }
+                }
+                PlaybackMode.LOOP_SINGLE -> currentTrack.value
+                PlaybackMode.SHUFFLE -> it.random()
             }
         }
         return null
