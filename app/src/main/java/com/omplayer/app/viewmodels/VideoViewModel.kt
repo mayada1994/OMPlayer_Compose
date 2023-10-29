@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.R
-import com.omplayer.app.entities.Video
+import com.omplayer.app.db.entities.Video
 import com.omplayer.app.enums.ScrobbleMediaType
 import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.repositories.LastFmRepository
@@ -22,11 +22,13 @@ class VideoViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private var currentVideo: Video? = null
+    private var isStarred: Boolean = false
     private var wasCurrentTrackScrobbled = false
 
     sealed class CustomEvent {
         data class PlayVideo(val videoId: String) : ViewEvent
         object ShowPlaceholder: ViewEvent
+        data class UpdateBookmarkState(val isStarred: Boolean) : ViewEvent
     }
 
     companion object {
@@ -46,12 +48,18 @@ class VideoViewModel @Inject constructor(
             _showProgress.postValue(true)
             videoRepository.getVideoId(artist, title).let { videoId ->
                 if (!videoId.isNullOrBlank()) {
-                    _event.postValue(CustomEvent.PlayVideo(videoId))
                     currentVideo = Video(
                         artist = artist,
                         title = title,
                         videoId = videoId
                     )
+
+                    isStarred = videoRepository.getVideo(artist, title) != null
+
+                    _event.postValue(Complex(
+                        CustomEvent.UpdateBookmarkState(isStarred),
+                        CustomEvent.PlayVideo(videoId)
+                    ))
                 } else {
                     _event.postValue(CustomEvent.ShowPlaceholder)
                 }
@@ -64,9 +72,22 @@ class VideoViewModel @Inject constructor(
         _event.value = BaseViewEvent.PausePlayback
     }
 
-    fun onStarClicked() {
-        currentVideo?.let {
-            //TODO: Save track
+    fun isLocalTrack(): Boolean {
+        return LibraryUtils.generalTracklist.value?.any {
+            it.artist == currentVideo?.artist && it.title == currentVideo?.title
+        } ?: false
+    }
+
+    fun changeBookmarkState() {
+        viewModelScope.launch {
+            _showProgress.postValue(true)
+            videoRepository.handleVideoState(currentVideo!!, isStarred).let { updated ->
+                if (updated) {
+                    isStarred = !isStarred
+                }
+                _event.postValue(CustomEvent.UpdateBookmarkState(isStarred))
+            }
+            _showProgress.postValue(false)
         }
     }
 

@@ -8,6 +8,7 @@ import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.omplayer.app.R
 import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.databinding.FragmentVideoBinding
 import com.omplayer.app.events.ViewEvent
@@ -39,7 +40,6 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
 
             txtArtist.text = args.artist
             txtTitle.text = args.title
-            btnStar.visibility = if (args.isSimilarTrack) View.VISIBLE else View.INVISIBLE
 
             btnBack.setOnClickListener { viewModel.onBackPressed() }
 
@@ -95,6 +95,16 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
                 true
             }
 
+            is VideoViewModel.CustomEvent.UpdateBookmarkState -> {
+                with(binding.btnStar) {
+                    visibility = if (args.isSimilarTrack && !viewModel.isLocalTrack()) View.VISIBLE else View.INVISIBLE
+                    setImageResource(
+                        if (event.isStarred) R.drawable.ic_star else R.drawable.ic_star_border
+                    )
+                }
+                true
+            }
+
             else -> super.handleCustomEvent(event)
         }
     }
@@ -143,7 +153,7 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
                 }
             }, iFramePlayerOptions)
 
-            btnStar.setOnClickListener { viewModel.onStarClicked() }
+            btnStar.setOnClickListener { viewModel.changeBookmarkState() }
         }
     }
 }

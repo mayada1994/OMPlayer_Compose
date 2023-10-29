@@ -75,6 +75,11 @@ dependencies {
     kapt 'androidx.hilt:hilt-compiler:1.0.0'
     implementation 'androidx.hilt:hilt-work:1.0.0'
 
+    // Room
+    implementation "androidx.room:room-runtime:2.4.3"
+    implementation "androidx.room:room-ktx:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
+
     // Moshi
     implementation 'com.squareup.moshi:moshi:1.14.0'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
@@ -86,9 +91,9 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
 
     // Work
-    implementation "androidx.work:work-runtime-ktx:2.8.1"
-    testImplementation "androidx.work:work-testing:2.8.1"
-    androidTestImplementation "androidx.work:work-testing:2.8.1"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
+    testImplementation "androidx.work:work-testing:2.7.1"
+    androidTestImplementation "androidx.work:work-testing:2.7.1"
 
     // YouTube
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0'
