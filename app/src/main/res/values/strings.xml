@@ -27,4 +27,5 @@
     <string name="tracks_similar_to">Tracks similar to:\n%1$s - %2$s</string>
     <string name="no_similar_tracks">No similar tracks were found</string>
     <string name="no_video">Video wasn\'t found</string>
+    <string name="match_percent">%s%%</string>
 </resources>

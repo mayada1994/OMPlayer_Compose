@@ -3,7 +3,9 @@ package com.omplayer.app.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.omplayer.app.R
 import com.omplayer.app.databinding.ItemSimilarTrackBinding
+import com.omplayer.app.extensions.round
 import com.omplayer.app.network.responses.LastFmSimilarTracksResponse.LastFmSimilarTrack
 
 class SimilarTracksAdapter(
@@ -32,7 +34,10 @@ class SimilarTracksAdapter(
             with(viewBinding) {
                 txtTitle.text = track.name
                 txtArtist.text = track.artist.name
-                btnStar.setOnClickListener { listener.onTrackStarred(track) }
+                txtMatch.text = root.context.getString(
+                    R.string.match_percent,
+                    (track.match * 100).round().removeSuffix(".00")
+                )
                 root.setOnClickListener { listener.onTrackSelected(track) }
             }
         }
@@ -40,6 +45,5 @@ class SimilarTracksAdapter(
 
     interface OnSimilarTrackSelectedListener {
         fun onTrackSelected(track: LastFmSimilarTrack)
-        fun onTrackStarred(track: LastFmSimilarTrack)
     }
 }

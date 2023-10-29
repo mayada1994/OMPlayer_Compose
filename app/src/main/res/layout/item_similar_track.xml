@@ -11,9 +11,10 @@
         android:id="@+id/txtTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/txtArtist"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txtMatch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Army of the Night" />
@@ -22,19 +23,20 @@
         android:id="@+id/txtArtist"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txtMatch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtTitle"
         tools:text="Powerwolf" />
 
-    <ImageView
-        android:id="@+id/btnStar"
+    <TextView
+        android:id="@+id/txtMatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_star_border"
         app:layout_constraintBottom_toBottomOf="@id/txtArtist"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/txtTitle" />
+        app:layout_constraintTop_toTopOf="@id/txtTitle"
+        tools:text="98.35%" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

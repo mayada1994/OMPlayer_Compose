@@ -42,8 +42,6 @@ class SimilarTracksFragment : BaseMvvmFragment<FragmentSimilarTracksBinding>(Fra
                                 override fun onTrackSelected(track: LastFmSimilarTrack) {
                                     viewModel.onTrackSelected(track)
                                 }
-
-                                override fun onTrackStarred(track: LastFmSimilarTrack) = Unit
                             })
 
                         addItemDecoration(
