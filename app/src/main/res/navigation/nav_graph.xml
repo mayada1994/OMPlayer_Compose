@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/libraryFragment">
 
     <fragment
         android:id="@+id/libraryFragment"
         android:name="com.omplayer.app.fragments.LibraryFragment"
-        android:label="LibraryFragment">
+        android:label="LibraryFragment"
+        tools:layout="@layout/fragment_library">
 
         <action
             android:id="@+id/nav_from_library_fragment_to_player_fragment"
@@ -24,23 +26,78 @@
         <action
             android:id="@+id/nav_from_library_fragment_to_artist_fragment"
             app:destination="@id/artistFragment" />
+
+        <action
+            android:id="@+id/nav_from_library_fragment_to_last_fm_login_fragment"
+            app:destination="@id/lastFmLoginFragment" />
+
+        <action
+            android:id="@+id/nav_from_library_fragment_to_last_fm_profile_fragment"
+            app:destination="@id/lastFmProfileFragment" />
+
+        <action
+            android:id="@+id/nav_from_library_fragment_to_bookmarked_videos_fragment"
+            app:destination="@id/bookmarkedVideosFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/playerFragment"
         android:name="com.omplayer.app.fragments.PlayerFragment"
-        android:label="PlayerFragment">
+        android:label="PlayerFragment"
+        tools:layout="@layout/fragment_player">
+
+        <action
+            android:id="@+id/nav_from_player_fragment_to_similar_tracks_fragment"
+            app:destination="@id/similarTracksFragment" />
+
+        <action
+            android:id="@+id/nav_from_player_fragment_to_video_fragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/similarTracksFragment"
+        android:name="com.omplayer.app.fragments.SimilarTracksFragment"
+        android:label="SimilarTracksFragment"
+        tools:layout="@layout/fragment_similar_tracks">
 
         <argument
             android:name="track"
             app:argType="com.omplayer.app.entities.Track"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/nav_from_similar_tracks_fragment_to_video_fragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.omplayer.app.fragments.VideoFragment"
+        android:label="VideoFragment"
+        tools:layout="@layout/fragment_video">
+
+        <argument
+            android:name="artist"
+            app:argType="string"
             app:nullable="true" />
+
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+
+        <argument
+            android:name="isSimilarTrack"
+            app:argType="boolean"
+            app:nullable="false" />
     </fragment>
 
     <fragment
         android:id="@+id/genreFragment"
         android:name="com.omplayer.app.fragments.GenreFragment"
-        android:label="GenreFragment">
+        android:label="GenreFragment"
+        tools:layout="@layout/fragment_genre">
 
         <argument
             android:name="genre"
@@ -55,7 +112,8 @@
     <fragment
         android:id="@+id/albumFragment"
         android:name="com.omplayer.app.fragments.AlbumFragment"
-        android:label="AlbumFragment">
+        android:label="AlbumFragment"
+        tools:layout="@layout/fragment_album">
 
         <argument
             android:name="album"
@@ -70,7 +128,8 @@
     <fragment
         android:id="@+id/artistFragment"
         android:name="com.omplayer.app.fragments.ArtistFragment"
-        android:label="ArtistFragment">
+        android:label="ArtistFragment"
+        tools:layout="@layout/fragment_artist">
 
         <argument
             android:name="artist"
@@ -82,4 +141,26 @@
             app:destination="@id/albumFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/lastFmLoginFragment"
+        android:name="com.omplayer.app.fragments.LastFmLoginFragment"
+        android:label="LastFmLoginFragment"
+        tools:layout="@layout/fragment_last_fm_login" />
+
+    <fragment
+        android:id="@+id/lastFmProfileFragment"
+        android:name="com.omplayer.app.fragments.LastFmProfileFragment"
+        android:label="LastFmProfileFragment"
+        tools:layout="@layout/fragment_last_fm_profile" />
+
+    <fragment
+        android:id="@+id/bookmarkedVideosFragment"
+        android:name="com.omplayer.app.fragments.BookmarkedVideosFragment"
+        android:label="BookmarkedVideosFragment"
+        tools:layout="@layout/fragment_bookmarked_videos" >
+
+        <action
+            android:id="@+id/nav_from_bookmarked_videos_fragment_to_video_fragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
 </navigation>

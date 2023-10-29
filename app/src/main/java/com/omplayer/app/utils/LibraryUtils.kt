@@ -10,11 +10,16 @@ import android.util.Size
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.omplayer.app.entities.Track
+import com.omplayer.app.enums.ScrobbleMediaType
 
 object LibraryUtils {
     var generalTracklist = MutableLiveData<List<Track>>()
     var currentTracklist = MutableLiveData<List<Track>>()
     var currentTrack = MutableLiveData<Track>()
+    var currentTrackProgress = MutableLiveData<Long>()
+    var wasCurrentTrackScrobbled = false
+    var lastTrackUpdateOnLastFmTime = 0L
+    var lastUpdatedMediaType: ScrobbleMediaType? = null
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun getAlbumCover(context: Context, trackId: Int): Bitmap? {

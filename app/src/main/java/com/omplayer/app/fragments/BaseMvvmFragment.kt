@@ -16,17 +16,29 @@ abstract class BaseMvvmFragment<T : ViewBinding>(bindingInflater: (layoutInflate
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.event.observe(viewLifecycleOwner) { handleEvent(it) }
-    }
-
-    /**
-     * Returns true if the event is base and false if it is custom
-     */
-    private fun handleEvent(event: ViewEvent): Boolean {
-        return if (BaseViewModel.BaseViewEvent::class.nestedClasses.contains(event::class)) {
-            (activity as MainActivity).handleBaseEvent(event)
-            true
-        } else {
-            false
+        viewModel.showProgress.observe(viewLifecycleOwner) {
+            (activity as MainActivity).showProgress(it)
         }
     }
+
+    private fun handleEvent(event: ViewEvent) {
+        if (!(activity as MainActivity).handleBaseEvent(event) && !handleComplexEvent(event)) {
+            handleCustomEvent(event)
+        }
+    }
+
+    private fun handleComplexEvent(event: ViewEvent): Boolean {
+        return when (event) {
+            is BaseViewModel.Complex -> {
+                event.events.forEach {
+                    handleEvent(it)
+                }
+                true
+            }
+
+            else -> false
+        }
+    }
+
+    open fun handleCustomEvent(event: ViewEvent): Boolean = false
 }

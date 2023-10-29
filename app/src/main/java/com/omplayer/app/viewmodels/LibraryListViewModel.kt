@@ -43,10 +43,9 @@ class LibraryListViewModel: BaseViewModel() {
     fun onItemClick(item: Any) {
         _event.value = when (item) {
             is Track -> {
-                if (LibraryUtils.generalTracklist.value != LibraryUtils.currentTracklist.value) {
-                    LibraryUtils.currentTracklist.value = LibraryUtils.generalTracklist.value
-                }
-                BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToPlayerFragment(item))
+                LibraryUtils.currentTracklist.value = LibraryUtils.generalTracklist.value
+                LibraryUtils.currentTrack.value = item
+                BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToPlayerFragment())
             }
             is Artist -> BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToArtistFragment(item))
             is Album -> BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToAlbumFragment(item))

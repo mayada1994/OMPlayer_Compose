@@ -6,11 +6,11 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import android.widget.SeekBar
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.omplayer.app.R
 import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.databinding.FragmentPlayerBinding
@@ -18,33 +18,34 @@ import com.omplayer.app.entities.Track
 import com.omplayer.app.extensions.toFormattedTime
 import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.viewmodels.PlayerViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBinding::inflate) {
 
     override val viewModel: PlayerViewModel by viewModels()
-
-    private val args: PlayerFragmentArgs by navArgs()
 
     private var mediaController: MediaControllerCompat? = null
 
     private val callback = object: MediaControllerCompat.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             super.onPlaybackStateChanged(state)
-            when(state?.state) {
-                PlaybackStateCompat.STATE_PLAYING -> {
-                    binding.btnPlay.setImageResource(R.drawable.ic_pause_circle)
-                    mediaController?.let { trackProgress(it) }
+            try {
+                when (state?.state) {
+                    PlaybackStateCompat.STATE_PLAYING -> {
+                        binding.btnPlay.setImageResource(R.drawable.ic_pause_circle)
+                    }
+                    PlaybackStateCompat.STATE_PAUSED -> {
+                        binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
+                    }
+                    PlaybackStateCompat.STATE_STOPPED -> {
+                        binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
+                        binding.seekBar.progress = 0
+                    }
                 }
-                PlaybackStateCompat.STATE_PAUSED -> {
-                    binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
-                }
-                PlaybackStateCompat.STATE_STOPPED -> {
-                    binding.btnPlay.setImageResource(R.drawable.ic_play_circle)
-                    binding.seekBar.progress = 0
-                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
@@ -60,9 +61,12 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 updateUI(it)
             }
 
-            args.track?.let { LibraryUtils.currentTrack.value = args.track }
-
             with(binding) {
+                LibraryUtils.currentTrackProgress.distinctUntilChanged().observe(viewLifecycleOwner) {
+                    seekBar.progress = it.toInt()
+                    txtCurrentPosition.text = it.toFormattedTime()
+                }
+
                 seekBar.apply {
                     LibraryUtils.currentTrack.value?.let {
                         progress = mediaController.playbackState?.position?.toInt() ?: 0
@@ -80,9 +84,11 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                         override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
 
                         override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                            seekBar?.let { mediaController.transportControls.seekTo(it.progress.toLong()) }
+                            seekBar?.let {
+                                mediaController.transportControls.seekTo(it.progress.toLong())
+                                LibraryUtils.currentTrackProgress.value = it.progress.toLong()
+                            }
                         }
-
                     })
                 }
                 btnPlay.setOnClickListener {
@@ -94,6 +100,10 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 }
                 btnNext.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToNext() } }
                 btnPrev.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToPrevious() } }
+
+                btnMenu.setOnClickListener { showMenu(btnMenu) }
+
+                btnBack.setOnClickListener { viewModel.onBackPressed() }
             }
 
             mediaController.registerCallback(callback)
@@ -112,6 +122,8 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                         LibraryUtils.getAlbumCover(track.id)
                     }
                 )
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .placeholder(R.drawable.placeholder)
                 .into(imgCover)
             seekBar.progress = mediaController?.playbackState?.position?.toInt() ?: 0
@@ -121,13 +133,15 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
         }
     }
 
-    private fun trackProgress(mediaController: MediaControllerCompat) {
-        lifecycleScope.launch {
-            while (mediaController.playbackState.state == PlaybackStateCompat.STATE_PLAYING) {
-                delay(500)
-                binding.seekBar.progress = mediaController.playbackState.position.toInt()
-                binding.txtCurrentPosition.text = mediaController.playbackState.position.toFormattedTime()
+    private fun showMenu(view: View) {
+        PopupMenu(requireContext(), view).let { popup ->
+            popup.menuInflater.inflate(R.menu.player_menu, popup.menu)
+            popup.setForceShowIcon(true)
+            popup.setOnMenuItemClickListener { menuItem ->
+                viewModel.onMenuItemClicked(menuItem.itemId, requireContext())
+                true
             }
+            popup.show()
         }
     }
 

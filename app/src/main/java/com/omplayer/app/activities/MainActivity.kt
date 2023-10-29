@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.omplayer.app.R
@@ -23,7 +24,9 @@ import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.services.MediaPlaybackService
 import com.omplayer.app.viewmodels.BaseViewModel.BaseViewEvent
 import com.omplayer.app.viewmodels.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -73,13 +76,37 @@ class MainActivity : AppCompatActivity() {
         )
 
         checkExternalStoragePermission()
+
+        viewModel.checkForOfflineScrobbledTracks(this)
     }
 
-    fun handleBaseEvent(event: ViewEvent) {
-        when (event) {
-            is BaseViewEvent.Navigate -> navController.navigate(event.navDirections)
-            is BaseViewEvent.ShowError -> Toast.makeText(this, event.resId, event.duration).show()
+    /**
+     * Returns true if the event is base and false if it is custom
+     */
+    fun handleBaseEvent(event: ViewEvent): Boolean {
+        return when (event) {
+            is BaseViewEvent.NavigateUp -> {
+                navController.navigateUp()
+                true
+            }
+            is BaseViewEvent.Navigate -> {
+                navController.navigate(event.navDirections)
+                true
+            }
+            is BaseViewEvent.ShowError -> {
+                Toast.makeText(this, event.resId, event.duration).show()
+                true
+            }
+            is BaseViewEvent.PausePlayback -> {
+                mediaController.transportControls.pause()
+                true
+            }
+            else -> false
         }
+    }
+
+    fun showProgress(isVisible: Boolean) {
+        binding.progressBar.isVisible = isVisible
     }
 
     override fun onStart() {

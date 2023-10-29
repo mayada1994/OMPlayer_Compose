@@ -7,20 +7,33 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.omplayer.app.R
 import com.omplayer.app.entities.Track
+import com.omplayer.app.enums.ScrobbleMediaType
+import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.services.MediaPlaybackService
 import com.omplayer.app.utils.LibraryUtils
+import com.omplayer.app.workers.LastFmTrackScrobbleWorker
+import com.omplayer.app.workers.LastFmTrackUpdateWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.TimeUnit
 
 class PlayerMediaSessionCallback(
     private val context: Context,
@@ -38,6 +51,8 @@ class PlayerMediaSessionCallback(
             )
         }
     }
+
+    private var progressTracker: CountDownTimer? = null
 
     private var lastPlayedTrackUri: Uri? = null
 
@@ -61,12 +76,14 @@ class PlayerMediaSessionCallback(
         super.onPlay()
         mediaPlayer.start()
         setMediaPlaybackState(position = mediaPlayer.currentPosition.toLong())
+        trackProgress()
     }
 
     override fun onPause() {
         super.onPause()
         mediaPlayer.pause()
         setMediaPlaybackState(state = PlaybackStateCompat.STATE_PAUSED, mediaPlayer.currentPosition.toLong())
+        progressTracker?.cancel()
     }
 
     override fun onSkipToNext() {
@@ -100,7 +117,10 @@ class PlayerMediaSessionCallback(
         super.onStop()
         mediaPlayer.stop()
         setMediaPlaybackState(state = PlaybackStateCompat.STATE_STOPPED)
+        LibraryUtils.currentTrackProgress.value = 0
         listener.onStop()
+        progressTracker?.cancel()
+        progressTracker = null
     }
 
     private fun setMediaPlaybackState(
@@ -172,6 +192,8 @@ class PlayerMediaSessionCallback(
             setOnPreparedListener {
                 mediaSession.controller.transportControls.play()
                 lastPlayedTrackUri = uri
+                LibraryUtils.wasCurrentTrackScrobbled = false
+                trackProgress()
             }
             setOnCompletionListener {
                 if (!LibraryUtils.isSingleTrackPlaylist()) {
@@ -183,6 +205,59 @@ class PlayerMediaSessionCallback(
             }
         }
     }
+
+    private fun trackProgress() {
+        progressTracker = object : CountDownTimer(
+            (mediaPlayer.duration - mediaPlayer.currentPosition).toLong(),
+            500L
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                // Do not remove to prevent track skipping bug when previous track duration is bigger than the current
+                if (mediaPlayer.isPlaying) {
+                    LibraryUtils.currentTrackProgress.postValue(mediaPlayer.currentPosition.toLong())
+
+                    if (shouldUpdateTrack(mediaPlayer.currentPosition)) {
+                        WorkManager.getInstance(context).beginUniqueWork(
+                            LastFmTrackUpdateWorker::class.java.simpleName,
+                            ExistingWorkPolicy.REPLACE,
+                            OneTimeWorkRequestBuilder<LastFmTrackUpdateWorker>().setConstraints(
+                                Constraints.Builder()
+                                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                                    .build()
+                            ).build()
+                        ).enqueue()
+                    }
+
+                    if (shouldScrobbleTrack(mediaPlayer.currentPosition, mediaPlayer.duration)) {
+                        WorkManager.getInstance(context).beginUniqueWork(
+                            LastFmTrackScrobbleWorker::class.java.simpleName,
+                            ExistingWorkPolicy.APPEND_OR_REPLACE,
+                            OneTimeWorkRequestBuilder<LastFmTrackScrobbleWorker>()
+                                .setBackoffCriteria(
+                                    BackoffPolicy.LINEAR,
+                                    OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                                    TimeUnit.MILLISECONDS
+                                ).build()
+                        ).enqueue()
+                    }
+                }
+            }
+
+            override fun onFinish() = Unit
+        }
+        progressTracker?.start()
+    }
+
+    private fun shouldUpdateTrack(currentPosition: Int) =
+        System.currentTimeMillis() - LibraryUtils.lastTrackUpdateOnLastFmTime >= LastFmRepository.LAST_FM_TRACK_UPDATE_INTERVAL
+                || currentPosition <= 500
+                || LibraryUtils.lastUpdatedMediaType != ScrobbleMediaType.TRACK
+
+    private fun shouldScrobbleTrack(currentPosition: Int, duration: Int) =
+        !LibraryUtils.wasCurrentTrackScrobbled
+                && duration >= LastFmRepository.LAST_FM_MIN_TRACK_DURATION
+                && (currentPosition >= LastFmRepository.LAST_FM_MAX_PLAYBACK_DURATION_BEFORE_SCROBBLE
+                || currentPosition.toFloat() / duration.toFloat() >= LastFmRepository.LAST_FM_SCROBBLING_PERCENTAGE)
 
     interface OnMediaSessionStoppedListener {
         fun onStop()
