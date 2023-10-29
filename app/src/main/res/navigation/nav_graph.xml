@@ -139,6 +139,10 @@
         <action
             android:id="@+id/nav_from_artist_fragment_to_album_fragment"
             app:destination="@id/albumFragment" />
+
+        <action
+            android:id="@+id/nav_from_artist_fragment_to_player_fragment"
+            app:destination="@id/playerFragment" />
     </fragment>
 
     <fragment

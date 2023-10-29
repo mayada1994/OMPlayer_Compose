@@ -24,24 +24,29 @@ class ArtistFragment : BaseMvvmFragment<FragmentArtistBinding>(FragmentArtistBin
 
         viewModel.init(args.artist)
 
-        binding.txtArtist.text = args.artist?.name
+        with(binding) {
+            txtArtist.text = args.artist?.name
 
-        viewModel.albums.observe(viewLifecycleOwner) {
-            binding.rvAlbums.apply {
-                adapter = LibraryListAdapter(it, object : LibraryListAdapter.OnItemClickListener {
-                    override fun onItemClick(item: Any) {
-                        viewModel.onAlbumSelected(item as Album)
-                    }
-                })
+            btnPlay.setOnClickListener { viewModel.playAllTracks(args.artist) }
+            btnBack.setOnClickListener { viewModel.onBackPressed() }
 
-                addItemDecoration(
-                    DividerItemDecoration(
-                        this.context,
-                        DividerItemDecoration.VERTICAL
-                    ).apply {
-                        ContextCompat.getDrawable(context, R.drawable.line_divider)?.let { setDrawable(it) }
-                    }
-                )
+            viewModel.albums.observe(viewLifecycleOwner) {
+                rvAlbums.apply {
+                    adapter = LibraryListAdapter(it, object : LibraryListAdapter.OnItemClickListener {
+                        override fun onItemClick(item: Any) {
+                            viewModel.onAlbumSelected(item as Album)
+                        }
+                    })
+
+                    addItemDecoration(
+                        DividerItemDecoration(
+                            this.context,
+                            DividerItemDecoration.VERTICAL
+                        ).apply {
+                            ContextCompat.getDrawable(context, R.drawable.line_divider)?.let { setDrawable(it) }
+                        }
+                    )
+                }
             }
         }
     }

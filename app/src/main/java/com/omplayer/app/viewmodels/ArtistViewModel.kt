@@ -23,4 +23,17 @@ class ArtistViewModel: BaseViewModel() {
         _event.value = BaseViewEvent.Navigate(ArtistFragmentDirections.navFromArtistFragmentToAlbumFragment(album))
     }
 
+    fun playAllTracks(artist: Artist?) {
+        LibraryUtils.generalTracklist.value?.filter { it.artist == artist?.name }?.let { artistTracklist ->
+            if (artistTracklist.isNotEmpty() && artistTracklist != LibraryUtils.generalTracklist.value) {
+                LibraryUtils.currentTracklist.value = artistTracklist
+                LibraryUtils.currentTrack.value = artistTracklist[0]
+                _event.value = BaseViewEvent.Navigate(ArtistFragmentDirections.navFromArtistFragmentToPlayerFragment())
+            }
+        }
+    }
+
+    fun onBackPressed() {
+        _event.value = BaseViewEvent.NavigateUp
+    }
 }
