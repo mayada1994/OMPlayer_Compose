@@ -4,8 +4,14 @@ import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.omplayer.app.entities.Track
 import com.omplayer.app.utils.LibraryUtils
+import com.omplayer.app.workers.LastFmOfflineScrobbledTracksWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -92,6 +98,18 @@ class MainViewModel: BaseViewModel() {
                 }
             }
         }
+    }
+
+    fun checkForOfflineScrobbledTracks(context: Context) {
+        WorkManager.getInstance(context).beginUniqueWork(
+            LastFmOfflineScrobbledTracksWorker::class.java.simpleName,
+            ExistingWorkPolicy.REPLACE,
+            OneTimeWorkRequestBuilder<LastFmOfflineScrobbledTracksWorker>().setConstraints(
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+            ).build()
+        ).enqueue()
     }
 
     companion object {

@@ -13,9 +13,11 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
@@ -31,6 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.TimeUnit
 
 class PlayerMediaSessionCallback(
     private val context: Context,
@@ -228,12 +231,13 @@ class PlayerMediaSessionCallback(
                     if (shouldScrobbleTrack(mediaPlayer.currentPosition, mediaPlayer.duration)) {
                         WorkManager.getInstance(context).beginUniqueWork(
                             LastFmTrackScrobbleWorker::class.java.simpleName,
-                            ExistingWorkPolicy.REPLACE,
-                            OneTimeWorkRequestBuilder<LastFmTrackScrobbleWorker>().setConstraints(
-                                Constraints.Builder()
-                                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                                    .build()
-                            ).build()
+                            ExistingWorkPolicy.APPEND_OR_REPLACE,
+                            OneTimeWorkRequestBuilder<LastFmTrackScrobbleWorker>()
+                                .setBackoffCriteria(
+                                    BackoffPolicy.LINEAR,
+                                    OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                                    TimeUnit.MILLISECONDS
+                                ).build()
                         ).enqueue()
                     }
                 }

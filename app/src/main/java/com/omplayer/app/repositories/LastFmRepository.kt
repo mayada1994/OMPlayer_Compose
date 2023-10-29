@@ -1,5 +1,7 @@
 package com.omplayer.app.repositories
 
+import com.omplayer.app.db.dao.ScrobbledTrackDao
+import com.omplayer.app.db.entities.ScrobbledTrack
 import com.omplayer.app.network.responses.LastFmSessionResponse
 import com.omplayer.app.network.responses.LastFmSimilarTracksResponse
 import com.omplayer.app.network.responses.LastFmUserResponse
@@ -14,7 +16,8 @@ import javax.inject.Singleton
 @Singleton
 class LastFmRepository @Inject constructor(
     private val lastFmService: LastFmService,
-    private val cacheManager: CacheManager
+    private val cacheManager: CacheManager,
+    private val scrobbledTrackDao: ScrobbledTrackDao
 ) {
 
     companion object {
@@ -26,6 +29,37 @@ class LastFmRepository @Inject constructor(
         const val LAST_FM_SCROBBLING_PERCENTAGE = 0.5 // 50% of the track duration
     }
 
+    // region DB
+
+    suspend fun getAllScrobbledTracks(): List<ScrobbledTrack>? {
+        return try {
+            scrobbledTrackDao.getAllScrobbledTracks()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    suspend fun insertScrobbledTrack(scrobbledTrack: ScrobbledTrack) : Boolean {
+        return try {
+            scrobbledTrackDao.insertScrobbledTrack(scrobbledTrack)
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    suspend fun deleteScrobbledTrack(scrobbledTrack: ScrobbledTrack) {
+        try {
+            scrobbledTrackDao.deleteScrobbledTrack(scrobbledTrack)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    // endregion
+
+    // region Network
     suspend fun getLastFmSession(
         apiKey: String,
         password: String,
@@ -199,4 +233,5 @@ class LastFmRepository @Inject constructor(
             null
         }
     }
+    // endregion
 }
