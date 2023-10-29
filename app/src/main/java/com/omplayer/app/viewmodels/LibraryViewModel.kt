@@ -10,13 +10,17 @@ import javax.inject.Inject
 class LibraryViewModel @Inject constructor(private val cacheManager: CacheManager) : BaseViewModel() {
 
     fun onMenuItemClicked(menuItemId: Int) {
-        if (menuItemId == R.id.lastFmMenuItem) {
-            _event.value = BaseViewEvent.Navigate(
+        when (menuItemId) {
+            R.id.lastFmMenuItem -> _event.value = BaseViewEvent.Navigate(
                 if (cacheManager.currentLastFmSession != null) {
                     LibraryFragmentDirections.navFromLibraryFragmentToLastFmProfileFragment()
                 } else {
                     LibraryFragmentDirections.navFromLibraryFragmentToLastFmLoginFragment()
                 }
+            )
+
+            R.id.bookmarkedMenuItem -> _event.value = BaseViewEvent.Navigate(
+                LibraryFragmentDirections.navFromLibraryFragmentToBookmarkedVideosFragment()
             )
         }
     }

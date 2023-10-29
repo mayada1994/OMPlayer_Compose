@@ -4,4 +4,8 @@
         android:id="@+id/lastFmMenuItem"
         android:icon="@drawable/ic_lastfm_logo"
         android:title="@string/last_fm" />
+    <item
+        android:id="@+id/bookmarkedMenuItem"
+        android:icon="@drawable/ic_star"
+        android:title="@string/bookmarked" />
 </menu>

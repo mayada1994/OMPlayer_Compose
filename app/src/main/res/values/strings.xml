@@ -20,6 +20,7 @@
     <string name="register">Don\'t have an account? <u>Register</u>.</string>
     <string name="scrobbling">Scrobbling</string>
     <string name="last_fm">Last.fm</string>
+    <string name="bookmarked">Bookmarked</string>
     <string name="last_fm_love">Love</string>
     <string name="last_fm_similar_tracks">Similar Tracks</string>
     <string name="last_fm_video">Video</string>
@@ -27,5 +28,6 @@
     <string name="tracks_similar_to">Tracks similar to:\n%1$s - %2$s</string>
     <string name="no_similar_tracks">No similar tracks were found</string>
     <string name="no_video">Video wasn\'t found</string>
+    <string name="no_bookmarked_videos">You don\'t have any bookmarked videos</string>
     <string name="match_percent">%s%%</string>
 </resources>

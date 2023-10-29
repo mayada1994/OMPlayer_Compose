@@ -34,6 +34,10 @@
         <action
             android:id="@+id/nav_from_library_fragment_to_last_fm_profile_fragment"
             app:destination="@id/lastFmProfileFragment" />
+
+        <action
+            android:id="@+id/nav_from_library_fragment_to_bookmarked_videos_fragment"
+            app:destination="@id/bookmarkedVideosFragment" />
     </fragment>
 
     <fragment
@@ -149,4 +153,14 @@
         android:label="LastFmProfileFragment"
         tools:layout="@layout/fragment_last_fm_profile" />
 
+    <fragment
+        android:id="@+id/bookmarkedVideosFragment"
+        android:name="com.omplayer.app.fragments.BookmarkedVideosFragment"
+        android:label="BookmarkedVideosFragment"
+        tools:layout="@layout/fragment_bookmarked_videos" >
+
+        <action
+            android:id="@+id/nav_from_bookmarked_videos_fragment_to_video_fragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
 </navigation>
