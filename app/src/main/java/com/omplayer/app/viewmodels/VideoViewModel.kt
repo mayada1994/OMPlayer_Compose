@@ -9,6 +9,7 @@ import com.omplayer.app.enums.ScrobbleMediaType
 import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.repositories.VideoRepository
+import com.omplayer.app.utils.CacheManager
 import com.omplayer.app.utils.LibraryUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class VideoViewModel @Inject constructor(
     private val lastFmRepository: LastFmRepository,
-    private val videoRepository: VideoRepository
+    private val videoRepository: VideoRepository,
+    private val cacheManager: CacheManager
 ) : BaseViewModel() {
 
     private var currentVideo: Video? = null
@@ -96,6 +98,8 @@ class VideoViewModel @Inject constructor(
     }
 
     fun handlePlaybackProgress(currentSecond: Float, duration: Float, context: Context) {
+        if (!cacheManager.isScrobblingEnabled) return
+
         currentVideo?.let {
             if (currentSecond < 1f) {
                 wasCurrentTrackScrobbled = false // Handle video restart

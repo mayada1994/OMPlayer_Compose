@@ -7,6 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.omplayer.app.R
 import com.omplayer.app.repositories.LastFmRepository
+import com.omplayer.app.utils.CacheManager
 import com.omplayer.app.utils.LibraryUtils.currentTrack
 import com.omplayer.app.utils.LibraryUtils.wasCurrentTrackScrobbled
 import dagger.assisted.Assisted
@@ -18,7 +19,8 @@ import kotlinx.coroutines.withContext
 class LastFmTrackScrobbleWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val lastFmRepository: LastFmRepository
+    private val lastFmRepository: LastFmRepository,
+    private val cacheManager: CacheManager
 ) : CoroutineWorker(context, workerParams) {
 
     companion object {
@@ -29,6 +31,8 @@ class LastFmTrackScrobbleWorker @AssistedInject constructor(
         val track = currentTrack.value
 
         track ?: return Result.failure()
+
+        if (!cacheManager.isScrobblingEnabled) return Result.failure()
 
         return try {
             withContext(Dispatchers.IO) {

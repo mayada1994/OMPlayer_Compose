@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import com.omplayer.app.R
 import com.omplayer.app.enums.ScrobbleMediaType
 import com.omplayer.app.repositories.LastFmRepository
+import com.omplayer.app.utils.CacheManager
 import com.omplayer.app.utils.LibraryUtils.currentTrack
 import com.omplayer.app.utils.LibraryUtils.lastTrackUpdateOnLastFmTime
 import com.omplayer.app.utils.LibraryUtils.lastUpdatedMediaType
@@ -20,7 +21,8 @@ import kotlinx.coroutines.withContext
 class LastFmTrackUpdateWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val lastFmRepository: LastFmRepository
+    private val lastFmRepository: LastFmRepository,
+    private val cacheManager: CacheManager
 ) : CoroutineWorker(context, workerParams) {
 
     companion object {
@@ -31,6 +33,8 @@ class LastFmTrackUpdateWorker @AssistedInject constructor(
         val track = currentTrack.value
 
         track ?: return Result.failure()
+
+        if (!cacheManager.isScrobblingEnabled) return Result.failure()
 
         return try {
             withContext(Dispatchers.IO) {
