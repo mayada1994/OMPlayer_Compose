@@ -67,13 +67,23 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btnPlaybackMode"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_loop_all"
+            app:layout_constraintBottom_toBottomOf="@id/btnPrev"
+            app:layout_constraintEnd_toStartOf="@id/btnPrev"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btnPrev" />
+
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btnPrev"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:src="@drawable/ic_prev_large"
             app:layout_constraintBottom_toBottomOf="@id/btnPlay"
             app:layout_constraintEnd_toStartOf="@id/btnPlay"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnPlaybackMode"
             app:layout_constraintTop_toTopOf="@id/btnPlay" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -90,9 +100,19 @@
             android:layout_height="0dp"
             android:src="@drawable/ic_next_large"
             app:layout_constraintBottom_toBottomOf="@id/btnPlay"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnAddToPlaylist"
             app:layout_constraintStart_toEndOf="@id/btnPlay"
             app:layout_constraintTop_toTopOf="@id/btnPlay" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btnAddToPlaylist"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_playlist_add"
+            app:layout_constraintBottom_toBottomOf="@id/btnNext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnNext"
+            app:layout_constraintTop_toTopOf="@id/btnNext" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
