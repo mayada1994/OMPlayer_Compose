@@ -22,6 +22,10 @@ class LibraryViewModel @Inject constructor(private val cacheManager: CacheManage
             R.id.bookmarkedMenuItem -> _event.value = BaseViewEvent.Navigate(
                 LibraryFragmentDirections.navFromLibraryFragmentToBookmarkedVideosFragment()
             )
+
+            R.id.playlistsMenuItem -> _event.value = BaseViewEvent.Navigate(
+                LibraryFragmentDirections.navFromLibraryFragmentToPlaylistsFragment()
+            )
         }
     }
 }

@@ -8,4 +8,8 @@
         android:id="@+id/bookmarkedMenuItem"
         android:icon="@drawable/ic_star"
         android:title="@string/bookmarked" />
+    <item
+        android:id="@+id/playlistsMenuItem"
+        android:icon="@drawable/ic_playlists"
+        android:title="@string/playlists" />
 </menu>

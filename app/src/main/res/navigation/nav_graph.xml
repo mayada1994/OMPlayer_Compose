@@ -38,6 +38,10 @@
         <action
             android:id="@+id/nav_from_library_fragment_to_bookmarked_videos_fragment"
             app:destination="@id/bookmarkedVideosFragment" />
+
+        <action
+            android:id="@+id/nav_from_library_fragment_to_playlists_fragment"
+            app:destination="@id/playlistsFragment" />
     </fragment>
 
     <fragment
@@ -167,4 +171,10 @@
             android:id="@+id/nav_from_bookmarked_videos_fragment_to_video_fragment"
             app:destination="@id/videoFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.omplayer.app.fragments.PlaylistsFragment"
+        android:label="PlaylistsFragment"
+        tools:layout="@layout/fragment_playlists" />
 </navigation>

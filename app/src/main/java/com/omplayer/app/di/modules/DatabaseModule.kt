@@ -3,6 +3,7 @@ package com.omplayer.app.di.modules
 import android.app.Application
 import androidx.room.Room
 import com.omplayer.app.db.PlayerDatabase
+import com.omplayer.app.db.dao.PlaylistDao
 import com.omplayer.app.db.dao.ScrobbledTrackDao
 import com.omplayer.app.db.dao.VideoDao
 import dagger.Module
@@ -22,6 +23,12 @@ class DatabaseModule {
             application.applicationContext,
             PlayerDatabase::class.java, "omplayer.db"
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    internal fun providePlaylistDao(database: PlayerDatabase): PlaylistDao {
+        return database.playlistDao()
     }
 
     @Provides
