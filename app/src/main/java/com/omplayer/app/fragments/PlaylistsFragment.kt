@@ -32,13 +32,13 @@ class PlaylistsFragment : BaseMvvmFragment<FragmentPlaylistsBinding>(FragmentPla
                     txtPlaceholder.isVisible = false
                     rvPlaylists.apply {
                         isVisible = true
-                        adapter = PlaylistAdapter(playlists, object : PlaylistAdapter.OnPlaylistSelectedListener {
+                        adapter = PlaylistAdapter(items = playlists, listener = object : PlaylistAdapter.OnPlaylistSelectedListener() {
                             override fun onPlaylistSelected(playlist: Playlist) {
                                 viewModel.onPlaylistSelected(playlist)
                             }
 
                             override fun onPlaylistRename(playlist: Playlist) {
-                                showAddChangePlaylistDialog(playlist)
+                                showAddChangePlaylistDialog(playlist, playlists)
                             }
 
                             override fun onPlaylistDelete(playlist: Playlist) {
@@ -58,13 +58,14 @@ class PlaylistsFragment : BaseMvvmFragment<FragmentPlaylistsBinding>(FragmentPla
                     txtPlaceholder.isVisible = true
                     rvPlaylists.isVisible = false
                 }
+
+                btnAdd.setOnClickListener { showAddChangePlaylistDialog(playlists = playlists) }
             }
-            btnAdd.setOnClickListener { showAddChangePlaylistDialog() }
             btnBack.setOnClickListener { viewModel.onBackPressed() }
         }
     }
 
-    private fun showAddChangePlaylistDialog(playlist: Playlist? = null) {
+    private fun showAddChangePlaylistDialog(playlist: Playlist? = null, playlists: List<Playlist>?) {
         val dialogBinding = DialogAddChangePlaylistBinding.inflate(layoutInflater)
         val alertDialog = AlertDialog.Builder(requireContext()).setView(dialogBinding.root).create()
         with(dialogBinding) {
@@ -74,9 +75,9 @@ class PlaylistsFragment : BaseMvvmFragment<FragmentPlaylistsBinding>(FragmentPla
             }
             btnSave.setOnClickListener {
                 if (playlist != null) {
-                    viewModel.renamePlaylist(playlist, fPlaylistTitle.text.toString())
+                    viewModel.renamePlaylist(playlist, fPlaylistTitle.text.toString(), playlists)
                 } else {
-                    viewModel.addPlaylist(fPlaylistTitle.text.toString())
+                    viewModel.addPlaylist(fPlaylistTitle.text.toString(), playlists)
                 }
                 alertDialog.dismiss()
             }

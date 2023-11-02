@@ -17,17 +17,35 @@ class PlaylistRepository @Inject constructor(private val playlistDao: PlaylistDa
         }
     }
 
-    suspend fun insert(playlist: Playlist) {
-        try {
+    suspend fun insert(playlist: Playlist) : Boolean {
+        return try {
             playlistDao.insertPlaylist(playlist)
+            true
         } catch (e: Exception) {
             e.printStackTrace()
+            false
         }
     }
 
     suspend fun insertAll(playlists: List<Playlist>) {
         try {
             playlistDao.insertPlaylists(playlists)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    suspend fun update(playlist: Playlist) {
+        try {
+            playlistDao.updatePlaylist(playlist)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    suspend fun updateAll(playlists: List<Playlist>) {
+        try {
+            playlistDao.updatePlaylists(playlists)
         } catch (e: Exception) {
             e.printStackTrace()
         }

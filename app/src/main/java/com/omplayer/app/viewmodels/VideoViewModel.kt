@@ -40,7 +40,7 @@ class VideoViewModel @Inject constructor(
     fun getVideo(artist: String?, title: String?) {
         if (artist.isNullOrBlank() || title.isNullOrBlank()) {
             _event.value = Complex(
-                BaseViewEvent.ShowError(R.string.general_error_message),
+                BaseViewEvent.ShowMessage(R.string.general_error_message),
                 CustomEvent.ShowPlaceholder
             )
             return

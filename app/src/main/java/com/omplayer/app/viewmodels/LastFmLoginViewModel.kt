@@ -25,8 +25,8 @@ class LastFmLoginViewModel @Inject constructor(
 
     fun login(username: String?, password: String?, context: Context) {
         when {
-            username.isNullOrBlank() -> _event.value = BaseViewEvent.ShowError(R.string.enter_username)
-            password.isNullOrBlank() -> _event.value = BaseViewEvent.ShowError(R.string.enter_password)
+            username.isNullOrBlank() -> _event.value = BaseViewEvent.ShowMessage(R.string.enter_username)
+            password.isNullOrBlank() -> _event.value = BaseViewEvent.ShowMessage(R.string.enter_password)
             else -> viewModelScope.launch(Dispatchers.IO) {
                 _showProgress.postValue(true)
                 try {
@@ -43,7 +43,7 @@ class LastFmLoginViewModel @Inject constructor(
                 } catch (e: Exception) {
                     Log.e(TAG, e.message, e)
                     _showProgress.postValue(false)
-                    _event.postValue(BaseViewEvent.ShowError(R.string.general_error_message))
+                    _event.postValue(BaseViewEvent.ShowMessage(R.string.general_error_message))
                 }
             }
         }

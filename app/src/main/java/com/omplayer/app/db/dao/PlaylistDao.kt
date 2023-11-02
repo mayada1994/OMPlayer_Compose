@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.omplayer.app.db.entities.Playlist
 
 @Dao
@@ -18,6 +19,12 @@ interface PlaylistDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylists(playlists: List<Playlist>)
+
+    @Update
+    suspend fun updatePlaylist(playlist: Playlist)
+
+    @Update
+    suspend fun updatePlaylists(playlists: List<Playlist>)
 
     @Delete
     suspend fun deletePlaylist(playlist: Playlist)

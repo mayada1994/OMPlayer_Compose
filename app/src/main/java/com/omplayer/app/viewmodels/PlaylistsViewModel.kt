@@ -28,11 +28,17 @@ class PlaylistsViewModel @Inject constructor(private val playlistRepository: Pla
         //TODO: Add navigation to playlist fragment
     }
 
-    fun addPlaylist(title: String?) {
+    fun addPlaylist(title: String?, playlists: List<Playlist>?) {
         if (title.isNullOrBlank()) {
-            _event.value = BaseViewEvent.ShowError(R.string.enter_valid_playlist_title)
+            _event.value = BaseViewEvent.ShowMessage(R.string.enter_valid_playlist_title)
             return
         }
+
+        if (playlists?.any { it.title.lowercase().trim() == title.lowercase().trim() } == true) {
+            _event.value = BaseViewEvent.ShowMessage(R.string.playlist_duplication)
+            return
+        }
+
         viewModelScope.launch {
             _showProgress.postValue(true)
             playlistRepository.insert(Playlist(title = title))
@@ -41,11 +47,17 @@ class PlaylistsViewModel @Inject constructor(private val playlistRepository: Pla
         }
     }
 
-    fun renamePlaylist(playlist: Playlist, newTitle: String?) {
+    fun renamePlaylist(playlist: Playlist, newTitle: String?, playlists: List<Playlist>?) {
         if (newTitle.isNullOrBlank()) {
-            _event.value = BaseViewEvent.ShowError(R.string.enter_valid_playlist_title)
+            _event.value = BaseViewEvent.ShowMessage(R.string.enter_valid_playlist_title)
             return
         }
+
+        if (playlists?.any { it.title.lowercase().trim() == newTitle.lowercase().trim() } == true) {
+            _event.value = BaseViewEvent.ShowMessage(R.string.playlist_duplication)
+            return
+        }
+
         viewModelScope.launch {
             _showProgress.postValue(true)
             playlistRepository.insert(playlist.copy(title = newTitle))

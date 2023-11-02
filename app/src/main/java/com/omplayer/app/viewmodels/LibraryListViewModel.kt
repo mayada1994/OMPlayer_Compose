@@ -50,7 +50,7 @@ class LibraryListViewModel: BaseViewModel() {
             is Artist -> BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToArtistFragment(item))
             is Album -> BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToAlbumFragment(item))
             is Genre -> BaseViewEvent.Navigate(LibraryFragmentDirections.navFromLibraryFragmentToGenreFragment(item))
-            else -> BaseViewEvent.ShowError(R.string.general_error_message)
+            else -> BaseViewEvent.ShowMessage(R.string.general_error_message)
         }
     }
 

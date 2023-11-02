@@ -12,8 +12,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/delete_playlist_prompt"
         android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -57,6 +57,10 @@
         <action
             android:id="@+id/nav_from_player_fragment_to_video_fragment"
             app:destination="@id/videoFragment" />
+
+        <action
+            android:id="@+id/nav_from_player_fragment_to_add_track_to_playlists_fragment"
+            app:destination="@id/addTrackToPlaylistsFragment" />
     </fragment>
 
     <fragment
@@ -177,4 +181,16 @@
         android:name="com.omplayer.app.fragments.PlaylistsFragment"
         android:label="PlaylistsFragment"
         tools:layout="@layout/fragment_playlists" />
+
+    <fragment
+        android:id="@+id/addTrackToPlaylistsFragment"
+        android:name="com.omplayer.app.fragments.AddTrackToPlaylistsFragment"
+        android:label="AddTrackToPlaylistsFragment"
+        tools:layout="@layout/fragment_add_track_to_playlists" >
+
+        <argument
+            android:name="trackId"
+            app:argType="integer"
+            app:nullable="false" />
+    </fragment>
 </navigation>

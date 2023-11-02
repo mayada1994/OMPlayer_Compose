@@ -41,7 +41,7 @@ class SimilarTracksViewModel @Inject constructor(private val lastFmRepository: L
                 e.printStackTrace()
                 _showProgress.postValue(false)
                 _similarTracks.postValue(null)
-                _event.postValue(BaseViewEvent.ShowError(R.string.general_error_message))
+                _event.postValue(BaseViewEvent.ShowMessage(R.string.general_error_message))
             }
         }
     }
