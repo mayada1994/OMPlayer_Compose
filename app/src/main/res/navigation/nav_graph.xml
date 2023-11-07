@@ -213,5 +213,26 @@
         <action
             android:id="@+id/nav_from_playlist_fragment_to_player_fragment"
             app:destination="@id/playerFragment" />
+
+        <action
+            android:id="@+id/nav_from_playlist_fragment_to_edit_playlist_fragment"
+            app:destination="@id/editPlaylistFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editPlaylistFragment"
+        android:name="com.omplayer.app.fragments.EditPlaylistFragment"
+        android:label="EditPlaylistFragment"
+        tools:layout="@layout/fragment_edit_playlist" >
+
+        <argument
+            android:name="playlist"
+            app:argType="com.omplayer.app.db.entities.Playlist"
+            app:nullable="false" />
+
+        <argument
+            android:name="action"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 </navigation>

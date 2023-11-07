@@ -17,6 +17,15 @@ class PlaylistRepository @Inject constructor(private val playlistDao: PlaylistDa
         }
     }
 
+    suspend fun getPlaylistById(id: Int): Playlist? {
+        return try {
+            playlistDao.getPlaylistById(id)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
     suspend fun insert(playlist: Playlist) : Boolean {
         return try {
             playlistDao.insertPlaylist(playlist)

@@ -13,7 +13,9 @@ import com.omplayer.app.adapters.TracklistAdapter
 import com.omplayer.app.databinding.FragmentPlaylistBinding
 import com.omplayer.app.entities.Track
 import com.omplayer.app.viewmodels.PlaylistViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PlaylistFragment : BaseMvvmFragment<FragmentPlaylistBinding>(FragmentPlaylistBinding::inflate) {
 
     override val viewModel: PlaylistViewModel by viewModels()
@@ -23,7 +25,7 @@ class PlaylistFragment : BaseMvvmFragment<FragmentPlaylistBinding>(FragmentPlayl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getPlaylistTracks(args.playlist)
+        viewModel.getPlaylistTracks(args.playlist.id)
 
         with(binding) {
             txtTitle.text = args.playlist.title
@@ -64,7 +66,7 @@ class PlaylistFragment : BaseMvvmFragment<FragmentPlaylistBinding>(FragmentPlayl
             popup.menuInflater.inflate(R.menu.playlist_tracklist_menu, popup.menu)
             popup.setForceShowIcon(true)
             popup.setOnMenuItemClickListener { menuItem ->
-                viewModel.onMenuItemClicked(menuItem.itemId)
+                viewModel.onMenuItemClicked(menuItem.itemId, args.playlist)
                 true
             }
             popup.show()
