@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.R
 import com.omplayer.app.db.entities.Playlist
+import com.omplayer.app.fragments.PlaylistsFragmentDirections
 import com.omplayer.app.repositories.PlaylistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -25,7 +26,7 @@ class PlaylistsViewModel @Inject constructor(private val playlistRepository: Pla
     }
 
     fun onPlaylistSelected(playlist: Playlist) {
-        //TODO: Add navigation to playlist fragment
+        _event.value = BaseViewEvent.Navigate(PlaylistsFragmentDirections.navFromPlaylistsFragmentToPlaylistFragment(playlist))
     }
 
     fun addPlaylist(title: String?, playlists: List<Playlist>?) {

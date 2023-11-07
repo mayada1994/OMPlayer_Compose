@@ -180,7 +180,12 @@
         android:id="@+id/playlistsFragment"
         android:name="com.omplayer.app.fragments.PlaylistsFragment"
         android:label="PlaylistsFragment"
-        tools:layout="@layout/fragment_playlists" />
+        tools:layout="@layout/fragment_playlists" >
+
+        <action
+            android:id="@+id/nav_from_playlists_fragment_to_playlist_fragment"
+            app:destination="@id/playlistFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/addTrackToPlaylistsFragment"
@@ -192,5 +197,21 @@
             android:name="trackId"
             app:argType="integer"
             app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.omplayer.app.fragments.PlaylistFragment"
+        android:label="PlaylistFragment"
+        tools:layout="@layout/fragment_playlist" >
+
+        <argument
+            android:name="playlist"
+            app:argType="com.omplayer.app.db.entities.Playlist"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/nav_from_playlist_fragment_to_player_fragment"
+            app:destination="@id/playerFragment" />
     </fragment>
 </navigation>
