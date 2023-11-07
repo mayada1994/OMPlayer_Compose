@@ -102,6 +102,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 btnNext.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToNext() } }
                 btnPrev.setOnClickListener { viewModel.skipTrack { mediaController.transportControls.skipToPrevious() } }
                 btnPlaybackMode.setOnClickListener { viewModel.changePlaybackMode() }
+                btnAddToPlaylist.setOnClickListener { viewModel.onAddToPlaylistsClick() }
 
                 btnMenu.setOnClickListener { showMenu(btnMenu) }
 

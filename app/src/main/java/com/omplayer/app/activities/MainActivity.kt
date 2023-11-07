@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(event.navDirections)
                 true
             }
-            is BaseViewEvent.ShowError -> {
+            is BaseViewEvent.ShowMessage -> {
                 Toast.makeText(this, event.resId, event.duration).show()
                 true
             }

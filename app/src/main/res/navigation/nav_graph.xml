@@ -38,6 +38,10 @@
         <action
             android:id="@+id/nav_from_library_fragment_to_bookmarked_videos_fragment"
             app:destination="@id/bookmarkedVideosFragment" />
+
+        <action
+            android:id="@+id/nav_from_library_fragment_to_playlists_fragment"
+            app:destination="@id/playlistsFragment" />
     </fragment>
 
     <fragment
@@ -53,6 +57,10 @@
         <action
             android:id="@+id/nav_from_player_fragment_to_video_fragment"
             app:destination="@id/videoFragment" />
+
+        <action
+            android:id="@+id/nav_from_player_fragment_to_add_track_to_playlists_fragment"
+            app:destination="@id/addTrackToPlaylistsFragment" />
     </fragment>
 
     <fragment
@@ -166,5 +174,65 @@
         <action
             android:id="@+id/nav_from_bookmarked_videos_fragment_to_video_fragment"
             app:destination="@id/videoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.omplayer.app.fragments.PlaylistsFragment"
+        android:label="PlaylistsFragment"
+        tools:layout="@layout/fragment_playlists" >
+
+        <action
+            android:id="@+id/nav_from_playlists_fragment_to_playlist_fragment"
+            app:destination="@id/playlistFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addTrackToPlaylistsFragment"
+        android:name="com.omplayer.app.fragments.AddTrackToPlaylistsFragment"
+        android:label="AddTrackToPlaylistsFragment"
+        tools:layout="@layout/fragment_add_track_to_playlists" >
+
+        <argument
+            android:name="trackId"
+            app:argType="integer"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.omplayer.app.fragments.PlaylistFragment"
+        android:label="PlaylistFragment"
+        tools:layout="@layout/fragment_playlist" >
+
+        <argument
+            android:name="playlist"
+            app:argType="com.omplayer.app.db.entities.Playlist"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/nav_from_playlist_fragment_to_player_fragment"
+            app:destination="@id/playerFragment" />
+
+        <action
+            android:id="@+id/nav_from_playlist_fragment_to_edit_playlist_fragment"
+            app:destination="@id/editPlaylistFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editPlaylistFragment"
+        android:name="com.omplayer.app.fragments.EditPlaylistFragment"
+        android:label="EditPlaylistFragment"
+        tools:layout="@layout/fragment_edit_playlist" >
+
+        <argument
+            android:name="playlist"
+            app:argType="com.omplayer.app.db.entities.Playlist"
+            app:nullable="false" />
+
+        <argument
+            android:name="action"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 </navigation>

@@ -44,10 +44,16 @@ class PlayerViewModel @Inject constructor(private val lastFmRepository: LastFmRe
         }
     }
 
+    fun onAddToPlaylistsClick() {
+        LibraryUtils.currentTrack.value?.let { track ->
+            _event.value = BaseViewEvent.Navigate(PlayerFragmentDirections.navFromPlayerFragmentToAddTrackToPlaylistsFragment(track.id))
+        }
+    }
+
     fun onMenuItemClicked(menuItemId: Int, context: Context) {
         LibraryUtils.currentTrack.value.let { track ->
             if (track == null) {
-                _event.value = BaseViewEvent.ShowError(R.string.general_error_message)
+                _event.value = BaseViewEvent.ShowMessage(R.string.general_error_message)
                 return
             }
 
@@ -80,11 +86,11 @@ class PlayerViewModel @Inject constructor(private val lastFmRepository: LastFmRe
                     secret = context.getString(R.string.last_fm_secret)
                 )
                 _showProgress.postValue(false)
-                _event.postValue(BaseViewEvent.ShowError(R.string.track_added_to_loved))
+                _event.postValue(BaseViewEvent.ShowMessage(R.string.track_added_to_loved))
             } catch (e: Exception) {
                 e.printStackTrace()
                 _showProgress.postValue(false)
-                _event.postValue(BaseViewEvent.ShowError(R.string.general_error_message))
+                _event.postValue(BaseViewEvent.ShowMessage(R.string.general_error_message))
             }
         }
     }

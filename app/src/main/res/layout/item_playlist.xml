@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="16dp"
+    android:paddingHorizontal="16dp"
     android:background="@color/selector_playlist_track"
     android:paddingVertical="8dp">
 
@@ -13,20 +13,31 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/txtArtist"
+        app:layout_constraintBottom_toTopOf="@id/txtSongsCount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Army of the Night" />
+        tools:text="Favorites" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txtArtist"
+        android:id="@+id/txtSongsCount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtTitle"
-        tools:text="Powerwolf" />
+        tools:text="35 songs" />
+
+    <ImageView
+        android:id="@+id/btnMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_menu"
+        app:layout_constraintBottom_toBottomOf="@id/txtSongsCount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/txtTitle"
+        app:tint="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
