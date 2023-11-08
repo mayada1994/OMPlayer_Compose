@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="black_90">#e6000000</color>
+    <color name="black_pearl">#061217</color>
+    <color name="white">#ffffff</color>
+    <color name="melanzane">#11040e</color>
+    <color name="rustic_red">#0C0305</color>
+    <color name="mardi_gras">#2F0A28</color>
+    <color name="mardi_gras_dark">#2A272A</color>
+    <color name="night_rider">#303030</color>
+    <color name="maroon">#660000</color>
+</resources>

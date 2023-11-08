@@ -2,20 +2,21 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/playerContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black_90"
     tools:context=".fragments.PlayerFragment">
 
     <ImageView
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/black" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/btnMenu"
@@ -25,14 +26,14 @@
         android:layout_marginEnd="16dp"
         android:src="@drawable/ic_menu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/black" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,6 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtTitle"
@@ -53,11 +55,11 @@
         android:id="@+id/imgCover"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_marginTop="36dp"
+        app:layout_constraintBottom_toTopOf="@id/seekBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtArtist"
-        tools:src="@drawable/placeholder" />
+        tools:src="@drawable/ic_cover_placeholder" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/controlsContainer"
@@ -122,6 +124,9 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="36dp"
+        android:progressBackgroundTint="@color/white"
+        android:progressTint="@color/white"
+        android:thumbTint="@color/white"
         app:layout_constraintBottom_toTopOf="@id/controlsContainer"
         tools:progress="55" />
 
@@ -131,6 +136,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="4dp"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@id/seekBar"
         app:layout_constraintTop_toBottomOf="@id/seekBar"
         tools:text="02:34" />
@@ -141,6 +147,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="4dp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@id/seekBar"
         app:layout_constraintTop_toBottomOf="@id/seekBar"
         tools:text="04:30" />
