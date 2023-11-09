@@ -24,4 +24,8 @@ class GenreViewModel: BaseViewModel() {
         _event.value = BaseViewEvent.Navigate(GenreFragmentDirections.navFromGenreFragmentToPlayerFragment())
     }
 
+    fun onBackPressed() {
+        _event.value = BaseViewEvent.NavigateUp
+    }
+
 }

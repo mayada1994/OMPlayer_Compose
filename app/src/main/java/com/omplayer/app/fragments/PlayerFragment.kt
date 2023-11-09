@@ -191,6 +191,9 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
     private fun showMenu(view: View) {
         PopupMenu(requireContext(), view).let { popup ->
             popup.menuInflater.inflate(R.menu.player_menu, popup.menu)
+            if (!viewModel.isScrobblingEnabled) {
+                popup.menu.removeItem(R.id.loveMenuItem)
+            }
             popup.setForceShowIcon(true)
             popup.setOnMenuItemClickListener { menuItem ->
                 viewModel.onMenuItemClicked(menuItem.itemId, requireContext())
