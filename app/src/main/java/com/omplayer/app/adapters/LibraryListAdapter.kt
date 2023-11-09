@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.omplayer.app.R
 import com.omplayer.app.databinding.ItemAlbumBinding
 import com.omplayer.app.databinding.ItemArtistBinding
@@ -88,7 +90,10 @@ class LibraryListAdapter(
                             album.cover
                         }
                     )
-                    .placeholder(R.drawable.placeholder)
+                    .transform(CircleCrop())
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.drawable.ic_cover_placeholder)
                     .into(imgCover)
                 root.setOnClickListener { listener.onItemClick(album) }
             }

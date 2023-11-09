@@ -4,6 +4,9 @@
     <color name="black_90">#e6000000</color>
     <color name="black_pearl">#061217</color>
     <color name="white">#ffffff</color>
+    <color name="white_50">#80ffffff</color>
+    <color name="white_20">#33ffffff</color>
+    <color name="transparent">#00000000</color>
     <color name="melanzane">#11040e</color>
     <color name="rustic_red">#0C0305</color>
     <color name="mardi_gras">#2F0A28</color>

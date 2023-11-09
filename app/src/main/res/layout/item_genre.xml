@@ -6,4 +6,5 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:paddingVertical="8dp"
+    android:textColor="@color/white"
     tools:text="Power Metal" />
