@@ -29,11 +29,11 @@ class SimilarTracksFragment : BaseMvvmFragment<FragmentSimilarTracksBinding>(Fra
 
         with(binding) {
             args.track.let {
-                txtTitle.text = requireContext().getString(R.string.tracks_similar_to, it.artist, it.title)
+                txtTitle.text = requireContext().getString(R.string.similar_track_title, it.artist, it.title)
             }
 
             viewModel.similarTracks.observe(viewLifecycleOwner) { list ->
-                txtPlaceholder.isVisible = list.isNullOrEmpty()
+                layoutPlaceholder.isVisible = list.isNullOrEmpty()
 
                 if (!list.isNullOrEmpty()) {
                     rvSimilarTracks.apply {
