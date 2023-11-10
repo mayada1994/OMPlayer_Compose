@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/txtTitle"
         app:layout_constraintTop_toBottomOf="@id/txtTitle"
-        android:textColor="@color/white"
+        android:textColor="@color/white_50"
         tools:text="2013" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
