@@ -33,4 +33,8 @@ class BookmarkedVideosViewModel @Inject constructor(private val videoRepository:
             )
         )
     }
+
+    fun onBackPressed() {
+        _event.value = BaseViewEvent.NavigateUp
+    }
 }
