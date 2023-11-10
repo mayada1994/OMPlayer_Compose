@@ -24,4 +24,8 @@ class AlbumViewModel: BaseViewModel() {
         _event.value = BaseViewEvent.Navigate(AlbumFragmentDirections.navFromAlbumFragmentToPlayerFragment())
     }
 
+    fun onBackPressed() {
+        _event.value = BaseViewEvent.NavigateUp
+    }
+
 }
