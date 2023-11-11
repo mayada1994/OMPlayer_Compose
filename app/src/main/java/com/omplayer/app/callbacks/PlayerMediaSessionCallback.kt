@@ -77,6 +77,7 @@ class PlayerMediaSessionCallback(
         mediaPlayer.start()
         setMediaPlaybackState(position = mediaPlayer.currentPosition.toLong())
         trackProgress()
+        LastFmRepository.updateTimestamp()
     }
 
     override fun onPause() {
@@ -194,6 +195,7 @@ class PlayerMediaSessionCallback(
                 lastPlayedTrackUri = uri
                 LibraryUtils.wasCurrentTrackScrobbled = false
                 trackProgress()
+                LastFmRepository.updateTimestamp()
             }
             setOnCompletionListener {
                 if (!LibraryUtils.isSingleTrackPlaylist()) {
