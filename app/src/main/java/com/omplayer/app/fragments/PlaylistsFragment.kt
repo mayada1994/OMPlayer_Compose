@@ -2,11 +2,11 @@ package com.omplayer.app.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.omplayer.app.R
 import com.omplayer.app.adapters.PlaylistAdapter
 import com.omplayer.app.databinding.DialogAddChangePlaylistBinding
@@ -67,7 +67,7 @@ class PlaylistsFragment : BaseMvvmFragment<FragmentPlaylistsBinding>(FragmentPla
 
     private fun showAddChangePlaylistDialog(playlist: Playlist? = null, playlists: List<Playlist>?) {
         val dialogBinding = DialogAddChangePlaylistBinding.inflate(layoutInflater)
-        val alertDialog = AlertDialog.Builder(requireContext()).setView(dialogBinding.root).create()
+        val alertDialog = MaterialAlertDialogBuilder(requireContext()).setView(dialogBinding.root).create()
         with(dialogBinding) {
             playlist?.title?.let {
                 fPlaylistTitle.setText(it)
@@ -91,7 +91,7 @@ class PlaylistsFragment : BaseMvvmFragment<FragmentPlaylistsBinding>(FragmentPla
 
     private fun showDeletePlaylistDialog(playlist: Playlist) {
         val dialogBinding = DialogDeletePlaylistBinding.inflate(layoutInflater)
-        val alertDialog = AlertDialog.Builder(requireContext()).setView(dialogBinding.root).create()
+        val alertDialog = MaterialAlertDialogBuilder(requireContext()).setView(dialogBinding.root).create()
         with(dialogBinding) {
             btnOk.setOnClickListener {
                 viewModel.deletePlaylist(playlist)

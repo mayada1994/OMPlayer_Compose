@@ -2,12 +2,12 @@ package com.omplayer.app.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.omplayer.app.R
 import com.omplayer.app.adapters.PlaylistAdapter
 import com.omplayer.app.databinding.DialogAddChangePlaylistBinding
@@ -100,7 +100,7 @@ class AddTrackToPlaylistsFragment : BaseMvvmFragment<FragmentAddTrackToPlaylists
 
     private fun showAddPlaylistDialog() {
         val dialogBinding = DialogAddChangePlaylistBinding.inflate(layoutInflater)
-        val alertDialog = AlertDialog.Builder(requireContext()).setView(dialogBinding.root).create()
+        val alertDialog = MaterialAlertDialogBuilder(requireContext()).setView(dialogBinding.root).create()
         with(dialogBinding) {
             btnSave.setOnClickListener {
                 viewModel.addPlaylist(fPlaylistTitle.text.toString())
