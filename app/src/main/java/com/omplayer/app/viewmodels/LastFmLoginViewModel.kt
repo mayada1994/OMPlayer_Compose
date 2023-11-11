@@ -58,4 +58,8 @@ class LastFmLoginViewModel @Inject constructor(
             Log.e(TAG, e.message, e)
         }
     }
+
+    fun onBackPressed() {
+        _event.value = BaseViewEvent.NavigateUp
+    }
 }

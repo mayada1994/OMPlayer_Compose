@@ -25,4 +25,9 @@
         <item name="hintTextColor">@color/white_50</item>
         <item name="boxStrokeColor">@color/selector_edit_text</item>
     </style>
+
+    <style name="ShapeAppearanceOverlay.MaterialButton.Rounded" parent="ShapeAppearance.MaterialComponents">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">40dp</item>
+    </style>
 </resources>

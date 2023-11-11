@@ -24,6 +24,7 @@ class LastFmLoginFragment : BaseMvvmFragment<FragmentLastFmLoginBinding>(Fragmen
                 )
             }
             btnRegister.setOnClickListener { viewModel.register(requireContext()) }
+            btnBack.setOnClickListener { viewModel.onBackPressed() }
         }
     }
 }
