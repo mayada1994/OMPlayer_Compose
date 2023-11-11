@@ -48,4 +48,5 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="track_position">%s.</string>
+    <string name="selected">Selected: %s</string>
 </resources>

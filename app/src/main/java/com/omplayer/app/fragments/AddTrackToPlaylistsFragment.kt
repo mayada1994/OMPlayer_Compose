@@ -50,7 +50,14 @@ class AddTrackToPlaylistsFragment : BaseMvvmFragment<FragmentAddTrackToPlaylists
         with(binding) {
             if (playlists.isNotEmpty()) {
                 txtPlaceholder.isVisible = false
-                txtSelectedCount.text = resources.getQuantityString(R.plurals.playlists_count, selectedPlaylists.count(), selectedPlaylists.count())
+                txtSelectedCount.text = getString(
+                    R.string.selected,
+                    resources.getQuantityString(
+                        R.plurals.playlists_count,
+                        selectedPlaylists.count(),
+                        selectedPlaylists.count()
+                    )
+                )
                 btnSave.apply {
                     isVisible = true
                     setOnClickListener { viewModel.onSaveClicked() }
@@ -63,10 +70,13 @@ class AddTrackToPlaylistsFragment : BaseMvvmFragment<FragmentAddTrackToPlaylists
                         selectedItems = selectedPlaylists,
                         listener = object : PlaylistAdapter.OnPlaylistSelectedListener() {
                             override fun onPlaylistsSelected(playlists: List<Playlist>) {
-                                txtSelectedCount.text = resources.getQuantityString(
-                                    R.plurals.playlists_count,
-                                    playlists.count(),
-                                    playlists.count()
+                                txtSelectedCount.text = getString(
+                                    R.string.selected,
+                                    resources.getQuantityString(
+                                        R.plurals.playlists_count,
+                                        playlists.count(),
+                                        playlists.count()
+                                    )
                                 )
                                 viewModel.onPlaylistsSelected(playlists)
                             }
