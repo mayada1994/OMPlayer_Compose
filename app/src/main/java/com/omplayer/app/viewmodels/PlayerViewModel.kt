@@ -33,6 +33,14 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
+    fun getInitialPlaybackModeIcon() {
+        _event.value = when (LibraryUtils.currentPlaybackMode) {
+            PlaybackMode.LOOP_ALL -> CustomEvent.UpdatePlaybackModeIcon(R.drawable.ic_loop_all)
+            PlaybackMode.LOOP_SINGLE -> CustomEvent.UpdatePlaybackModeIcon(R.drawable.ic_loop_single)
+            PlaybackMode.SHUFFLE -> CustomEvent.UpdatePlaybackModeIcon(R.drawable.ic_shuffle)
+        }
+    }
+
     fun changePlaybackMode() {
         when (LibraryUtils.currentPlaybackMode) {
             PlaybackMode.LOOP_ALL -> {

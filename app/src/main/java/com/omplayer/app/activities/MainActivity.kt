@@ -78,6 +78,10 @@ class MainActivity : AppCompatActivity() {
         checkExternalStoragePermission()
 
         viewModel.checkForOfflineScrobbledTracks(this)
+
+        viewModel.showProgress.observe(this) {
+            showProgress(it)
+        }
     }
 
     /**

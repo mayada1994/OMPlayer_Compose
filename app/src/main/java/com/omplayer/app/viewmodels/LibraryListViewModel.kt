@@ -33,9 +33,13 @@ class LibraryListViewModel: BaseViewModel() {
         libraryListTypePosition ?: return listOf()
 
         return when (LibraryListType.getLibraryListTypeByPosition(libraryListTypePosition!!)) {
-            LibraryListType.SONGS -> tracklist.sortedWith(compareBy({ it.artist.lowercase() }, { it.title.lowercase() }))
+            LibraryListType.SONGS -> tracklist.sortedBy { it.title.lowercase() }
             LibraryListType.ARTISTS -> tracklist.distinctBy { it.artist }.map { it.toArtist() }.sortedBy { it.name.lowercase() }
-            LibraryListType.ALBUMS -> tracklist.distinctBy { it.albumId }.map { it.toAlbum() }.sortedBy { it.title.lowercase() }
+            LibraryListType.ALBUMS -> tracklist.asSequence()
+                .distinctBy { it.albumId }
+                .distinctBy { it.artist to it.album }
+                .distinctBy { it.album to it.year }
+                .map { it.toAlbum() }.sortedBy { it.title.lowercase() }.toList()
             LibraryListType.GENRES -> tracklist.distinctBy { it.genre }.map { it.toGenre() }.sortedBy { it.title.lowercase() }
         }
     }

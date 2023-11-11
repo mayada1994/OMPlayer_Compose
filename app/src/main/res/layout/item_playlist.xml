@@ -7,7 +7,7 @@
     android:layout_marginHorizontal="8dp"
     android:background="@color/selector_playlist_track"
     android:paddingHorizontal="8dp"
-    android:paddingVertical="8dp">
+    android:paddingVertical="12dp">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtTitle"

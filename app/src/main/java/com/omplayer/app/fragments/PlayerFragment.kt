@@ -121,6 +121,8 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 btnBack.setOnClickListener { viewModel.onBackPressed() }
             }
 
+            viewModel.getInitialPlaybackModeIcon()
+
             mediaController.registerCallback(callback)
         }
     }

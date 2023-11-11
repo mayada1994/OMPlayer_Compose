@@ -13,7 +13,11 @@ class AlbumViewModel: BaseViewModel() {
     val tracklist: LiveData<List<Track>> = _tracklist
 
     fun init(album: Album?) {
-        LibraryUtils.generalTracklist.value?.filter { it.albumId == album?.id }?.let {
+        LibraryUtils.generalTracklist.value?.filter {
+            it.albumId == album?.id
+                    || (it.album == album?.title && it.artist == album.artist)
+                    || (it.album == album?.title && it.year == album.year)
+        }?.let {
             _tracklist.value = it.sortedBy { track -> track.position }
         }
     }
