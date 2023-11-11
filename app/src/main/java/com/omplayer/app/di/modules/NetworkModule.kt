@@ -1,5 +1,7 @@
 package com.omplayer.app.di.modules
 
+import android.app.Application
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.omplayer.app.network.services.LastFmService
 import com.omplayer.app.network.services.VideoService
 import com.squareup.moshi.Moshi
@@ -23,12 +25,13 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    internal fun provideLastFmService(moshi: Moshi): LastFmService =
+    internal fun provideLastFmService(moshi: Moshi, application: Application): LastFmService =
         Retrofit.Builder()
             .baseUrl("https://ws.audioscrobbler.com/2.0/")
             .client(
                 OkHttpClient.Builder()
                     .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                    .addInterceptor(ChuckerInterceptor(application.applicationContext))
                     .build()
             )
             .addConverterFactory(MoshiConverterFactory.create(moshi))
