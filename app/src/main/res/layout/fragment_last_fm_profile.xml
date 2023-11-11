@@ -4,20 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginHorizontal="32dp"
+    android:background="@color/black_90"
+    android:paddingHorizontal="16dp"
     tools:context=".fragments.LastFmProfileFragment">
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBack"
         tools:text="User" />
 
     <ImageView
@@ -34,10 +44,11 @@
         android:id="@+id/txtScrobbling"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="48dp"
         android:layout_weight="1"
         android:text="@string/scrobbling"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imgUserAvatar" />
 
@@ -45,20 +56,21 @@
         android:id="@+id/switchScrobbling"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_weight="3"
         app:layout_constraintBottom_toBottomOf="@id/txtScrobbling"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/txtScrobbling" />
+        app:layout_constraintTop_toTopOf="@id/txtScrobbling"
+        app:thumbTint="@color/white"
+        app:trackTint="@color/selector_switch" />
 
-    <TextView
+    <ImageView
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/ic_logout"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="24dp"
-        android:text="@string/logout"/>
+        app:layout_constraintTop_toTopOf="@id/btnBack" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

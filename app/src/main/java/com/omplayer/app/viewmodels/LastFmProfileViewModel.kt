@@ -46,4 +46,8 @@ class LastFmProfileViewModel @Inject constructor(
         cacheManager.isScrobblingEnabled = false
         _event.value = BaseViewEvent.NavigateUp
     }
+
+    fun onBackPressed() {
+        _event.value = BaseViewEvent.NavigateUp
+    }
 }
