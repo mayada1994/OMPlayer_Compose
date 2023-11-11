@@ -13,7 +13,11 @@ class AlbumViewModel: BaseViewModel() {
     val tracklist: LiveData<List<Track>> = _tracklist
 
     fun init(album: Album?) {
-        LibraryUtils.generalTracklist.value?.filter { it.albumId == album?.id }?.let {
+        LibraryUtils.generalTracklist.value?.filter {
+            it.albumId == album?.id
+                    || (it.album == album?.title && it.artist == album.artist)
+                    || (it.album == album?.title && it.year == album.year)
+        }?.let {
             _tracklist.value = it.sortedBy { track -> track.position }
         }
     }
@@ -22,6 +26,10 @@ class AlbumViewModel: BaseViewModel() {
         LibraryUtils.currentTracklist.value = tracklist.value
         LibraryUtils.currentTrack.value = track
         _event.value = BaseViewEvent.Navigate(AlbumFragmentDirections.navFromAlbumFragmentToPlayerFragment())
+    }
+
+    fun onBackPressed() {
+        _event.value = BaseViewEvent.NavigateUp
     }
 
 }

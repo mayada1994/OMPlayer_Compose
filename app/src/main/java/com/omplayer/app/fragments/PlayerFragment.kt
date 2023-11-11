@@ -1,5 +1,8 @@
 package com.omplayer.app.fragments
 
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.session.MediaControllerCompat
@@ -7,10 +10,18 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import android.widget.SeekBar
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.distinctUntilChanged
+import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.omplayer.app.R
 import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.databinding.FragmentPlayerBinding
@@ -20,6 +31,7 @@ import com.omplayer.app.extensions.toFormattedTime
 import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.viewmodels.PlayerViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
@@ -109,6 +121,8 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                 btnBack.setOnClickListener { viewModel.onBackPressed() }
             }
 
+            viewModel.getInitialPlaybackModeIcon()
+
             mediaController.registerCallback(callback)
         }
     }
@@ -125,9 +139,49 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                         LibraryUtils.getAlbumCover(track.id)
                     }
                 )
+                .listener(object : RequestListener<Drawable?> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable?>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        val color = ContextCompat.getColor(requireContext(), R.color.black_90)
+                        val colorWithAlpha = Color.argb((Color.alpha(color) * 0.6).roundToInt(), Color.red(color), Color.green(color), Color.blue(color))
+                        val drawableBackground = GradientDrawable().apply {
+                            shape = GradientDrawable.RECTANGLE
+                            colors = intArrayOf(color, colorWithAlpha)
+                        }
+                        playerContainer.background = drawableBackground
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable?>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        resource ?: return false
+
+                        val palette = Palette.from(resource.toBitmap()).generate()
+                        val color = palette.getDarkMutedColor(ContextCompat.getColor(requireContext(), R.color.black_90))
+                        val colorWithAlpha = Color.argb((Color.alpha(color) * 0.6).roundToInt(), Color.red(color), Color.green(color), Color.blue(color))
+                        val drawableBackground = GradientDrawable().apply {
+                            shape = GradientDrawable.RECTANGLE
+                            colors = intArrayOf(color, colorWithAlpha)
+                        }
+                        playerContainer.background = drawableBackground
+                        imgCover.setImageDrawable(resource)
+
+                        return true
+                    }
+                })
+                .transform(CircleCrop())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
-                .placeholder(R.drawable.placeholder)
+                .placeholder(R.drawable.ic_cover_placeholder)
                 .into(imgCover)
             seekBar.progress = mediaController?.playbackState?.position?.toInt() ?: 0
             seekBar.max = track.duration
@@ -139,6 +193,9 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
     private fun showMenu(view: View) {
         PopupMenu(requireContext(), view).let { popup ->
             popup.menuInflater.inflate(R.menu.player_menu, popup.menu)
+            if (!viewModel.isScrobblingEnabled) {
+                popup.menu.removeItem(R.id.loveMenuItem)
+            }
             popup.setForceShowIcon(true)
             popup.setOnMenuItemClickListener { menuItem ->
                 viewModel.onMenuItemClicked(menuItem.itemId, requireContext())

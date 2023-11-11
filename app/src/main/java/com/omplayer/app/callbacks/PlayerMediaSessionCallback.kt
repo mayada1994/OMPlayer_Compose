@@ -166,8 +166,8 @@ class PlayerMediaSessionCallback(
                                     Glide.with(context)
                                         .asBitmap()
                                         .load(LibraryUtils.getAlbumCover(track.id))
-                                        .placeholder(R.drawable.placeholder)
-                                        .error(R.drawable.placeholder)
+                                        .placeholder(R.drawable.ic_cover_placeholder)
+                                        .error(R.drawable.ic_cover_placeholder)
                                         .submit().get()
                                 } catch (e: Exception) {
                                     null

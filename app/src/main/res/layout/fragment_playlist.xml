@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black_90"
     tools:context=".fragments.PlaylistFragment">
 
     <ImageView
@@ -14,8 +15,7 @@
         android:layout_marginTop="24dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/black" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/btnMenu"
@@ -25,15 +25,15 @@
         android:layout_marginEnd="16dp"
         android:src="@drawable/ic_menu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/black" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/btnBack"
         app:layout_constraintEnd_toStartOf="@id/btnMenu"
@@ -55,11 +55,11 @@
         android:id="@+id/txtPlaceholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="32dp"
         android:gravity="center"
         android:text="@string/no_playlist_songs"
-        android:textColor="@color/black"
-        android:textSize="46sp"
+        android:textColor="@color/white_50"
+        android:textSize="40sp"
         android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

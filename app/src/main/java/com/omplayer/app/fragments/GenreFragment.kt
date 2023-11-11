@@ -23,25 +23,30 @@ class GenreFragment : BaseMvvmFragment<FragmentGenreBinding>(FragmentGenreBindin
 
         viewModel.init(args.genre)
 
-        binding.txtGenre.text = args.genre?.title
+        with(binding) {
+            txtGenre.text = args.genre?.title
 
-        viewModel.tracklist.observe(viewLifecycleOwner) {
-            binding.rvTracks.apply {
-                adapter = TracklistAdapter(it, object : TracklistAdapter.OnTrackSelectedListener{
-                    override fun onTrackSelected(track: Track) {
-                        viewModel.onTrackSelected(track)
-                    }
-                })
+            viewModel.tracklist.observe(viewLifecycleOwner) {
+                rvTracks.apply {
+                    adapter = TracklistAdapter(it, object : TracklistAdapter.OnTrackSelectedListener{
+                        override fun onTrackSelected(track: Track) {
+                            viewModel.onTrackSelected(track)
+                        }
+                    })
 
-                addItemDecoration(
-                    DividerItemDecoration(
-                        this.context,
-                        DividerItemDecoration.VERTICAL
-                    ).apply {
-                        ContextCompat.getDrawable(context, R.drawable.line_divider)?.let { setDrawable(it) }
-                    }
-                )
+                    addItemDecoration(
+                        DividerItemDecoration(
+                            this.context,
+                            DividerItemDecoration.VERTICAL
+                        ).apply {
+                            ContextCompat.getDrawable(context, R.drawable.line_divider)?.let { setDrawable(it) }
+                        }
+                    )
+                }
             }
+
+            btnBack.setOnClickListener { viewModel.onBackPressed() }
         }
+
     }
 }

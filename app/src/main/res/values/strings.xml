@@ -30,7 +30,8 @@
     <string name="last_fm_similar_tracks">Similar Tracks</string>
     <string name="last_fm_video">Video</string>
     <string name="track_added_to_loved">Track was added to loved successfully</string>
-    <string name="tracks_similar_to">Tracks similar to:\n%1$s - %2$s</string>
+    <string name="tracks_similar_to">Tracks similar to:</string>
+    <string name="similar_track_title">%1$s - %2$s</string>
     <string name="no_similar_tracks">No similar tracks were found</string>
     <string name="no_video">Video wasn\'t found</string>
     <string name="no_bookmarked_videos">You don\'t have any bookmarked videos</string>
@@ -46,4 +47,6 @@
     <string name="save">Save</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="track_position">%s.</string>
+    <string name="selected">Selected: %s</string>
 </resources>

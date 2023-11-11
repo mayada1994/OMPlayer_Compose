@@ -9,8 +9,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.omplayer.app.R
-import com.omplayer.app.adapters.TracklistAdapter
+import com.omplayer.app.adapters.AlbumTracksAdapter
 import com.omplayer.app.databinding.FragmentAlbumBinding
 import com.omplayer.app.entities.Track
 import com.omplayer.app.utils.LibraryUtils
@@ -40,14 +41,15 @@ class AlbumFragment : BaseMvvmFragment<FragmentAlbumBinding>(FragmentAlbumBindin
                             it.cover
                         }
                     )
+                    .transform(CircleCrop())
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
-                    .placeholder(R.drawable.placeholder)
+                    .placeholder(R.drawable.ic_cover_placeholder)
                     .into(imgCover)
             }
             viewModel.tracklist.observe(viewLifecycleOwner) {
                 rvTracks.apply {
-                    adapter = TracklistAdapter(it, object : TracklistAdapter.OnTrackSelectedListener{
+                    adapter = AlbumTracksAdapter(it, object : AlbumTracksAdapter.OnTrackSelectedListener{
                         override fun onTrackSelected(track: Track) {
                             viewModel.onTrackSelected(track)
                         }
@@ -63,6 +65,7 @@ class AlbumFragment : BaseMvvmFragment<FragmentAlbumBinding>(FragmentAlbumBindin
                     )
                 }
             }
+            btnBack.setOnClickListener { viewModel.onBackPressed() }
         }
     }
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:paddingVertical="8dp">
+    android:paddingVertical="12dp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgCover"
@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toStartOf="@id/txtTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/placeholder" />
+        tools:src="@drawable/ic_cover_placeholder" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtTitle"
@@ -26,6 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/imgCover"
         app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/white"
         tools:text="Harvest Moon" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -36,6 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/txtTitle"
         app:layout_constraintTop_toBottomOf="@id/txtTitle"
+        android:textColor="@color/white_50"
         tools:text="2013" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

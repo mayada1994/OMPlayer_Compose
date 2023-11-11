@@ -15,7 +15,7 @@ class ArtistViewModel: BaseViewModel() {
 
     fun init(artist: Artist?) {
         LibraryUtils.generalTracklist.value?.filter { it.artist == artist?.name }?.let {
-            _albums.value = it.distinctBy { it.albumId }.map { it.toAlbum() }.sortedBy { it.year }
+            _albums.value = it.distinctBy { it.album }.map { it.toAlbum() }.sortedBy { it.year }
         }
     }
 

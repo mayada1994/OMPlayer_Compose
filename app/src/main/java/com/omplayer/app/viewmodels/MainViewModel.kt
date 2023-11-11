@@ -37,6 +37,8 @@ class MainViewModel: BaseViewModel() {
                 null,
                 MediaStore.Audio.AudioColumns.ARTIST + "," + MediaStore.Audio.AudioColumns.ALBUM + " COLLATE NOCASE ASC"
             )?.let { cursor ->
+                _showProgress.postValue(true)
+
                 val extractedTracks = arrayListOf<Track>()
                 try {
                     cursor.moveToFirst()
@@ -90,9 +92,10 @@ class MainViewModel: BaseViewModel() {
                 } catch (e: Exception) {
                     Log.e(TAG, e.toString())
                 } finally {
+                    _showProgress.postValue(false)
                     cursor.close()
                 }
-                extractedTracks.sortedWith(compareBy({ it.artist.lowercase() }, { it.title.lowercase() })).let {
+                extractedTracks.sortedBy { it.title.lowercase() }.let {
                     LibraryUtils.generalTracklist.postValue(it)
                     LibraryUtils.currentTracklist.postValue(it)
                 }

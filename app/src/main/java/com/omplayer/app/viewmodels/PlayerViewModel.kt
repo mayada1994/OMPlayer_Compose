@@ -9,21 +9,35 @@ import com.omplayer.app.enums.PlaybackMode
 import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.fragments.PlayerFragmentDirections
 import com.omplayer.app.repositories.LastFmRepository
+import com.omplayer.app.utils.CacheManager
 import com.omplayer.app.utils.LibraryUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PlayerViewModel @Inject constructor(private val lastFmRepository: LastFmRepository) : BaseViewModel() {
+class PlayerViewModel @Inject constructor(
+    private val lastFmRepository: LastFmRepository,
+    private val cacheManager: CacheManager
+) : BaseViewModel() {
 
     sealed class CustomEvent {
         data class UpdatePlaybackModeIcon(@DrawableRes val iconRes: Int) : ViewEvent
     }
 
+    val isScrobblingEnabled = cacheManager.isScrobblingEnabled
+
     fun skipTrack(action: () -> Unit) {
         if (!LibraryUtils.isSingleTrackPlaylist()) {
             action()
+        }
+    }
+
+    fun getInitialPlaybackModeIcon() {
+        _event.value = when (LibraryUtils.currentPlaybackMode) {
+            PlaybackMode.LOOP_ALL -> CustomEvent.UpdatePlaybackModeIcon(R.drawable.ic_loop_all)
+            PlaybackMode.LOOP_SINGLE -> CustomEvent.UpdatePlaybackModeIcon(R.drawable.ic_loop_single)
+            PlaybackMode.SHUFFLE -> CustomEvent.UpdatePlaybackModeIcon(R.drawable.ic_shuffle)
         }
     }
 

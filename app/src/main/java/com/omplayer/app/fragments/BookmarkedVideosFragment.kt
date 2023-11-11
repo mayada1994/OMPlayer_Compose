@@ -50,6 +50,8 @@ class BookmarkedVideosFragment : BaseMvvmFragment<FragmentBookmarkedVideosBindin
                         )
                     }
                 }
+
+                btnBack.setOnClickListener { viewModel.onBackPressed() }
             }
         }
     }
