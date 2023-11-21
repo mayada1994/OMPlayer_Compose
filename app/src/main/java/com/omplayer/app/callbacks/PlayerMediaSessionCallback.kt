@@ -221,7 +221,7 @@ class PlayerMediaSessionCallback(
                     if (shouldUpdateTrack(mediaPlayer.currentPosition)) {
                         WorkManager.getInstance(context).beginUniqueWork(
                             LastFmTrackUpdateWorker::class.java.simpleName,
-                            ExistingWorkPolicy.REPLACE,
+                            ExistingWorkPolicy.KEEP,
                             OneTimeWorkRequestBuilder<LastFmTrackUpdateWorker>().setConstraints(
                                 Constraints.Builder()
                                     .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -233,7 +233,7 @@ class PlayerMediaSessionCallback(
                     if (shouldScrobbleTrack(mediaPlayer.currentPosition, mediaPlayer.duration)) {
                         WorkManager.getInstance(context).beginUniqueWork(
                             LastFmTrackScrobbleWorker::class.java.simpleName,
-                            ExistingWorkPolicy.APPEND_OR_REPLACE,
+                            ExistingWorkPolicy.KEEP,
                             OneTimeWorkRequestBuilder<LastFmTrackScrobbleWorker>()
                                 .setBackoffCriteria(
                                     BackoffPolicy.LINEAR,
