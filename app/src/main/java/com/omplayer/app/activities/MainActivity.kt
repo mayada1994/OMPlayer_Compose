@@ -129,10 +129,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun playTrack(track: Track) {
-        mediaController.transportControls.playFromUri(
-            track.path.toUri(),
-            Bundle().apply { putParcelable(PlayerMediaSessionCallback.TRACK_EXTRA, track) }
-        )
+        try {
+            mediaController.transportControls.playFromUri(
+                track.path.toUri(),
+                Bundle().apply { putParcelable(PlayerMediaSessionCallback.TRACK_EXTRA, track) }
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun checkExternalStoragePermission() {
