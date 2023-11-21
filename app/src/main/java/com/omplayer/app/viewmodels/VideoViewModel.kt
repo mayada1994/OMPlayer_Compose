@@ -94,7 +94,10 @@ class VideoViewModel @Inject constructor(
     }
 
     fun onPlaybackStarted(context: Context) {
+        if (!cacheManager.isScrobblingEnabled) return
+
         currentVideo?.let { updatePlayingTrack(it, context) }
+        LastFmRepository.updateTimestamp()
     }
 
     fun handlePlaybackProgress(currentSecond: Float, duration: Float, context: Context) {
