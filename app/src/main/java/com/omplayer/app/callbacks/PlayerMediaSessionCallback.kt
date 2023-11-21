@@ -252,7 +252,7 @@ class PlayerMediaSessionCallback(
 
     private fun shouldUpdateTrack(currentPosition: Int) =
         System.currentTimeMillis() - LibraryUtils.lastTrackUpdateOnLastFmTime >= LastFmRepository.LAST_FM_TRACK_UPDATE_INTERVAL
-                || currentPosition <= 500
+                || (currentPosition in 3000..3500)
                 || LibraryUtils.lastUpdatedMediaType != ScrobbleMediaType.TRACK
 
     private fun shouldScrobbleTrack(currentPosition: Int, duration: Int) =
