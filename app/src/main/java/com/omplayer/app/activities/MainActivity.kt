@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         } else {
-            viewModel.loadTracks(this)
+            viewModel.loadTracks(this, this)
         }
     }
 
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         if (requestCode == EXTERNAL_STORAGE_PERMISSIONS_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            viewModel.loadTracks(this, true)
+            viewModel.loadTracks(this, this, true)
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }

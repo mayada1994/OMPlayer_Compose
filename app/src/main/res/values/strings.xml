@@ -22,6 +22,7 @@
     <string name="last_fm">Last.fm</string>
     <string name="bookmarked">Bookmarked</string>
     <string name="playlists">Playlists</string>
+    <string name="sync">Sync</string>
     <string name="playlist_rename">Rename</string>
     <string name="playlist_delete">Delete</string>
     <string name="playlist_tracklist_add">Add</string>
