@@ -20,33 +20,35 @@ class PlaylistViewModel @Inject constructor(private val playlistRepository: Play
     private val _playlistTracks = MutableLiveData<List<Track>?>()
     val playlistTracks: LiveData<List<Track>?> = _playlistTracks
 
+    private var playlist: Playlist? = null
+
     fun getPlaylistTracks(playlistId: Int) {
         viewModelScope.launch {
             _showProgress.postValue(true)
-            val playlist = playlistRepository.getPlaylistById(playlistId)
+            playlist = playlistRepository.getPlaylistById(playlistId)
 
             _playlistTracks.value =
-                if (playlist == null || playlist.tracks.isEmpty()) {
+                if (playlist == null || playlist?.tracks.isNullOrEmpty()) {
                     null
                 } else {
-                    LibraryUtils.generalTracklist.value?.filter { playlist.tracks.contains(it.id) }
+                    LibraryUtils.generalTracklist.value?.filter { playlist!!.tracks.contains(it.id) }
                 }
             _showProgress.postValue(false)
         }
     }
 
-    fun onMenuItemClicked(menuItemId: Int, playlist: Playlist) {
+    fun onMenuItemClicked(menuItemId: Int) {
         when (menuItemId) {
             R.id.addMenuItem -> _event.value = BaseViewEvent.Navigate(
                 PlaylistFragmentDirections.navFromPlaylistFragmentToEditPlaylistFragment(
-                    playlist,
+                    playlist!!,
                     PlaylistTracksAction.ADD.name
                 )
             )
 
             R.id.removeMenuItem -> _event.value = BaseViewEvent.Navigate(
                 PlaylistFragmentDirections.navFromPlaylistFragmentToEditPlaylistFragment(
-                    playlist,
+                    playlist!!,
                     PlaylistTracksAction.REMOVE.name
                 )
             )

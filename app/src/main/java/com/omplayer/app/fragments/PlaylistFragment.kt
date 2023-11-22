@@ -25,8 +25,6 @@ class PlaylistFragment : BaseMvvmFragment<FragmentPlaylistBinding>(FragmentPlayl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getPlaylistTracks(args.playlist.id)
-
         with(binding) {
             txtTitle.text = args.playlist.title
 
@@ -61,12 +59,17 @@ class PlaylistFragment : BaseMvvmFragment<FragmentPlaylistBinding>(FragmentPlayl
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPlaylistTracks(args.playlist.id)
+    }
+
     private fun showMenu(view: View) {
         PopupMenu(requireContext(), view).let { popup ->
             popup.menuInflater.inflate(R.menu.playlist_tracklist_menu, popup.menu)
             popup.setForceShowIcon(true)
             popup.setOnMenuItemClickListener { menuItem ->
-                viewModel.onMenuItemClicked(menuItem.itemId, args.playlist)
+                viewModel.onMenuItemClicked(menuItem.itemId)
                 true
             }
             popup.show()

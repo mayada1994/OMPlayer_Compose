@@ -55,11 +55,11 @@ class EditPlaylistViewModel @Inject constructor(private val playlistRepository: 
             _showProgress.postValue(true)
             _event.postValue(CustomEvent.SetTracks(
                 if (playlist.tracks.isEmpty()) {
-                    LibraryUtils.generalTracklist.value
+                    LibraryUtils.generalTracklist.value?.sortedBy { it.title }
                 } else {
                     LibraryUtils.generalTracklist.value?.filter {
                         playlist.tracks.contains(it.id).not()
-                    }
+                    }?.sortedBy { it.title }
                 }))
             _showProgress.postValue(false)
         }

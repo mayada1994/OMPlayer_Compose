@@ -27,16 +27,21 @@ class PlaylistTracksAdapter(
             with(viewBinding) {
                 txtTitle.text = track.title
                 txtArtist.text = track.artist
-                root.setOnClickListener {
-                    if (selectedTracks.contains(track.id)) {
-                        it.isSelected = false
-                        selectedTracks.remove(track.id)
-                    } else {
-                        it.isSelected = true
-                        selectedTracks.add(track.id)
-                    }
 
-                    listener.onTracksSelected(selectedTracks)
+                root.apply {
+                    isSelected = selectedTracks.contains(track.id)
+
+                    setOnClickListener {
+                        if (selectedTracks.contains(track.id)) {
+                            it.isSelected = false
+                            selectedTracks.remove(track.id)
+                        } else {
+                            it.isSelected = true
+                            selectedTracks.add(track.id)
+                        }
+
+                        listener.onTracksSelected(selectedTracks)
+                    }
                 }
             }
         }
