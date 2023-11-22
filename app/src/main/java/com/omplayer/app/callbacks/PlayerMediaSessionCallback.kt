@@ -2,6 +2,7 @@ package com.omplayer.app.callbacks
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
@@ -20,7 +21,8 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.bumptech.glide.Glide
+import coil.ImageLoader
+import coil.request.ImageRequest
 import com.omplayer.app.R
 import com.omplayer.app.entities.Track
 import com.omplayer.app.enums.ScrobbleMediaType
@@ -164,12 +166,14 @@ class PlayerMediaSessionCallback(
                                 LibraryUtils.getAlbumCover(context, track.id)
                             } else {
                                 try {
-                                    Glide.with(context)
-                                        .asBitmap()
-                                        .load(LibraryUtils.getAlbumCover(track.id))
-                                        .placeholder(R.drawable.ic_cover_placeholder)
-                                        .error(R.drawable.ic_cover_placeholder)
-                                        .submit().get()
+                                    val result = ImageLoader(context).execute(
+                                        ImageRequest.Builder(context)
+                                            .data(LibraryUtils.getAlbumCover(track.id))
+                                            .placeholder(R.drawable.ic_cover_placeholder)
+                                            .error(R.drawable.ic_cover_placeholder)
+                                            .build()
+                                    ).drawable
+                                    (result as BitmapDrawable).bitmap
                                 } catch (e: Exception) {
                                     null
                                 }

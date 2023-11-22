@@ -7,9 +7,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import coil.load
+import coil.request.CachePolicy
+import coil.transform.CircleCropTransformation
 import com.omplayer.app.R
 import com.omplayer.app.adapters.AlbumTracksAdapter
 import com.omplayer.app.databinding.FragmentAlbumBinding
@@ -33,19 +33,21 @@ class AlbumFragment : BaseMvvmFragment<FragmentAlbumBinding>(FragmentAlbumBindin
                 txtTitle.text = it.title
                 txtArtist.text = it.artist
                 txtYear.text = it.year
-                Glide.with(this@AlbumFragment)
-                    .load(
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            LibraryUtils.getAlbumCover(requireContext(), it.cover)
-                        } else {
-                            it.cover
-                        }
-                    )
-                    .transform(CircleCrop())
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .placeholder(R.drawable.ic_cover_placeholder)
-                    .into(imgCover)
+
+                imgCover.load(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        LibraryUtils.getAlbumCover(requireContext(), it.cover)
+                    } else {
+                        it.cover
+                    }
+                ) {
+                    crossfade(true)
+                    transformations(CircleCropTransformation())
+                    diskCachePolicy(CachePolicy.DISABLED)
+                    memoryCachePolicy(CachePolicy.DISABLED)
+                    placeholder(R.drawable.ic_cover_placeholder)
+                    error(R.drawable.ic_cover_placeholder)
+                }
             }
             viewModel.tracklist.observe(viewLifecycleOwner) {
                 rvTracks.apply {
