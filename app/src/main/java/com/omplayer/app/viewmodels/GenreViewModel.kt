@@ -3,7 +3,7 @@ package com.omplayer.app.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.omplayer.app.entities.Genre
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.fragments.GenreFragmentDirections
 import com.omplayer.app.utils.LibraryUtils
 

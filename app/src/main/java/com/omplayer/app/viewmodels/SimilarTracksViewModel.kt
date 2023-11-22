@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.R
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.fragments.SimilarTracksFragmentDirections
 import com.omplayer.app.network.responses.LastFmSimilarTracksResponse.LastFmSimilarTrack
 import com.omplayer.app.repositories.LastFmRepository

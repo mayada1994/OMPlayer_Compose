@@ -13,7 +13,7 @@ import coil.transform.CircleCropTransformation
 import com.omplayer.app.R
 import com.omplayer.app.adapters.AlbumTracksAdapter
 import com.omplayer.app.databinding.FragmentAlbumBinding
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.viewmodels.AlbumViewModel
 

@@ -9,16 +9,31 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
+import com.omplayer.app.repositories.TrackRepository
 import com.omplayer.app.utils.LibraryUtils
 import com.omplayer.app.workers.LastFmOfflineScrobbledTracksWorker
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel: BaseViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val trackRepository: TrackRepository): BaseViewModel() {
 
-    fun loadTracks(context: Context) {
+    fun loadTracks(context: Context, isUpdate: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
+
+            if (!isUpdate) {
+                trackRepository.getAllTracks()?.let {
+                    if (it.isNotEmpty()) {
+                        LibraryUtils.generalTracklist.postValue(it)
+                        LibraryUtils.currentTracklist.postValue(it)
+                        return@launch
+                    }
+                }
+            }
+
             val projection = arrayOf(
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.ARTIST,
@@ -96,6 +111,8 @@ class MainViewModel: BaseViewModel() {
                     cursor.close()
                 }
                 extractedTracks.sortedBy { it.title.lowercase() }.let {
+                    trackRepository.deleteAll()
+                    trackRepository.insertAll(it)
                     LibraryUtils.generalTracklist.postValue(it)
                     LibraryUtils.currentTracklist.postValue(it)
                 }

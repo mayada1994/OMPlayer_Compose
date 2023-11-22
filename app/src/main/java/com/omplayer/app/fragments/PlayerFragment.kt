@@ -1,7 +1,6 @@
 package com.omplayer.app.fragments
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
@@ -24,7 +23,7 @@ import coil.transform.CircleCropTransformation
 import com.omplayer.app.R
 import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.databinding.FragmentPlayerBinding
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.extensions.toFormattedTime
 import com.omplayer.app.utils.LibraryUtils

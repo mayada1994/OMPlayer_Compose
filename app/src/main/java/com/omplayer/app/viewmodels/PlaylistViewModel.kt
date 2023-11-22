@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.R
 import com.omplayer.app.db.entities.Playlist
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.enums.PlaylistTracksAction
 import com.omplayer.app.fragments.PlaylistFragmentDirections
 import com.omplayer.app.repositories.PlaylistRepository

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.omplayer.app.R
 import com.omplayer.app.adapters.TracklistAdapter
 import com.omplayer.app.databinding.FragmentPlaylistBinding
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.viewmodels.PlaylistViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -7,7 +7,7 @@ import com.omplayer.app.adapters.LibraryAdapter.LibraryListType
 import com.omplayer.app.entities.Album
 import com.omplayer.app.entities.Artist
 import com.omplayer.app.entities.Genre
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.extensions.toAlbum
 import com.omplayer.app.extensions.toArtist
 import com.omplayer.app.extensions.toGenre

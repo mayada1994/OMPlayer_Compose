@@ -19,7 +19,7 @@ import androidx.navigation.findNavController
 import com.omplayer.app.R
 import com.omplayer.app.callbacks.PlayerMediaSessionCallback
 import com.omplayer.app.databinding.ActivityMainBinding
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.services.MediaPlaybackService
 import com.omplayer.app.viewmodels.BaseViewModel.BaseViewEvent
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         if (requestCode == EXTERNAL_STORAGE_PERMISSIONS_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            viewModel.loadTracks(this)
+            viewModel.loadTracks(this, true)
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }

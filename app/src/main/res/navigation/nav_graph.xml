@@ -71,7 +71,7 @@
 
         <argument
             android:name="track"
-            app:argType="com.omplayer.app.entities.Track"
+            app:argType="com.omplayer.app.db.entities.Track"
             app:nullable="false" />
 
         <action

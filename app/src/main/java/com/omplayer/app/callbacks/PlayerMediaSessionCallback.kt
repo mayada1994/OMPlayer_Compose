@@ -24,7 +24,7 @@ import androidx.work.WorkManager
 import coil.ImageLoader
 import coil.request.ImageRequest
 import com.omplayer.app.R
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.enums.ScrobbleMediaType
 import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.services.MediaPlaybackService

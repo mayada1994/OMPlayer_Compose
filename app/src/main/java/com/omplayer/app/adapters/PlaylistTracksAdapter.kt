@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.omplayer.app.databinding.ItemTrackBinding
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 
 class PlaylistTracksAdapter(
     private val items: List<Track>,
