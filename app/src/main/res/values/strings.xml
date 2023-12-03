@@ -16,7 +16,6 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="logout">Logout</string>
     <string name="register">Don\'t have an account? <u>Register</u>.</string>
     <string name="scrobbling">Scrobbling</string>
     <string name="last_fm">Last.fm</string>
