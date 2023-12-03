@@ -44,7 +44,7 @@ class EditPlaylistViewModel @Inject constructor(private val playlistRepository: 
                 if (playlist.tracks.isEmpty()) {
                     null
                 } else {
-                    LibraryUtils.generalTracklist.value?.filter { playlist.tracks.contains(it.id) }
+                    LibraryUtils.generalTracklist.value?.filter { playlist.tracks.contains(it.id) }?.sortedBy { playlist?.tracks?.indexOf(it.id) }
                 }))
             _showProgress.postValue(false)
         }
@@ -55,11 +55,11 @@ class EditPlaylistViewModel @Inject constructor(private val playlistRepository: 
             _showProgress.postValue(true)
             _event.postValue(CustomEvent.SetTracks(
                 if (playlist.tracks.isEmpty()) {
-                    LibraryUtils.generalTracklist.value?.sortedBy { it.title }
+                    LibraryUtils.generalTracklist.value?.sortedBy { it.title.lowercase() }
                 } else {
                     LibraryUtils.generalTracklist.value?.filter {
                         playlist.tracks.contains(it.id).not()
-                    }?.sortedBy { it.title }
+                    }?.sortedBy { it.title.lowercase() }
                 }))
             _showProgress.postValue(false)
         }

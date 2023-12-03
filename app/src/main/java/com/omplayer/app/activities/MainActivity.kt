@@ -2,6 +2,7 @@ package com.omplayer.app.activities
 
 import android.Manifest
 import android.content.ComponentName
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.os.Bundle
@@ -22,6 +23,7 @@ import com.omplayer.app.databinding.ActivityMainBinding
 import com.omplayer.app.db.entities.Track
 import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.services.MediaPlaybackService
+import com.omplayer.app.utils.NotificationUtils
 import com.omplayer.app.viewmodels.BaseViewModel.BaseViewEvent
 import com.omplayer.app.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,6 +53,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             Log.d(TAG, "onConnected")
+
+            intent?.extras?.getBoolean(NotificationUtils.OPEN_PLAYER)?.let { openPlayer ->
+                if (openPlayer && navController.currentDestination?.id != R.id.playerFragment) {
+                    navController.navigate(
+                        R.id.playerFragment,
+                        Bundle().apply { putBoolean(NotificationUtils.OPEN_PLAYER, true) }
+                    )
+                }
+            }
         }
 
         override fun onConnectionSuspended() {
@@ -81,6 +92,19 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.showProgress.observe(this) {
             showProgress(it)
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        intent?.extras?.getBoolean(NotificationUtils.OPEN_PLAYER)?.let { openPlayer ->
+            if (openPlayer && navController.currentDestination?.id != R.id.playerFragment) {
+                navController.navigate(
+                    R.id.playerFragment,
+                    Bundle().apply { putBoolean(NotificationUtils.OPEN_PLAYER, true) }
+                )
+            }
         }
     }
 

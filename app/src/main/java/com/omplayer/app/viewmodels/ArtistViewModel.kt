@@ -24,13 +24,16 @@ class ArtistViewModel: BaseViewModel() {
     }
 
     fun playAllTracks(artist: Artist?) {
-        LibraryUtils.generalTracklist.value?.filter { it.artist == artist?.name }?.let { artistTracklist ->
-            if (artistTracklist.isNotEmpty() && artistTracklist != LibraryUtils.generalTracklist.value) {
-                LibraryUtils.currentTracklist.value = artistTracklist
-                LibraryUtils.currentTrack.value = artistTracklist[0]
-                _event.value = BaseViewEvent.Navigate(ArtistFragmentDirections.navFromArtistFragmentToPlayerFragment())
+        LibraryUtils.generalTracklist.value?.filter { it.artist == artist?.name }
+            ?.sortedWith(compareBy({ it.year }, { it.album }, { it.position }))
+            ?.let { artistTracklist ->
+                if (artistTracklist.isNotEmpty() && artistTracklist != LibraryUtils.generalTracklist.value) {
+                    LibraryUtils.currentTracklist.value = artistTracklist
+                    LibraryUtils.currentTrack.value = artistTracklist[0]
+                    _event.value =
+                        BaseViewEvent.Navigate(ArtistFragmentDirections.navFromArtistFragmentToPlayerFragment())
+                }
             }
-        }
     }
 
     fun onBackPressed() {

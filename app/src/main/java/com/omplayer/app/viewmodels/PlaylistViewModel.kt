@@ -31,7 +31,7 @@ class PlaylistViewModel @Inject constructor(private val playlistRepository: Play
                 if (playlist == null || playlist?.tracks.isNullOrEmpty()) {
                     null
                 } else {
-                    LibraryUtils.generalTracklist.value?.filter { playlist!!.tracks.contains(it.id) }
+                    LibraryUtils.generalTracklist.value?.filter { playlist!!.tracks.contains(it.id) }?.sortedBy { playlist?.tracks?.indexOf(it.id) }
                 }
             _showProgress.postValue(false)
         }

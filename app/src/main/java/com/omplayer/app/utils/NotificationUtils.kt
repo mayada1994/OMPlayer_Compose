@@ -2,13 +2,16 @@ package com.omplayer.app.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
 import androidx.media.session.MediaButtonReceiver
 import com.omplayer.app.R
+import com.omplayer.app.activities.MainActivity
 import com.omplayer.app.services.MediaPlaybackService
 
 
@@ -16,6 +19,7 @@ object NotificationUtils {
 
     private const val channelId = "omplayer_channel"
     private const val channelName = "OMPlayer Channel"
+    const val OPEN_PLAYER = "OPEN_PLAYER"
 
     private fun createNotificationChannel(context: Context) {
         (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).let { notificationManager ->
@@ -45,7 +49,16 @@ object NotificationUtils {
             }
 
             // Enable launching the player by clicking the notification
-            setContentIntent(controller.sessionActivity)
+            setContentIntent(
+                PendingIntent.getActivity(
+                    service,
+                    0,
+                    Intent(service, MainActivity::class.java).setFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    ).putExtra(OPEN_PLAYER, true),
+                    PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            )
 
             // Make the transport controls visible on the lockscreen
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
