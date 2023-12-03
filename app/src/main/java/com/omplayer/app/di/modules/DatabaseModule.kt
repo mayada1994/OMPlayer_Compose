@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.omplayer.app.db.PlayerDatabase
 import com.omplayer.app.db.dao.PlaylistDao
 import com.omplayer.app.db.dao.ScrobbledTrackDao
+import com.omplayer.app.db.dao.TrackDao
 import com.omplayer.app.db.dao.VideoDao
 import dagger.Module
 import dagger.Provides
@@ -35,6 +36,12 @@ class DatabaseModule {
     @Singleton
     internal fun provideScrobbledTrackDao(database: PlayerDatabase): ScrobbledTrackDao {
         return database.scrobbledTrackDao()
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideTrackDao(database: PlayerDatabase): TrackDao {
+        return database.trackDao()
     }
 
     @Provides

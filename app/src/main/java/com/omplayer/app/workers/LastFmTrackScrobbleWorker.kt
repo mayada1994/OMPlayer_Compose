@@ -7,7 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.omplayer.app.R
 import com.omplayer.app.db.entities.ScrobbledTrack
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.utils.CacheManager
 import com.omplayer.app.utils.ConnectivityUtils

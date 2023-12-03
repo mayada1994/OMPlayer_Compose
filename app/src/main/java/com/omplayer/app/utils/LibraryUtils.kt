@@ -9,7 +9,7 @@ import android.provider.MediaStore
 import android.util.Size
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.enums.PlaybackMode
 import com.omplayer.app.enums.ScrobbleMediaType
 

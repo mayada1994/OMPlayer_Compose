@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import coil.load
+import coil.request.CachePolicy
+import coil.transform.CircleCropTransformation
 import com.omplayer.app.R
 import com.omplayer.app.databinding.ItemAlbumBinding
 import com.omplayer.app.databinding.ItemArtistBinding
@@ -16,7 +16,7 @@ import com.omplayer.app.databinding.ItemTrackBinding
 import com.omplayer.app.entities.Album
 import com.omplayer.app.entities.Artist
 import com.omplayer.app.entities.Genre
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.utils.LibraryUtils
 
 class LibraryListAdapter(
@@ -82,19 +82,20 @@ class LibraryListAdapter(
             with(viewBinding) {
                 txtTitle.text = album.title
                 txtYear.text = album.year
-                Glide.with(root.context)
-                    .load(
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            LibraryUtils.getAlbumCover(root.context, album.cover)
-                        } else {
-                            album.cover
-                        }
-                    )
-                    .transform(CircleCrop())
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .placeholder(R.drawable.ic_cover_placeholder)
-                    .into(imgCover)
+                imgCover.load(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        LibraryUtils.getAlbumCover(root.context, album.cover)
+                    } else {
+                        album.cover
+                    }
+                ) {
+                    crossfade(true)
+                    transformations(CircleCropTransformation())
+                    diskCachePolicy(CachePolicy.DISABLED)
+                    memoryCachePolicy(CachePolicy.DISABLED)
+                    placeholder(R.drawable.ic_cover_placeholder)
+                    error(R.drawable.ic_cover_placeholder)
+                }
                 root.setOnClickListener { listener.onItemClick(album) }
             }
         }

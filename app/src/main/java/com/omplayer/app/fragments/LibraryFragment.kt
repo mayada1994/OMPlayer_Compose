@@ -36,7 +36,7 @@ class LibraryFragment : BaseMvvmFragment<FragmentLibraryBinding>(FragmentLibrary
             popup.menuInflater.inflate(R.menu.library_menu, popup.menu)
             popup.setForceShowIcon(true)
             popup.setOnMenuItemClickListener { menuItem ->
-                viewModel.onMenuItemClicked(menuItem.itemId)
+                viewModel.onMenuItemClicked(menuItem.itemId, requireContext(), viewLifecycleOwner)
                 true
             }
             popup.show()

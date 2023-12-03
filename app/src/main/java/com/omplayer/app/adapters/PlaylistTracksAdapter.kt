@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.omplayer.app.databinding.ItemTrackBinding
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 
 class PlaylistTracksAdapter(
     private val items: List<Track>,
@@ -27,16 +27,21 @@ class PlaylistTracksAdapter(
             with(viewBinding) {
                 txtTitle.text = track.title
                 txtArtist.text = track.artist
-                root.setOnClickListener {
-                    if (selectedTracks.contains(track.id)) {
-                        it.isSelected = false
-                        selectedTracks.remove(track.id)
-                    } else {
-                        it.isSelected = true
-                        selectedTracks.add(track.id)
-                    }
 
-                    listener.onTracksSelected(selectedTracks)
+                root.apply {
+                    isSelected = selectedTracks.contains(track.id)
+
+                    setOnClickListener {
+                        if (selectedTracks.contains(track.id)) {
+                            it.isSelected = false
+                            selectedTracks.remove(track.id)
+                        } else {
+                            it.isSelected = true
+                            selectedTracks.add(track.id)
+                        }
+
+                        listener.onTracksSelected(selectedTracks)
+                    }
                 }
             }
         }

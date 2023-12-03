@@ -17,6 +17,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstan
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,9 +43,6 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
             txtTitle.text = args.title
 
             btnBack.setOnClickListener { viewModel.onBackPressed() }
-
-            // we need to initialize manually in order to pass IFramePlayerOptions to the player
-            youtubeVideoView.enableAutomaticInitialization = false
 
             youtubeVideoView.addFullscreenListener(object : FullscreenListener {
                 override fun onEnterFullscreen(fullscreenView: View, exitFullscreen: () -> Unit) {
@@ -110,16 +108,8 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
     }
 
     private fun playVideo(videoId: String) {
-        val iFramePlayerOptions = IFramePlayerOptions.Builder()
-            .controls(1)
-            .fullscreen(1)
-            .rel(0)
-            .ivLoadPolicy(3)
-            .ccLoadPolicy(0)
-            .build()
-
         with(binding) {
-            youtubeVideoView.initialize(object : AbstractYouTubePlayerListener() {
+            val youTubePlayerListener = object : AbstractYouTubePlayerListener() {
                 override fun onReady(youTubePlayer: YouTubePlayer) {
                     requireActivity().onBackPressedDispatcher.addCallback(this@VideoFragment) {
                         if (isFullscreen) {
@@ -151,7 +141,33 @@ class VideoFragment : BaseMvvmFragment<FragmentVideoBinding>(FragmentVideoBindin
                 override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
                     viewModel.handlePlaybackProgress(second, currentVideoDuration, requireContext())
                 }
-            }, iFramePlayerOptions)
+            }
+
+            try {
+                // we need to initialize manually in order to pass IFramePlayerOptions to the player
+                youtubeVideoView.enableAutomaticInitialization = false
+
+                val iFramePlayerOptions = IFramePlayerOptions.Builder()
+                    .controls(1)
+                    .fullscreen(1)
+                    .rel(0)
+                    .ivLoadPolicy(3)
+                    .ccLoadPolicy(0)
+                    .build()
+
+                youtubeVideoView.initialize(youTubePlayerListener, iFramePlayerOptions)
+            } catch (e: Exception) {
+                youtubeVideoView.enableAutomaticInitialization = true
+
+                youtubeVideoView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+                    override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                        youTubePlayer.addListener(youTubePlayerListener)
+
+                        youTubePlayer.loadVideo(videoId, 0f)
+                        viewModel.onPlaybackStarted(requireContext())
+                    }
+                })
+            }
 
             btnStar.setOnClickListener { viewModel.changeBookmarkState() }
         }

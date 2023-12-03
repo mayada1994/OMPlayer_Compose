@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.omplayer.app.R
 import com.omplayer.app.adapters.TracklistAdapter
 import com.omplayer.app.databinding.FragmentGenreBinding
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.viewmodels.GenreViewModel
 
 class GenreFragment : BaseMvvmFragment<FragmentGenreBinding>(FragmentGenreBinding::inflate) {

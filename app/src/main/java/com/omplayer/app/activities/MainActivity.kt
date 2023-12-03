@@ -2,6 +2,7 @@ package com.omplayer.app.activities
 
 import android.Manifest
 import android.content.ComponentName
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.os.Bundle
@@ -19,9 +20,10 @@ import androidx.navigation.findNavController
 import com.omplayer.app.R
 import com.omplayer.app.callbacks.PlayerMediaSessionCallback
 import com.omplayer.app.databinding.ActivityMainBinding
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.services.MediaPlaybackService
+import com.omplayer.app.utils.NotificationUtils
 import com.omplayer.app.viewmodels.BaseViewModel.BaseViewEvent
 import com.omplayer.app.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,6 +53,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             Log.d(TAG, "onConnected")
+
+            intent?.extras?.getBoolean(NotificationUtils.OPEN_PLAYER)?.let { openPlayer ->
+                if (openPlayer && navController.currentDestination?.id != R.id.playerFragment) {
+                    navController.navigate(
+                        R.id.playerFragment,
+                        Bundle().apply { putBoolean(NotificationUtils.OPEN_PLAYER, true) }
+                    )
+                }
+            }
         }
 
         override fun onConnectionSuspended() {
@@ -81,6 +92,19 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.showProgress.observe(this) {
             showProgress(it)
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        intent?.extras?.getBoolean(NotificationUtils.OPEN_PLAYER)?.let { openPlayer ->
+            if (openPlayer && navController.currentDestination?.id != R.id.playerFragment) {
+                navController.navigate(
+                    R.id.playerFragment,
+                    Bundle().apply { putBoolean(NotificationUtils.OPEN_PLAYER, true) }
+                )
+            }
         }
     }
 
@@ -129,10 +153,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun playTrack(track: Track) {
-        mediaController.transportControls.playFromUri(
-            track.path.toUri(),
-            Bundle().apply { putParcelable(PlayerMediaSessionCallback.TRACK_EXTRA, track) }
-        )
+        try {
+            mediaController.transportControls.playFromUri(
+                track.path.toUri(),
+                Bundle().apply { putParcelable(PlayerMediaSessionCallback.TRACK_EXTRA, track) }
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun checkExternalStoragePermission() {
@@ -155,7 +183,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         } else {
-            viewModel.loadTracks(this)
+            viewModel.loadTracks(this, this)
         }
     }
 
@@ -165,7 +193,7 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         if (requestCode == EXTERNAL_STORAGE_PERMISSIONS_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            viewModel.loadTracks(this)
+            viewModel.loadTracks(this, this, true)
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }

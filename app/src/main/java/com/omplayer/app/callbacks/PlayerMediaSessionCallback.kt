@@ -2,6 +2,7 @@ package com.omplayer.app.callbacks
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
@@ -20,9 +21,10 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.bumptech.glide.Glide
+import coil.ImageLoader
+import coil.request.ImageRequest
 import com.omplayer.app.R
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.enums.ScrobbleMediaType
 import com.omplayer.app.repositories.LastFmRepository
 import com.omplayer.app.services.MediaPlaybackService
@@ -77,6 +79,7 @@ class PlayerMediaSessionCallback(
         mediaPlayer.start()
         setMediaPlaybackState(position = mediaPlayer.currentPosition.toLong())
         trackProgress()
+        LastFmRepository.updateTimestamp()
     }
 
     override fun onPause() {
@@ -163,12 +166,14 @@ class PlayerMediaSessionCallback(
                                 LibraryUtils.getAlbumCover(context, track.id)
                             } else {
                                 try {
-                                    Glide.with(context)
-                                        .asBitmap()
-                                        .load(LibraryUtils.getAlbumCover(track.id))
-                                        .placeholder(R.drawable.ic_cover_placeholder)
-                                        .error(R.drawable.ic_cover_placeholder)
-                                        .submit().get()
+                                    val result = ImageLoader(context).execute(
+                                        ImageRequest.Builder(context)
+                                            .data(LibraryUtils.getAlbumCover(track.id))
+                                            .placeholder(R.drawable.ic_cover_placeholder)
+                                            .error(R.drawable.ic_cover_placeholder)
+                                            .build()
+                                    ).drawable
+                                    (result as BitmapDrawable).bitmap
                                 } catch (e: Exception) {
                                     null
                                 }
@@ -194,6 +199,7 @@ class PlayerMediaSessionCallback(
                 lastPlayedTrackUri = uri
                 LibraryUtils.wasCurrentTrackScrobbled = false
                 trackProgress()
+                LastFmRepository.updateTimestamp()
             }
             setOnCompletionListener {
                 if (!LibraryUtils.isSingleTrackPlaylist()) {
@@ -219,7 +225,7 @@ class PlayerMediaSessionCallback(
                     if (shouldUpdateTrack(mediaPlayer.currentPosition)) {
                         WorkManager.getInstance(context).beginUniqueWork(
                             LastFmTrackUpdateWorker::class.java.simpleName,
-                            ExistingWorkPolicy.REPLACE,
+                            ExistingWorkPolicy.KEEP,
                             OneTimeWorkRequestBuilder<LastFmTrackUpdateWorker>().setConstraints(
                                 Constraints.Builder()
                                     .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -231,7 +237,7 @@ class PlayerMediaSessionCallback(
                     if (shouldScrobbleTrack(mediaPlayer.currentPosition, mediaPlayer.duration)) {
                         WorkManager.getInstance(context).beginUniqueWork(
                             LastFmTrackScrobbleWorker::class.java.simpleName,
-                            ExistingWorkPolicy.APPEND_OR_REPLACE,
+                            ExistingWorkPolicy.KEEP,
                             OneTimeWorkRequestBuilder<LastFmTrackScrobbleWorker>()
                                 .setBackoffCriteria(
                                     BackoffPolicy.LINEAR,
@@ -250,7 +256,7 @@ class PlayerMediaSessionCallback(
 
     private fun shouldUpdateTrack(currentPosition: Int) =
         System.currentTimeMillis() - LibraryUtils.lastTrackUpdateOnLastFmTime >= LastFmRepository.LAST_FM_TRACK_UPDATE_INTERVAL
-                || currentPosition <= 500
+                || (currentPosition in 3000..3500)
                 || LibraryUtils.lastUpdatedMediaType != ScrobbleMediaType.TRACK
 
     private fun shouldScrobbleTrack(currentPosition: Int, duration: Int) =

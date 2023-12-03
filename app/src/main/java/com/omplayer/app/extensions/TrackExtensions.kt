@@ -6,7 +6,7 @@ import android.provider.MediaStore
 import com.omplayer.app.entities.Album
 import com.omplayer.app.entities.Artist
 import com.omplayer.app.entities.Genre
-import com.omplayer.app.entities.Track
+import com.omplayer.app.db.entities.Track
 import com.omplayer.app.utils.LibraryUtils
 
 fun Track.toAlbum() = Album(
