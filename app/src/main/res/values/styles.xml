@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="ContentLoadingProgress">
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/colorTextPrimary</item>
     </style>
 
     <style name="TextInputEditText.FilledBox.Dense" parent="@style/Widget.MaterialComponents.TextInputEditText.FilledBox.Dense">
         <item name="android:paddingStart">0dp</item>
         <item name="android:paddingEnd">0dp</item>
-        <item name="android:textColorHint">@color/white_50</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="colorControlNormal">@color/white_50</item>
-        <item name="colorControlActivated">@color/white</item>
+        <item name="android:textColorHint">@color/colorTextSecondary</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="colorControlNormal">@color/colorTextSecondary</item>
+        <item name="colorControlActivated">@color/colorTextPrimary</item>
     </style>
 
     <style name="MaterialThemeOverlayFilledDense">
@@ -20,9 +20,9 @@
 
     <style name="TextInputLayout.FilledBox.Dense" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
         <item name="materialThemeOverlay">@style/MaterialThemeOverlayFilledDense</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textColorHint">@color/white_50</item>
-        <item name="hintTextColor">@color/white_50</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textColorHint">@color/colorTextSecondary</item>
+        <item name="hintTextColor">@color/colorTextSecondary</item>
         <item name="boxStrokeColor">@color/selector_edit_text</item>
     </style>
 
