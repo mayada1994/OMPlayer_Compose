@@ -84,7 +84,7 @@ object NotificationUtils {
 
             // Add a play/pause button
             val actionPlay = NotificationCompat.Action(
-                R.drawable.play,
+                R.drawable.ic_play,
                 service.getString(R.string.play),
                 MediaButtonReceiver.buildMediaButtonPendingIntent(
                     service,
@@ -93,7 +93,7 @@ object NotificationUtils {
             )
 
             val actionPause = NotificationCompat.Action(
-                R.drawable.pause,
+                R.drawable.ic_pause,
                 service.getString(R.string.pause),
                 MediaButtonReceiver.buildMediaButtonPendingIntent(
                     service,
@@ -122,7 +122,7 @@ object NotificationUtils {
 
             addAction(
                 NotificationCompat.Action(
-                    R.drawable.close,
+                    R.drawable.ic_close,
                     service.getString(R.string.close),
                     MediaButtonReceiver.buildMediaButtonPendingIntent(
                         service,

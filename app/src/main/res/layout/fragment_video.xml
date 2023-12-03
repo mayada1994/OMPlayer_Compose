@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/colorBackgroundDark"
     tools:context=".fragments.VideoFragment">
 
     <ImageView
@@ -26,8 +26,7 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/btnBack"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btnBack"
-        app:tint="@color/white" />
+        app:layout_constraintTop_toTopOf="@id/btnBack" />
 
     <TextView
         android:id="@+id/txtTitle"
@@ -37,7 +36,7 @@
         android:layout_marginTop="24dp"
         android:gravity="center_horizontal"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/colorTextPrimary"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/btnStar"
         app:layout_constraintStart_toEndOf="@id/btnBack"
@@ -50,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
-        android:textColor="@color/white"
+        android:textColor="@color/colorTextPrimary"
         app:layout_constraintEnd_toEndOf="@id/txtTitle"
         app:layout_constraintStart_toStartOf="@id/txtTitle"
         app:layout_constraintTop_toBottomOf="@id/txtTitle"
@@ -82,7 +81,7 @@
         android:layout_marginHorizontal="16dp"
         android:gravity="center"
         android:text="@string/no_video"
-        android:textColor="@color/white"
+        android:textColor="@color/colorTextPrimary"
         android:textSize="46sp"
         android:visibility="gone" />
 

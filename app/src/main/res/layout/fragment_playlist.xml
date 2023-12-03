@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_90"
+    android:background="@color/colorBackground"
     tools:context=".fragments.PlaylistFragment">
 
     <ImageView
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/colorTextPrimary"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/btnBack"
         app:layout_constraintEnd_toStartOf="@id/btnMenu"
@@ -58,7 +58,7 @@
         android:layout_marginHorizontal="32dp"
         android:gravity="center"
         android:text="@string/no_playlist_songs"
-        android:textColor="@color/white_50"
+        android:textColor="@color/colorTextSecondary"
         android:textSize="40sp"
         android:visibility="gone" />
 

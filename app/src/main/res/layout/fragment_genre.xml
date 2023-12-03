@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_90"
+    android:background="@color/colorBackground"
     tools:context=".fragments.GenreFragment">
 
     <ImageView
@@ -25,7 +25,7 @@
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@color/colorTextPrimary"
         app:layout_constraintBottom_toTopOf="@id/rvTracks"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

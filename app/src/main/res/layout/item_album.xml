@@ -26,7 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/imgCover"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/white"
+        android:textColor="@color/colorTextPrimary"
         tools:text="Harvest Moon" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/txtTitle"
         app:layout_constraintTop_toBottomOf="@id/txtTitle"
-        android:textColor="@color/white_50"
+        android:textColor="@color/colorTextSecondary"
         tools:text="2013" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

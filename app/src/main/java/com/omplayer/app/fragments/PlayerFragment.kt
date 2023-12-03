@@ -139,7 +139,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
             ) {
                 listener(object : ImageRequest.Listener {
                     override fun onError(request: ImageRequest, result: ErrorResult) {
-                        val color = ContextCompat.getColor(requireContext(), R.color.black_90)
+                        val color = ContextCompat.getColor(requireContext(), R.color.colorBackground)
                         val colorWithAlpha = Color.argb((Color.alpha(color) * 0.6).roundToInt(), Color.red(color), Color.green(color), Color.blue(color))
                         val drawableBackground = GradientDrawable().apply {
                             shape = GradientDrawable.RECTANGLE
@@ -151,7 +151,7 @@ class PlayerFragment : BaseMvvmFragment<FragmentPlayerBinding>(FragmentPlayerBin
                     override fun onSuccess(request: ImageRequest, result: SuccessResult) {
                         result.drawable.let {
                             val palette = Palette.from(it.toBitmap()).generate()
-                            val color = palette.getDarkMutedColor(ContextCompat.getColor(requireContext(), R.color.black_90))
+                            val color = palette.getDarkMutedColor(ContextCompat.getColor(requireContext(), R.color.colorBackground))
                             val colorWithAlpha = Color.argb((Color.alpha(color) * 0.6).roundToInt(), Color.red(color), Color.green(color), Color.blue(color))
                             val drawableBackground = GradientDrawable().apply {
                                 shape = GradientDrawable.RECTANGLE

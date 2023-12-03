@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_90"
+    android:background="@color/colorBackground"
     tools:context=".fragments.BookmarkedVideosFragment">
 
     <ImageView
@@ -33,7 +33,7 @@
         android:layout_marginHorizontal="32dp"
         android:gravity="center"
         android:text="@string/no_bookmarked_videos"
-        android:textColor="@color/white_50"
+        android:textColor="@color/colorTextSecondary"
         android:textSize="40sp"
         android:visibility="gone" />
 

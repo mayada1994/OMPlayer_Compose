@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_90"
+    android:background="@color/colorBackground"
     android:paddingHorizontal="16dp"
     tools:context=".fragments.LastFmProfileFragment">
 
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:textColor="@color/white"
+        android:textColor="@color/colorTextPrimary"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +48,7 @@
         android:layout_marginTop="48dp"
         android:layout_weight="1"
         android:text="@string/scrobbling"
-        android:textColor="@color/white"
+        android:textColor="@color/colorTextPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imgUserAvatar" />
 
@@ -61,7 +61,7 @@
         app:layout_constraintBottom_toBottomOf="@id/txtScrobbling"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/txtScrobbling"
-        app:thumbTint="@color/white"
+        app:thumbTint="@color/colorTextPrimary"
         app:trackTint="@color/selector_switch" />
 
     <ImageView

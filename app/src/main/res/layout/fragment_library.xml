@@ -19,7 +19,7 @@
         android:layout_marginStart="24dp"
         android:gravity="center"
         android:text="@string/library"
-        android:textColor="@color/white"
+        android:textColor="@color/colorTextPrimary"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/toolbar"
@@ -40,10 +40,10 @@
         android:id="@+id/tabsLibrary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black"
-        app:tabIndicatorColor="@color/white"
-        app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@color/white_50"
+        android:background="@color/colorBackgroundDark"
+        app:tabIndicatorColor="@color/colorTextPrimary"
+        app:tabSelectedTextColor="@color/colorTextPrimary"
+        app:tabTextColor="@color/colorTextSecondary"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <androidx.viewpager2.widget.ViewPager2
