@@ -4,103 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:paddingHorizontal="16dp"
     tools:context=".fragments.LastFmLoginFragment">
 
-    <ImageView
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:src="@drawable/ic_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/colorTextSecondary" />
-
-    <ImageView
-        android:id="@+id/imgLastFmLogo"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="24dp"
-        android:src="@drawable/ic_lastfm_logo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/fire_brick" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layoutUsername"
-        style="@style/TextInputLayout.FilledBox.Dense"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="36dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgLastFmLogo">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/fUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:background="@color/transparent"
-            android:hint="@string/username"
-            android:inputType="textPersonName"
-            android:lines="1"
-            android:theme="@style/TextInputEditText.FilledBox.Dense" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layoutPassword"
-        style="@style/TextInputLayout.FilledBox.Dense"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutUsername"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/colorTextSecondary">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/fPassword"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:lines="1"
-            android:theme="@style/TextInputEditText.FilledBox.Dense" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/fire_brick"
-        android:paddingHorizontal="48dp"
-        android:paddingVertical="10dp"
-        android:text="@string/login"
-        app:layout_constraintBottom_toTopOf="@id/btnRegister"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialButton.Rounded" />
-
-    <TextView
-        android:id="@+id/btnRegister"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
-        android:gravity="center"
-        android:text="@string/register"
-        android:textColor="@color/colorTextSecondary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

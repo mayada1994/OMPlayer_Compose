@@ -35,11 +35,16 @@ class LastFmLoginViewModel @Inject constructor(
                         password,
                         username,
                         context.getString(R.string.last_fm_secret)
-                    )?.let {
-                        cacheManager.isScrobblingEnabled = true
+                    ).let { response ->
+                        if (response != null) {
+                            cacheManager.isScrobblingEnabled = true
+                            _showProgress.postValue(false)
+                            _event.postValue(BaseViewEvent.NavigateUp)
+                        } else {
+                            _event.postValue(BaseViewEvent.ShowMessage(R.string.general_error_message))
+                            _showProgress.postValue(false)
+                        }
                     }
-                    _showProgress.postValue(false)
-                    _event.postValue(BaseViewEvent.NavigateUp)
                 } catch (e: Exception) {
                     Log.e(TAG, e.message, e)
                     _showProgress.postValue(false)

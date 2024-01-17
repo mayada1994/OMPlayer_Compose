@@ -16,7 +16,8 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="register">Don\'t have an account? <u>Register</u>.</string>
+    <string name="do_not_have_account">Don\'t have an account?</string>
+    <string name="register">Register.</string>
     <string name="scrobbling">Scrobbling</string>
     <string name="last_fm">Last.fm</string>
     <string name="bookmarked">Bookmarked</string>

@@ -34,7 +34,7 @@ class SyncWorker @AssistedInject constructor(
     }
 
     private suspend fun loadTracks(context: Context): Result {
-        trackRepository.getAllTracks()?.let {
+        trackRepository.getAllTracks()?.sortedBy { it.title.lowercase() }?.let {
             if (it.isNotEmpty()) {
                 LibraryUtils.generalTracklist.postValue(it)
                 LibraryUtils.currentTracklist.postValue(it)
@@ -116,7 +116,10 @@ class SyncWorker @AssistedInject constructor(
                 cursor.close()
             }
 
-            if (extractedTracks.subtract((LibraryUtils.generalTracklist.value ?: emptyList()).toSet()).isEmpty()) {
+            if (!LibraryUtils.generalTracklist.value.isNullOrEmpty() &&
+                (extractedTracks.size != LibraryUtils.generalTracklist.value?.size
+                        || extractedTracks.subtract((LibraryUtils.generalTracklist.value ?: emptyList()).toSet()).isEmpty())
+            ) {
                 Log.d(TAG, "No new tracks found")
                 return Result.success()
             }
