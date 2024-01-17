@@ -4,4 +4,5 @@
     <color name="colorBackground">@color/black_90</color>
     <color name="colorTextPrimary">@color/white</color>
     <color name="colorTextSecondary">@color/white_50</color>
+    <color name="colorDivider">@android:color/darker_gray</color>
 </resources>

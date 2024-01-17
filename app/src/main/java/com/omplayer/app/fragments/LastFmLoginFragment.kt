@@ -122,7 +122,7 @@ class LastFmLoginFragment :
                 ) {
                     IconButton(
                         onClick = { onBackPressed() },
-                        modifier = Modifier.align(Alignment.Start)
+                        modifier = Modifier.align(Alignment.Start).padding(top = 16.dp)
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_back),
