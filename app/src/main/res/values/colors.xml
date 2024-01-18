@@ -5,4 +5,5 @@
     <color name="colorTextPrimary">@color/white</color>
     <color name="colorTextSecondary">@color/white_50</color>
     <color name="colorDivider">@android:color/darker_gray</color>
+    <color name="colorSelectedBackground">@color/white_20</color>
 </resources>

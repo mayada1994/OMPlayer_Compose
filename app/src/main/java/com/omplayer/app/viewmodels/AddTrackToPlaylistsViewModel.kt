@@ -1,5 +1,7 @@
 package com.omplayer.app.viewmodels
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.R
 import com.omplayer.app.db.entities.Playlist
@@ -13,9 +15,13 @@ import javax.inject.Inject
 class AddTrackToPlaylistsViewModel @Inject constructor(private val playlistRepository: PlaylistRepository) : BaseViewModel() {
 
     private var trackId: Int = -1
-    private var playlists: List<Playlist> = emptyList()
     private var initialSelectedPlaylists: List<Playlist> = emptyList()
-    private var selectedPlaylists: List<Playlist> = emptyList()
+
+    private val _selectedPlaylists: MutableLiveData<List<Playlist>> = MutableLiveData()
+    val selectedPlaylists: LiveData<List<Playlist>> = _selectedPlaylists
+
+    private val _playlists: MutableLiveData<List<Playlist>> = MutableLiveData()
+    val playlists: LiveData<List<Playlist>> = _playlists
 
     sealed class CustomEvent {
         data class SetPlaylists(val playlists: List<Playlist>, val selectedPlaylists: List<Playlist>) : ViewEvent
@@ -29,12 +35,12 @@ class AddTrackToPlaylistsViewModel @Inject constructor(private val playlistRepos
     private fun getPlaylists() {
         viewModelScope.launch {
             _showProgress.postValue(true)
-            playlists = playlistRepository.getAllPlaylists() ?: emptyList()
-            initialSelectedPlaylists = playlists.filter { it.tracks.contains(trackId) }
-            selectedPlaylists = initialSelectedPlaylists
+            _playlists.value = playlistRepository.getAllPlaylists() ?: emptyList()
+            initialSelectedPlaylists = _playlists.value?.filter { it.tracks.contains(trackId) } ?: emptyList()
+            _selectedPlaylists.value = initialSelectedPlaylists
             _event.postValue(
                 CustomEvent.SetPlaylists(
-                    playlists,
+                    playlists.value ?: emptyList(),
                     initialSelectedPlaylists
                 )
             )
@@ -42,8 +48,12 @@ class AddTrackToPlaylistsViewModel @Inject constructor(private val playlistRepos
         }
     }
 
-    fun onPlaylistsSelected(playlists: List<Playlist>) {
-        selectedPlaylists = playlists
+    fun onPlaylistSelected(playlist: Playlist) {
+        _selectedPlaylists.value = if (selectedPlaylists.value?.contains(playlist) == true) {
+            selectedPlaylists.value?.minus(playlist)
+        } else {
+            selectedPlaylists.value?.plus(playlist)
+        }
     }
 
     fun addPlaylist(title: String?) {
@@ -52,7 +62,7 @@ class AddTrackToPlaylistsViewModel @Inject constructor(private val playlistRepos
             return
         }
 
-        if (playlists.any { it.title.lowercase().trim() == title.lowercase().trim() }) {
+        if (_playlists.value?.any { it.title.lowercase().trim() == title.lowercase().trim() } == true) {
             _event.value = BaseViewEvent.ShowMessage(R.string.playlist_duplication)
             return
         }
@@ -60,8 +70,8 @@ class AddTrackToPlaylistsViewModel @Inject constructor(private val playlistRepos
         viewModelScope.launch {
             _showProgress.postValue(true)
             playlistRepository.insert(Playlist(title = title))
-            playlists = playlistRepository.getAllPlaylists() ?: emptyList()
-            _event.postValue(CustomEvent.SetPlaylists(playlists, selectedPlaylists))
+            _playlists.value = playlistRepository.getAllPlaylists() ?: emptyList()
+            _event.postValue(CustomEvent.SetPlaylists(playlists.value ?: emptyList(), _selectedPlaylists.value ?: emptyList()))
             _showProgress.postValue(false)
         }
     }
@@ -74,11 +84,11 @@ class AddTrackToPlaylistsViewModel @Inject constructor(private val playlistRepos
 
     fun onSaveClicked() {
         _showProgress.value = true
-        initialSelectedPlaylists.subtract(selectedPlaylists).let { removalPlaylists ->
+        initialSelectedPlaylists.subtract(_selectedPlaylists.value ?: emptyList()).let { removalPlaylists ->
             updatePlaylist(removalPlaylists.map { it.copy(tracks = it.tracks - trackId) })
         }
-        selectedPlaylists.subtract(initialSelectedPlaylists).let { insertPlaylists ->
-            updatePlaylist(insertPlaylists.map { it.copy(tracks = it.tracks + trackId) })
+        _selectedPlaylists.value?.subtract(initialSelectedPlaylists).let { insertPlaylists ->
+            updatePlaylist(insertPlaylists?.map { it.copy(tracks = it.tracks + trackId) } ?: emptyList())
         }
         _event.value = Complex(
             BaseViewEvent.ShowMessage(R.string.playlists_updated),
