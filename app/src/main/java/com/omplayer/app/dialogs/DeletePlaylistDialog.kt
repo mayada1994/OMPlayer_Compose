@@ -14,13 +14,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -33,9 +27,8 @@ import androidx.compose.ui.window.DialogProperties
 import com.omplayer.app.R
 
 @Composable
-fun AddChangePlaylistDialog(
-    title: String,
-    onSave: (String?) -> Unit,
+fun DeletePlaylistDialog(
+    onDelete: () -> Unit,
     onCancel: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -50,42 +43,20 @@ fun AddChangePlaylistDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .background(color = colorResource(id = R.color.colorSelectedBackground), CircleShape.copy(CornerSize(16.dp)))
+                .background(
+                    color = colorResource(id = R.color.colorSelectedBackground),
+                    CircleShape.copy(CornerSize(16.dp))
+                )
                 .padding(horizontal = 20.dp),
         ) {
             Text(
-                text = title,
+                text = stringResource(id = R.string.delete_playlist_prompt),
                 modifier = Modifier
                     .wrapContentWidth()
                     .wrapContentHeight()
                     .padding(top = 16.dp),
                 color = colorResource(id = R.color.colorTextPrimary),
                 fontSize = 18.sp
-            )
-
-            var playlistTitle by rememberSaveable { mutableStateOf("") }
-            TextField(
-                value = playlistTitle,
-                onValueChange = { playlistTitle = it },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.hint_title),
-                        color = colorResource(id = R.color.colorTextSecondary),
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .wrapContentHeight()
-                            .offset(y = (8).dp)
-                    )
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = colorResource(id = R.color.transparent),
-                    focusedIndicatorColor = colorResource(id = R.color.colorTextSecondary),
-                    unfocusedIndicatorColor = colorResource(id = R.color.colorTextSecondary),
-                    disabledIndicatorColor = colorResource(id = R.color.colorTextSecondary),
-                    textColor = colorResource(id = R.color.colorTextPrimary),
-                    cursorColor = colorResource(id = R.color.colorTextPrimary)
-                )
             )
 
             Row(
@@ -104,9 +75,9 @@ fun AddChangePlaylistDialog(
                     )
                 }
 
-                TextButton(onClick = { onSave(playlistTitle) }) {
+                TextButton(onClick = { onDelete() }) {
                     Text(
-                        text = stringResource(id = R.string.save).uppercase(),
+                        text = stringResource(id = R.string.ok).uppercase(),
                         modifier = Modifier
                             .wrapContentHeight()
                             .offset(x = 8.dp),
@@ -121,16 +92,15 @@ fun AddChangePlaylistDialog(
 
 @Preview
 @Composable
-fun AddChangePlaylistDialogPreview() {
+fun DeletePlaylistDialogPreview() {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         color = colorResource(id = R.color.colorBackground)
     ) {
-        AddChangePlaylistDialog(
-            title = stringResource(id = R.string.enter_new_playlist_title),
-            onSave = {},
+        DeletePlaylistDialog(
+            onDelete = {},
             onCancel = {},
             onDismiss = {}
         )
