@@ -1,5 +1,6 @@
 package com.omplayer.app.dialogs
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -46,13 +49,15 @@ fun AddChangePlaylistDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
+                .background(color = colorResource(id = R.color.colorSelectedBackground), CircleShape.copy(CornerSize(16.dp)))
+                .padding(horizontal = 20.dp),
         ) {
             Text(
                 text = title,
                 modifier = Modifier
                     .wrapContentWidth()
                     .wrapContentHeight()
-                    .padding(top = 12.dp),
+                    .padding(top = 16.dp),
                 color = colorResource(id = R.color.colorTextPrimary),
                 fontSize = 18.sp
             )
@@ -86,7 +91,7 @@ fun AddChangePlaylistDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(top = 32.dp, bottom = 18.dp),
+                    .padding(top = 32.dp, bottom = 8.dp),
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = { onCancel() }) {

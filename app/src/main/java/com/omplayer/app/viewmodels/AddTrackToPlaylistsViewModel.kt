@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.omplayer.app.R
 import com.omplayer.app.db.entities.Playlist
-import com.omplayer.app.events.ViewEvent
 import com.omplayer.app.repositories.PlaylistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,10 +22,6 @@ class AddTrackToPlaylistsViewModel @Inject constructor(private val playlistRepos
     private val _playlists: MutableLiveData<List<Playlist>> = MutableLiveData()
     val playlists: LiveData<List<Playlist>> = _playlists
 
-    sealed class CustomEvent {
-        data class SetPlaylists(val playlists: List<Playlist>, val selectedPlaylists: List<Playlist>) : ViewEvent
-    }
-
     fun init(trackId: Int) {
         this.trackId = trackId
         getPlaylists()
@@ -38,12 +33,6 @@ class AddTrackToPlaylistsViewModel @Inject constructor(private val playlistRepos
             _playlists.value = playlistRepository.getAllPlaylists() ?: emptyList()
             initialSelectedPlaylists = _playlists.value?.filter { it.tracks.contains(trackId) } ?: emptyList()
             _selectedPlaylists.value = initialSelectedPlaylists
-            _event.postValue(
-                CustomEvent.SetPlaylists(
-                    playlists.value ?: emptyList(),
-                    initialSelectedPlaylists
-                )
-            )
             _showProgress.postValue(false)
         }
     }
@@ -71,7 +60,6 @@ class AddTrackToPlaylistsViewModel @Inject constructor(private val playlistRepos
             _showProgress.postValue(true)
             playlistRepository.insert(Playlist(title = title))
             _playlists.value = playlistRepository.getAllPlaylists() ?: emptyList()
-            _event.postValue(CustomEvent.SetPlaylists(playlists.value ?: emptyList(), _selectedPlaylists.value ?: emptyList()))
             _showProgress.postValue(false)
         }
     }
