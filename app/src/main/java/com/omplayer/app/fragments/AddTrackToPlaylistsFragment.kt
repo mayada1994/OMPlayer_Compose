@@ -27,6 +27,8 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -41,11 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.omplayer.app.R
-import com.omplayer.app.databinding.DialogAddChangePlaylistBinding
 import com.omplayer.app.databinding.FragmentAddTrackToPlaylistsBinding
 import com.omplayer.app.db.entities.Playlist
+import com.omplayer.app.dialogs.AddChangePlaylistDialog
 import com.omplayer.app.items.PlaylistItem
 import com.omplayer.app.theme.OMPlayerTheme
 import com.omplayer.app.viewmodels.AddTrackToPlaylistsViewModel
@@ -85,22 +86,6 @@ class AddTrackToPlaylistsFragment : BaseMvvmFragment<FragmentAddTrackToPlaylists
         viewModel.init(args.trackId)
     }
 
-    private fun showAddPlaylistDialog() {
-        val dialogBinding = DialogAddChangePlaylistBinding.inflate(layoutInflater)
-        val alertDialog = MaterialAlertDialogBuilder(requireContext()).setView(dialogBinding.root).create()
-        with(dialogBinding) {
-            btnSave.setOnClickListener {
-                viewModel.addPlaylist(fPlaylistTitle.text.toString())
-                alertDialog.dismiss()
-            }
-            btnCancel.setOnClickListener {
-                alertDialog.dismiss()
-            }
-        }
-        alertDialog.setCancelable(false)
-        alertDialog.show()
-    }
-
     @Composable
     fun AddTrackToPlaylistsScreen(viewModel: AddTrackToPlaylistsViewModel) {
         val playlists by viewModel.playlists.observeAsState()
@@ -110,8 +95,8 @@ class AddTrackToPlaylistsFragment : BaseMvvmFragment<FragmentAddTrackToPlaylists
             playlists = playlists ?: listOf(),
             selectedPlaylists = selectedPlaylists ?: listOf(),
             onPlaylistSelected = { viewModel.onPlaylistSelected(it) },
-            onAddPlaylistClicked = { showAddPlaylistDialog() },
             onSaveClicked = { viewModel.onSaveClicked() },
+            onDialogSaveClicked = { viewModel.addPlaylist(it) },
             onBackPressed = { viewModel.onBackPressed() }
         )
     }
@@ -121,10 +106,12 @@ class AddTrackToPlaylistsFragment : BaseMvvmFragment<FragmentAddTrackToPlaylists
         playlists: List<Playlist>,
         selectedPlaylists: List<Playlist>,
         onPlaylistSelected: (Playlist) -> Unit,
-        onAddPlaylistClicked: () -> Unit,
         onSaveClicked: () -> Unit,
+        onDialogSaveClicked: (String?) -> Unit,
         onBackPressed: () -> Unit
     ) {
+        val openDialog = rememberSaveable { mutableStateOf(false) }
+
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = colorResource(id = R.color.colorBackground)
@@ -173,7 +160,7 @@ class AddTrackToPlaylistsFragment : BaseMvvmFragment<FragmentAddTrackToPlaylists
                     )
 
                     IconButton(
-                        onClick = { onAddPlaylistClicked() },
+                        onClick = { openDialog.value = true },
                         modifier = Modifier
                             .wrapContentWidth()
                             .wrapContentHeight()
@@ -254,6 +241,18 @@ class AddTrackToPlaylistsFragment : BaseMvvmFragment<FragmentAddTrackToPlaylists
                         textAlign = TextAlign.Center
                     )
                 }
+
+                if (openDialog.value) {
+                    AddChangePlaylistDialog(
+                        title = stringResource(id = R.string.enter_new_playlist_title),
+                        onSave = {
+                            onDialogSaveClicked(it)
+                            openDialog.value = false
+                        },
+                        onCancel = { openDialog.value = false },
+                        onDismiss = { openDialog.value = false }
+                    )
+                }
             }
         }
     }
@@ -296,8 +295,8 @@ class AddTrackToPlaylistsFragment : BaseMvvmFragment<FragmentAddTrackToPlaylists
                     )
                 ),
                 onPlaylistSelected = {},
-                onAddPlaylistClicked = {},
                 onSaveClicked = {},
+                onDialogSaveClicked = {},
                 onBackPressed = {}
             )
         }
